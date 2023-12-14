@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,30 +14,35 @@ type CreateUserParams struct {
 	HashedPassword string `json:"hashed_password" bson:"hashed_password"`
 	FullName       string `json:"full_name" bson:"full_name"`
 	Email          string `json:"email" bson:"email"`
+	Gender         string `json:"gender" bson:"gender"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (any, error) {
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	user := User{
+		ID:             primitive.NewObjectID(),
+		Username:       arg.Username,
+		HashedPassword: arg.HashedPassword,
+		FullName:       arg.FullName,
+		Email:          arg.Email,
+		Description:    "",
+		Gender:         arg.Gender,
+		CreatedAt:      time.Now(),
+	}
+
+	// create the user
 	coll := q.db.Collection("users")
+	_, err := coll.InsertOne(ctx, user)
 
-	result, err := coll.InsertOne(ctx, arg)
-	id := result.InsertedID
-	return id, err
+	return user, err
 }
 
-type GetUserParams struct {
-	Username string `json:"username" bson:"username"`
-}
-
-func (q *Queries) GetUser(ctx context.Context, arg GetUserParams) (User, error) {
-	coll := q.db.Collection("users")
-	filter := bson.D{primitive.E{Key: "username", Value: arg.Username}}
+func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
+	filter := bson.D{primitive.E{Key: "username", Value: username}}
 	opts := options.FindOne()
 
 	var user User
+	coll := q.db.Collection("users")
 	err := coll.FindOne(ctx, filter, opts).Decode(&user)
-	if err != nil {
-		return User{}, err
-	}
 
-	return user, nil
+	return user, err
 }
