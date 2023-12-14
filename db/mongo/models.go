@@ -12,6 +12,7 @@ type User struct {
 	HashedPassword string             `json:"hashed_password" bson:"hashed_password"`
 	FullName       string             `json:"full_name" bson:"full_name"`
 	Email          string             `json:"email" bson:"email"`
+	Avatar         string             `json:"avatar" bson:"avatar"`
 	Description    string             `json:"description" bson:"description"`
 	Gender         string             `json:"gender" bson:"gender"`
 	CreatedAt      time.Time          `json:"created_at" bson:"created_at"`

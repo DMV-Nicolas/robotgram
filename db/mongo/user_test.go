@@ -7,6 +7,7 @@ import (
 	"github.com/DMV-Nicolas/tinygram/util"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func randomUser(t *testing.T) User {
@@ -15,6 +16,7 @@ func randomUser(t *testing.T) User {
 		HashedPassword: util.RandomPassword(16),
 		FullName:       util.RandomUsername(),
 		Email:          util.RandomEmail(),
+		Avatar:         "avatar.png",
 		Gender:         "male",
 	}
 
@@ -26,6 +28,7 @@ func randomUser(t *testing.T) User {
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.Equal(t, arg.FullName, user.FullName)
 	require.Equal(t, arg.Email, user.Email)
+	require.Equal(t, arg.Avatar, user.Avatar)
 	require.Equal(t, arg.Gender, user.Gender)
 
 	require.Empty(t, user.Description)
@@ -51,6 +54,7 @@ func TestGetUser(t *testing.T) {
 	require.Equal(t, user1.HashedPassword, user2.HashedPassword)
 	require.Equal(t, user1.FullName, user2.FullName)
 	require.Equal(t, user1.Email, user2.Email)
+	require.Equal(t, user1.Avatar, user2.Avatar)
 	require.Equal(t, user1.Gender, user2.Gender)
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
@@ -69,5 +73,39 @@ func TestListUsers(t *testing.T) {
 	for _, u := range users {
 		require.NotEmpty(t, u)
 	}
+}
 
+func TestUpdateUser(t *testing.T) {
+	user1 := randomUser(t)
+
+	arg := UpdateUserParams{
+		Username:       user1.Username,
+		HashedPassword: util.RandomPassword(20),
+		FullName:       util.RandomUsername(),
+		Description:    util.RandomPassword(100),
+		Gender:         "female",
+		Avatar:         "other-avatar.png",
+	}
+
+	user2, err := testQueries.UpdateUser(testCtx, arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, user2)
+
+	require.Equal(t, user1.Username, user2.Username)
+	require.NotEqual(t, user1.HashedPassword, user2.HashedPassword)
+	require.NotEqual(t, user1.FullName, user2.FullName)
+	require.NotEqual(t, user1.Avatar, user2.Avatar)
+	require.NotEqual(t, user1.Gender, user2.Gender)
+}
+
+func TestDeleteUser(t *testing.T) {
+	user1 := randomUser(t)
+
+	err := testQueries.DeleteUser(testCtx, user1.Username)
+	require.NoError(t, err)
+
+	user2, err := testQueries.GetUser(testCtx, user1.Username)
+	require.Error(t, err)
+	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
+	require.Empty(t, user2)
 }

@@ -14,6 +14,7 @@ type CreateUserParams struct {
 	HashedPassword string `json:"hashed_password" bson:"hashed_password"`
 	FullName       string `json:"full_name" bson:"full_name"`
 	Email          string `json:"email" bson:"email"`
+	Avatar         string `json:"avatar" bson:"avatar"`
 	Gender         string `json:"gender" bson:"gender"`
 }
 
@@ -24,12 +25,12 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		HashedPassword: arg.HashedPassword,
 		FullName:       arg.FullName,
 		Email:          arg.Email,
+		Avatar:         arg.Avatar,
 		Description:    "",
 		Gender:         arg.Gender,
 		CreatedAt:      time.Now(),
 	}
 
-	// create the user
 	coll := q.db.Collection("users")
 	_, err := coll.InsertOne(ctx, user)
 
@@ -68,4 +69,55 @@ func (q *Queries) ListUsers(ctx context.Context, limit int) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+type UpdateUserParams struct {
+	Username       string `json:"username" bson:"username"`
+	HashedPassword string `json:"hashed_password" bson:"hashed_password"`
+	FullName       string `json:"full_name" bson:"full_name"`
+	Description    string `json:"description" bson:"description"`
+	Gender         string `json:"gender" bson:"gender"`
+	Avatar         string `json:"avatar" bson:"avatar"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	filter := bson.M{"username": "arr"}
+	update := bson.M{
+		"$set": bson.M{
+			"hashed_password": arg.HashedPassword,
+			"full_name":       arg.FullName,
+			"description":     arg.Description,
+			"gender":          arg.Gender,
+			"avatar":          arg.Avatar,
+		},
+	}
+
+	coll := q.db.Collection("users")
+	_, err := coll.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return User{}, err
+	}
+
+	updatedUser := User{
+		Username:       arg.Username,
+		HashedPassword: arg.HashedPassword,
+		FullName:       arg.FullName,
+		Description:    arg.Description,
+		Gender:         arg.Gender,
+		Avatar:         arg.Avatar,
+	}
+
+	return updatedUser, nil
+}
+
+func (q *Queries) DeleteUser(ctx context.Context, username string) error {
+	filter := bson.M{"username": username}
+
+	coll := q.db.Collection("users")
+	_, err := coll.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
