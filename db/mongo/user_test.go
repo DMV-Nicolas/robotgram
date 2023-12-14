@@ -55,3 +55,19 @@ func TestGetUser(t *testing.T) {
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 }
+
+func TestListUsers(t *testing.T) {
+	n := 10
+	for i := 0; i < n; i++ {
+		randomUser(t)
+	}
+
+	users, err := testQueries.ListUsers(testCtx, 10)
+	require.NoError(t, err)
+	require.Len(t, users, n)
+
+	for _, u := range users {
+		require.NotEmpty(t, u)
+	}
+
+}

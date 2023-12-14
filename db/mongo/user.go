@@ -46,3 +46,26 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 
 	return user, err
 }
+
+func (q *Queries) ListUsers(ctx context.Context, limit int) ([]User, error) {
+	filter := bson.D{}
+
+	var users []User
+	coll := q.db.Collection("users")
+	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(limit)))
+	if err != nil {
+		return nil, err
+	}
+
+	for cursor.Next(ctx) {
+		var user User
+		err = cursor.Decode(&user)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
