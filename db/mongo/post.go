@@ -11,16 +11,16 @@ import (
 )
 
 type CreatePostParams struct {
-	Owner       string   `json:"owner" bson:"owner"`
-	Images      []string `json:"images" bson:"images"`
-	Videos      []string `json:"videos" bson:"videos"`
-	Description string   `json:"description" bson:"description"`
+	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
+	Images      []string           `json:"images" bson:"images"`
+	Videos      []string           `json:"videos" bson:"videos"`
+	Description string             `json:"description" bson:"description"`
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.InsertOneResult, error) {
 	post := Post{
 		ID:          primitive.NewObjectID(),
-		Owner:       arg.Owner,
+		UserID:      arg.UserID,
 		Images:      arg.Images,
 		Videos:      arg.Videos,
 		Description: arg.Description,
