@@ -17,3 +17,12 @@ type User struct {
 	Gender         string             `json:"gender" bson:"gender"`
 	CreatedAt      time.Time          `json:"created_at" bson:"created_at"`
 }
+
+type Post struct {
+	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	Owner       string             `json:"owner" bson:"owner"`
+	Images      []string           `json:"images" bson:"images"`
+	Videos      []string           `json:"videos" bson:"videos"`
+	Description string             `json:"description" bson:"description"`
+	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
+}

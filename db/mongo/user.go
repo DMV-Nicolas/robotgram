@@ -34,7 +34,11 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	coll := q.db.Collection("users")
 	_, err := coll.InsertOne(ctx, user)
 
-	return user, err
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
 }
 
 func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
@@ -80,8 +84,8 @@ type UpdateUserParams struct {
 	Avatar         string `json:"avatar" bson:"avatar"`
 }
 
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	filter := bson.M{"username": "arr"}
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
+	filter := bson.M{"username": arg.Username}
 	update := bson.M{
 		"$set": bson.M{
 			"hashed_password": arg.HashedPassword,
@@ -94,20 +98,8 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 
 	coll := q.db.Collection("users")
 	_, err := coll.UpdateOne(ctx, filter, update)
-	if err != nil {
-		return User{}, err
-	}
 
-	updatedUser := User{
-		Username:       arg.Username,
-		HashedPassword: arg.HashedPassword,
-		FullName:       arg.FullName,
-		Description:    arg.Description,
-		Gender:         arg.Gender,
-		Avatar:         arg.Avatar,
-	}
-
-	return updatedUser, nil
+	return err
 }
 
 func (q *Queries) DeleteUser(ctx context.Context, username string) error {
@@ -115,9 +107,6 @@ func (q *Queries) DeleteUser(ctx context.Context, username string) error {
 
 	coll := q.db.Collection("users")
 	_, err := coll.DeleteOne(ctx, filter)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }

@@ -87,15 +87,22 @@ func TestUpdateUser(t *testing.T) {
 		Avatar:         "other-avatar.png",
 	}
 
-	user2, err := testQueries.UpdateUser(testCtx, arg)
+	err := testQueries.UpdateUser(testCtx, arg)
+	require.NoError(t, err)
+
+	user2, err := testQueries.GetUser(testCtx, user1.Username)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 
+	require.Equal(t, user1.ID, user2.ID)
 	require.Equal(t, user1.Username, user2.Username)
+	require.Equal(t, user1.Email, user2.Email)
 	require.NotEqual(t, user1.HashedPassword, user2.HashedPassword)
 	require.NotEqual(t, user1.FullName, user2.FullName)
 	require.NotEqual(t, user1.Avatar, user2.Avatar)
 	require.NotEqual(t, user1.Gender, user2.Gender)
+
+	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 }
 
 func TestDeleteUser(t *testing.T) {
