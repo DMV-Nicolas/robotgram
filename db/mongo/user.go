@@ -6,6 +6,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -18,7 +19,15 @@ type CreateUserParams struct {
 	Gender         string `json:"gender" bson:"gender"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.InsertOneResult, error) {
+	if err := q.UsernameTaken(ctx, arg.Username); err != nil {
+		return nil, err
+	}
+
+	if err := q.EmailTaken(ctx, arg.Email); err != nil {
+		return nil, err
+	}
+
 	user := User{
 		ID:             primitive.NewObjectID(),
 		Username:       arg.Username,
@@ -32,13 +41,9 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	}
 
 	coll := q.db.Collection("users")
-	_, err := coll.InsertOne(ctx, user)
+	result, err := coll.InsertOne(ctx, user)
 
-	if err != nil {
-		return User{}, err
-	}
-
-	return user, nil
+	return result, err
 }
 
 func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
@@ -84,7 +89,7 @@ type UpdateUserParams struct {
 	Avatar         string `json:"avatar" bson:"avatar"`
 }
 
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.UpdateResult, error) {
 	filter := bson.M{"username": arg.Username}
 	update := bson.M{
 		"$set": bson.M{
@@ -93,20 +98,21 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 			"description":     arg.Description,
 			"gender":          arg.Gender,
 			"avatar":          arg.Avatar,
+			"a":               "a",
 		},
 	}
 
 	coll := q.db.Collection("users")
-	_, err := coll.UpdateOne(ctx, filter, update)
+	result, err := coll.UpdateOne(ctx, filter, update)
 
-	return err
+	return result, err
 }
 
-func (q *Queries) DeleteUser(ctx context.Context, username string) error {
+func (q *Queries) DeleteUser(ctx context.Context, username string) (*mongo.DeleteResult, error) {
 	filter := bson.M{"username": username}
 
 	coll := q.db.Collection("users")
-	_, err := coll.DeleteOne(ctx, filter)
+	result, err := coll.DeleteOne(ctx, filter)
 
-	return err
+	return result, err
 }

@@ -51,8 +51,9 @@ func RandomEmail() string {
 		"com", "co", "ar", "es", "us",
 		"br", "cl", "pe", "mx", "uy",
 	}
-	str := names[rand.Intn(len(names))]
-	str += fmt.Sprint(rand.Intn(1000))
+	str := fmt.Sprint(rand.Intn(100))
+	str += names[rand.Intn(len(names))]
+	str += fmt.Sprint(rand.Intn(10000))
 	str += "@"
 	str += business[rand.Intn(len(business))] + "."
 	str += countries[rand.Intn(len(countries))]

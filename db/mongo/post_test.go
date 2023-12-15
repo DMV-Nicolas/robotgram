@@ -13,22 +13,29 @@ import (
 func randomPost(t *testing.T) Post {
 	user := randomUser(t)
 	arg := CreatePostParams{
-		Owner:       user.Username,
+		UserID:      user.ID,
 		Images:      []string{"ai", "bi", "ci"},
 		Videos:      []string{"av", "bv", "cv"},
 		Description: util.RandomPassword(100),
 	}
 
-	post, err := testQueries.CreatePost(testCtx, arg)
+	result, err := testQueries.CreatePost(testCtx, arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+
+	insertedID, ok := result.InsertedID.(primitive.ObjectID)
+	require.True(t, ok)
+	require.NotEqual(t, primitive.NilObjectID, insertedID)
+
+	post, err := testQueries.GetPost(testCtx, insertedID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post)
 
-	require.Equal(t, arg.Owner, post.Owner)
+	require.Equal(t, insertedID, post.ID)
+	require.Equal(t, arg.UserID, post.UserID)
 	require.Equal(t, arg.Images, post.Images)
 	require.Equal(t, arg.Videos, post.Videos)
 	require.Equal(t, arg.Description, post.Description)
-
-	require.NotEqual(t, primitive.NilObjectID, post.ID)
 	require.WithinDuration(t, time.Now(), post.CreatedAt, time.Second)
 
 	return post
@@ -46,11 +53,10 @@ func TestGetPost(t *testing.T) {
 	require.NotEmpty(t, post2)
 
 	require.Equal(t, post1.ID, post2.ID)
-	require.Equal(t, post1.Owner, post2.Owner)
+	require.Equal(t, post1.UserID, post2.UserID)
 	require.Equal(t, post1.Images, post2.Images)
 	require.Equal(t, post1.Videos, post2.Videos)
 	require.Equal(t, post1.Description, post2.Description)
-
 	require.WithinDuration(t, post1.CreatedAt, post2.CreatedAt, time.Second)
 }
 
@@ -79,15 +85,18 @@ func TestUpdatePost(t *testing.T) {
 		Description: util.RandomPassword(200),
 	}
 
-	err := testQueries.UpdatePost(testCtx, arg)
+	result, err := testQueries.UpdatePost(testCtx, arg)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.MatchedCount)
+	require.EqualValues(t, 1, result.ModifiedCount)
 
 	post2, err := testQueries.GetPost(testCtx, post1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post2)
 
 	require.Equal(t, post1.ID, post2.ID)
-	require.Equal(t, post1.Owner, post2.Owner)
+	require.Equal(t, post1.UserID, post2.UserID)
 	require.NotEqual(t, post1.Images, post2.Images)
 	require.NotEqual(t, post1.Videos, post2.Videos)
 	require.NotEqual(t, post1.Description, post2.Description)
@@ -96,8 +105,10 @@ func TestUpdatePost(t *testing.T) {
 func TestDeletePost(t *testing.T) {
 	post1 := randomPost(t)
 
-	err := testQueries.DeletePost(testCtx, post1.ID)
+	result, err := testQueries.DeletePost(testCtx, post1.ID)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.DeletedCount)
 
 	post2, err := testQueries.GetPost(testCtx, post1.ID)
 	require.Error(t, err)

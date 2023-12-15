@@ -20,9 +20,16 @@ type User struct {
 
 type Post struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id"`
-	Owner       string             `json:"owner" bson:"owner"`
+	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
 	Images      []string           `json:"images" bson:"images"`
 	Videos      []string           `json:"videos" bson:"videos"`
 	Description string             `json:"description" bson:"description"`
 	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
+}
+
+type Like struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	UserID    primitive.ObjectID `json:"user_id" bson:"user_id"`
+	PostID    primitive.ObjectID `json:"post_id" bson:"post_id"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
