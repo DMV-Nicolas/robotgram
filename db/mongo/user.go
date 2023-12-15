@@ -35,11 +35,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.
 	coll := q.db.Collection("users")
 	result, err := coll.InsertOne(ctx, user)
 
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
+	return result, err
 }
 
 func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {

@@ -29,6 +29,9 @@ func randomUser(t *testing.T) User {
 	require.NotEqual(t, primitive.NilObjectID, insertedID)
 
 	user, err := testQueries.GetUser(testCtx, arg.Username)
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
 	require.Equal(t, insertedID, user.ID)
 	require.Equal(t, arg.Username, user.Username)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)

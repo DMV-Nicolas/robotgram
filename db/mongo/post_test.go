@@ -19,16 +19,24 @@ func randomPost(t *testing.T) Post {
 		Description: util.RandomPassword(100),
 	}
 
-	post, err := testQueries.CreatePost(testCtx, arg)
+	result, err := testQueries.CreatePost(testCtx, arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+
+	insertedID, ok := result.InsertedID.(primitive.ObjectID)
+	require.True(t, ok)
+	require.NotEqual(t, primitive.NilObjectID, insertedID)
+
+	post, err := testQueries.GetPost(testCtx, insertedID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post)
 
+	require.Equal(t, insertedID, post.ID)
 	require.Equal(t, arg.Owner, post.Owner)
 	require.Equal(t, arg.Images, post.Images)
 	require.Equal(t, arg.Videos, post.Videos)
 	require.Equal(t, arg.Description, post.Description)
 
-	require.NotEqual(t, primitive.NilObjectID, post.ID)
 	require.WithinDuration(t, time.Now(), post.CreatedAt, time.Second)
 
 	return post
@@ -79,8 +87,11 @@ func TestUpdatePost(t *testing.T) {
 		Description: util.RandomPassword(200),
 	}
 
-	err := testQueries.UpdatePost(testCtx, arg)
+	result, err := testQueries.UpdatePost(testCtx, arg)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.MatchedCount)
+	require.EqualValues(t, 1, result.ModifiedCount)
 
 	post2, err := testQueries.GetPost(testCtx, post1.ID)
 	require.NoError(t, err)
@@ -96,8 +107,10 @@ func TestUpdatePost(t *testing.T) {
 func TestDeletePost(t *testing.T) {
 	post1 := randomPost(t)
 
-	err := testQueries.DeletePost(testCtx, post1.ID)
+	result, err := testQueries.DeletePost(testCtx, post1.ID)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.DeletedCount)
 
 	post2, err := testQueries.GetPost(testCtx, post1.ID)
 	require.Error(t, err)

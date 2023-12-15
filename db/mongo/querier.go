@@ -13,11 +13,11 @@ type Querier interface {
 	ListUsers(ctx context.Context, limit int) ([]User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.UpdateResult, error)
 	DeleteUser(ctx context.Context, username string) (*mongo.DeleteResult, error)
-	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
+	CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.InsertOneResult, error)
 	GetPost(ctx context.Context, id primitive.ObjectID) (Post, error)
 	ListPosts(ctx context.Context, limit int) ([]Post, error)
-	UpdatePost(ctx context.Context, arg UpdatePostParams) error
-	DeletePost(ctx context.Context, id primitive.ObjectID) error
+	UpdatePost(ctx context.Context, arg UpdatePostParams) (*mongo.UpdateResult, error)
+	DeletePost(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
 }
 
 var _ Querier = (*Queries)(nil)

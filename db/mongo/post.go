@@ -6,6 +6,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -16,7 +17,7 @@ type CreatePostParams struct {
 	Description string   `json:"description" bson:"description"`
 }
 
-func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
+func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.InsertOneResult, error) {
 	post := Post{
 		ID:          primitive.NewObjectID(),
 		Owner:       arg.Owner,
@@ -27,9 +28,9 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, e
 	}
 
 	coll := q.db.Collection("posts")
-	_, err := coll.InsertOne(ctx, post)
+	result, err := coll.InsertOne(ctx, post)
 
-	return post, err
+	return result, err
 }
 
 func (q *Queries) GetPost(ctx context.Context, id primitive.ObjectID) (Post, error) {
@@ -73,7 +74,7 @@ type UpdatePostParams struct {
 	Description string             `json:"description" bson:"description"`
 }
 
-func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) error {
+func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": arg.ID}
 	update := bson.M{
 		"$set": bson.M{
@@ -84,16 +85,16 @@ func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) error {
 	}
 
 	coll := q.db.Collection("posts")
-	_, err := coll.UpdateOne(ctx, filter, update)
+	result, err := coll.UpdateOne(ctx, filter, update)
 
-	return err
+	return result, err
 }
 
-func (q *Queries) DeletePost(ctx context.Context, id primitive.ObjectID) error {
+func (q *Queries) DeletePost(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
 	filter := bson.M{"_id": id}
 
 	coll := q.db.Collection("posts")
-	_, err := coll.DeleteOne(ctx, filter)
+	result, err := coll.DeleteOne(ctx, filter)
 
-	return err
+	return result, err
 }
