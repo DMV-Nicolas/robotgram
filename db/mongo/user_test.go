@@ -39,7 +39,6 @@ func randomUser(t *testing.T) User {
 	require.Equal(t, arg.Email, user.Email)
 	require.Equal(t, arg.Avatar, user.Avatar)
 	require.Equal(t, arg.Gender, user.Gender)
-
 	require.Empty(t, user.Description)
 	require.WithinDuration(t, time.Now(), user.CreatedAt, time.Second)
 

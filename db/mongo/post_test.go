@@ -36,7 +36,6 @@ func randomPost(t *testing.T) Post {
 	require.Equal(t, arg.Images, post.Images)
 	require.Equal(t, arg.Videos, post.Videos)
 	require.Equal(t, arg.Description, post.Description)
-
 	require.WithinDuration(t, time.Now(), post.CreatedAt, time.Second)
 
 	return post
@@ -58,7 +57,6 @@ func TestGetPost(t *testing.T) {
 	require.Equal(t, post1.Images, post2.Images)
 	require.Equal(t, post1.Videos, post2.Videos)
 	require.Equal(t, post1.Description, post2.Description)
-
 	require.WithinDuration(t, post1.CreatedAt, post2.CreatedAt, time.Second)
 }
 
