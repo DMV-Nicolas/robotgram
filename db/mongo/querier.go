@@ -4,14 +4,15 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Querier interface {
-	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.InsertOneResult, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	ListUsers(ctx context.Context, limit int) ([]User, error)
-	UpdateUser(ctx context.Context, arg UpdateUserParams) error
-	DeleteUser(ctx context.Context, username string) error
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.UpdateResult, error)
+	DeleteUser(ctx context.Context, username string) (*mongo.DeleteResult, error)
 	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
 	GetPost(ctx context.Context, id primitive.ObjectID) (Post, error)
 	ListPosts(ctx context.Context, limit int) ([]Post, error)

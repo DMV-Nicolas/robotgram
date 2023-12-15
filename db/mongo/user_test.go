@@ -20,10 +20,16 @@ func randomUser(t *testing.T) User {
 		Gender:         "male",
 	}
 
-	user, err := testQueries.CreateUser(testCtx, arg)
+	result, err := testQueries.CreateUser(testCtx, arg)
 	require.NoError(t, err)
-	require.NotEmpty(t, user)
+	require.NotEmpty(t, result)
 
+	insertedID, ok := result.InsertedID.(primitive.ObjectID)
+	require.True(t, ok)
+	require.NotEqual(t, primitive.NilObjectID, insertedID)
+
+	user, err := testQueries.GetUser(testCtx, arg.Username)
+	require.Equal(t, insertedID, user.ID)
 	require.Equal(t, arg.Username, user.Username)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.Equal(t, arg.FullName, user.FullName)
@@ -32,7 +38,6 @@ func randomUser(t *testing.T) User {
 	require.Equal(t, arg.Gender, user.Gender)
 
 	require.Empty(t, user.Description)
-	require.NotEqual(t, primitive.NilObjectID, user.ID)
 	require.WithinDuration(t, time.Now(), user.CreatedAt, time.Second)
 
 	return user
@@ -58,6 +63,10 @@ func TestGetUser(t *testing.T) {
 	require.Equal(t, user1.Gender, user2.Gender)
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
+
+	user3, err := testQueries.GetUser(testCtx, "pepito123")
+	require.Error(t, err)
+	require.Empty(t, user3)
 }
 
 func TestListUsers(t *testing.T) {
@@ -87,8 +96,11 @@ func TestUpdateUser(t *testing.T) {
 		Avatar:         "other-avatar.png",
 	}
 
-	err := testQueries.UpdateUser(testCtx, arg)
+	result, err := testQueries.UpdateUser(testCtx, arg)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.MatchedCount)
+	require.EqualValues(t, 1, result.ModifiedCount)
 
 	user2, err := testQueries.GetUser(testCtx, user1.Username)
 	require.NoError(t, err)
@@ -108,8 +120,10 @@ func TestUpdateUser(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	user1 := randomUser(t)
 
-	err := testQueries.DeleteUser(testCtx, user1.Username)
+	result, err := testQueries.DeleteUser(testCtx, user1.Username)
 	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.DeletedCount)
 
 	user2, err := testQueries.GetUser(testCtx, user1.Username)
 	require.Error(t, err)
