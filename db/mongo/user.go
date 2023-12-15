@@ -20,6 +20,14 @@ type CreateUserParams struct {
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.InsertOneResult, error) {
+	if err := q.UsernameTaken(ctx, arg.Username); err != nil {
+		return nil, err
+	}
+
+	if err := q.EmailTaken(ctx, arg.Email); err != nil {
+		return nil, err
+	}
+
 	user := User{
 		ID:             primitive.NewObjectID(),
 		Username:       arg.Username,

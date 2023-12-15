@@ -16,6 +16,10 @@ type CreateLikeParams struct {
 }
 
 func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.InsertOneResult, error) {
+	if err := q.DuplicatedLike(ctx, arg); err != nil {
+		return nil, err
+	}
+
 	like := Like{
 		ID:        primitive.NewObjectID(),
 		UserID:    arg.UserID,

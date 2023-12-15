@@ -22,6 +22,9 @@ type Querier interface {
 	GetLike(ctx context.Context, id primitive.ObjectID) (Like, error)
 	ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error)
 	DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
+
+	UsernameTaken(ctx context.Context, username string) error
+	EmailTaken(ctx context.Context, email string) error
 }
 
 var _ Querier = (*Queries)(nil)
