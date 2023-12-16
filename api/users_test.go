@@ -136,7 +136,7 @@ func TestCreateUserAPI(t *testing.T) {
 				querier.EXPECT().
 					CreateUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(nil, mongo.ErrWrongClient)
+					Return(nil, mongo.ErrClientDisconnected)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -206,6 +206,160 @@ func TestCreateUserAPI(t *testing.T) {
 			recorder := httptest.NewRecorder()
 
 			url := "/users"
+			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
+			request.Header.Add("Content-Type", "application/json")
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
+func TestLoginUserAPI(t *testing.T) {
+	user, password := randomUser(t)
+	testCases := []struct {
+		name          string
+		body          map[string]any
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK-UsernameLogin",
+			body: map[string]any{
+				"username": user.Username,
+				"email":    "",
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Eq(user.Username)).
+					Times(1).
+					Return(user, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name: "OK-EmailLogin",
+			body: map[string]any{
+				"username": "",
+				"email":    user.Email,
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("email"), gomock.Eq(user.Email)).
+					Times(1).
+					Return(user, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name: "IncorrectPassword",
+			body: map[string]any{
+				"username": user.Username,
+				"email":    "",
+				"password": "incorrect-password",
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Eq(user.Username)).
+					Times(1).
+					Return(user, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
+		{
+			name: "UserNotFound",
+			body: map[string]any{
+				"username": user.Username,
+				"email":    "",
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Any()).
+					Times(1).
+					Return(db.User{}, mongo.ErrNoDocuments)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name: "InternalError",
+			body: map[string]any{
+				"username": user.Username,
+				"email":    "",
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Any()).
+					Times(1).
+					Return(db.User{}, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "NoUsernameOrEmailProvided",
+			body: map[string]any{
+				"username": "",
+				"email":    "",
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "IncorrectBodyTypes",
+			body: map[string]any{
+				"username": 100,
+				"email":    "",
+				"password": password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			querier := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(querier)
+
+			// marshal data body to json
+			data, err := json.Marshal(tc.body)
+			require.NoError(t, err)
+
+			// start test server and send request
+			server := newTestServer(t, querier)
+			recorder := httptest.NewRecorder()
+
+			url := "/users/login"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)

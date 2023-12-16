@@ -99,11 +99,13 @@ func (server *Server) LoginUser(c echo.Context) error {
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.AccessTokenDuration)
 	if err != nil {
+		// imposible
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.RefreshTokenDuration)
 	if err != nil {
+		// imposible
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
