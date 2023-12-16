@@ -33,8 +33,8 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.
 	return result, err
 }
 
-func (q *Queries) GetPost(ctx context.Context, id primitive.ObjectID) (Post, error) {
-	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+func (q *Queries) GetPost(ctx context.Context, key string, value any) (Post, error) {
+	filter := bson.D{primitive.E{Key: key, Value: value}}
 	opts := options.FindOne()
 
 	var post Post

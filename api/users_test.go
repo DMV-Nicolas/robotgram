@@ -45,7 +45,7 @@ func (e eqCreateUserParamsMatcher) String() string {
 
 func TestCreateUserAPI(t *testing.T) {
 	user, password := randomUser(t)
-
+	result := &mongo.InsertOneResult{InsertedID: user.ID}
 	testCases := []struct {
 		name          string
 		body          map[string]any
@@ -75,10 +75,11 @@ func TestCreateUserAPI(t *testing.T) {
 				querier.EXPECT().
 					CreateUser(gomock.Any(), eqCreateUserParamsMatcher{arg, password}).
 					Times(1).
-					Return(&mongo.InsertOneResult{InsertedID: user.ID}, nil)
+					Return(result, nil)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusCreated, recorder.Code)
+				requireBodyMatchResult(t, recorder.Body, result)
 			},
 		},
 		{
@@ -213,6 +214,21 @@ func TestCreateUserAPI(t *testing.T) {
 			tc.checkResponse(t, recorder)
 		})
 	}
+}
+
+func requireBodyMatchResult(t *testing.T, body *bytes.Buffer, result *mongo.InsertOneResult) {
+	bodyResult := new(mongo.InsertOneResult)
+	err := json.NewDecoder(body).Decode(bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	bodyInsertedID, err := primitive.ObjectIDFromHex(bodyResult.InsertedID.(string))
+	require.NoError(t, err)
+
+	insertedID, ok := result.InsertedID.(primitive.ObjectID)
+	require.True(t, ok)
+
+	require.Equal(t, insertedID, bodyInsertedID)
 }
 
 func randomUser(t *testing.T) (db.User, string) {

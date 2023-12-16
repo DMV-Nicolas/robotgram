@@ -157,33 +157,33 @@ func (mr *MockQuerierMockRecorder) GetLike(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // GetPost mocks base method.
-func (m *MockQuerier) GetPost(arg0 context.Context, arg1 primitive.ObjectID) (db.Post, error) {
+func (m *MockQuerier) GetPost(arg0 context.Context, arg1 string, arg2 interface{}) (db.Post, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPost", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetPost", arg0, arg1, arg2)
 	ret0, _ := ret[0].(db.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPost indicates an expected call of GetPost.
-func (mr *MockQuerierMockRecorder) GetPost(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockQuerierMockRecorder) GetPost(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPost", reflect.TypeOf((*MockQuerier)(nil).GetPost), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPost", reflect.TypeOf((*MockQuerier)(nil).GetPost), arg0, arg1, arg2)
 }
 
 // GetUser mocks base method.
-func (m *MockQuerier) GetUser(arg0 context.Context, arg1 string) (db.User, error) {
+func (m *MockQuerier) GetUser(arg0 context.Context, arg1 string, arg2 interface{}) (db.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(db.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetUser indicates an expected call of GetUser.
-func (mr *MockQuerierMockRecorder) GetUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockQuerierMockRecorder) GetUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockQuerier)(nil).GetUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockQuerier)(nil).GetUser), arg0, arg1, arg2)
 }
 
 // ListLikes mocks base method.

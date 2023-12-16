@@ -46,8 +46,8 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.
 	return result, err
 }
 
-func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
-	filter := bson.D{primitive.E{Key: "username", Value: username}}
+func (q *Queries) GetUser(ctx context.Context, key string, value any) (User, error) {
+	filter := bson.D{primitive.E{Key: key, Value: value}}
 	opts := options.FindOne()
 
 	var user User
