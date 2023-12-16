@@ -9,12 +9,12 @@ import (
 
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.InsertOneResult, error)
-	GetUser(ctx context.Context, username string) (User, error)
+	GetUser(ctx context.Context, key string, value any) (User, error)
 	ListUsers(ctx context.Context, limit int) ([]User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.UpdateResult, error)
 	DeleteUser(ctx context.Context, username string) (*mongo.DeleteResult, error)
 	CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.InsertOneResult, error)
-	GetPost(ctx context.Context, id primitive.ObjectID) (Post, error)
+	GetPost(ctx context.Context, key string, value any) (Post, error)
 	ListPosts(ctx context.Context, limit int) ([]Post, error)
 	UpdatePost(ctx context.Context, arg UpdatePostParams) (*mongo.UpdateResult, error)
 	DeletePost(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)

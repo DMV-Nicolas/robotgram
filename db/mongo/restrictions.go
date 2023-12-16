@@ -6,6 +6,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -16,23 +17,26 @@ var (
 )
 
 func (q *Queries) UsernameTaken(ctx context.Context, username string) error {
-	_, err := q.GetUser(ctx, username)
-	if err != nil {
+	_, err := q.GetUser(ctx, "username", username)
+	if err == mongo.ErrNoDocuments {
 		return nil
 	}
+
+	if err != nil {
+		return err
+	}
+
 	return ErrUsernameTaken
 }
 
 func (q *Queries) EmailTaken(ctx context.Context, email string) error {
-	filter := bson.D{primitive.E{Key: "email", Value: email}}
-	opts := options.FindOne()
-
-	var user User
-	coll := q.db.Collection("users")
-	err := coll.FindOne(ctx, filter, opts).Decode(&user)
+	_, err := q.GetUser(ctx, "email", email)
+	if err == mongo.ErrNoDocuments {
+		return nil
+	}
 
 	if err != nil {
-		return nil
+		return err
 	}
 
 	return ErrEmailTaken

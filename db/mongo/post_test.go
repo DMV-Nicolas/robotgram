@@ -27,7 +27,7 @@ func randomPost(t *testing.T) Post {
 	require.True(t, ok)
 	require.NotEqual(t, primitive.NilObjectID, insertedID)
 
-	post, err := testQueries.GetPost(testCtx, insertedID)
+	post, err := testQueries.GetPost(testCtx, "_id", insertedID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post)
 
@@ -48,7 +48,7 @@ func TestCreatePost(t *testing.T) {
 func TestGetPost(t *testing.T) {
 	post1 := randomPost(t)
 
-	post2, err := testQueries.GetPost(testCtx, post1.ID)
+	post2, err := testQueries.GetPost(testCtx, "_id", post1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post2)
 
@@ -91,7 +91,7 @@ func TestUpdatePost(t *testing.T) {
 	require.EqualValues(t, 1, result.MatchedCount)
 	require.EqualValues(t, 1, result.ModifiedCount)
 
-	post2, err := testQueries.GetPost(testCtx, post1.ID)
+	post2, err := testQueries.GetPost(testCtx, "_id", post1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, post2)
 
@@ -110,7 +110,7 @@ func TestDeletePost(t *testing.T) {
 	require.NotEmpty(t, result)
 	require.EqualValues(t, 1, result.DeletedCount)
 
-	post2, err := testQueries.GetPost(testCtx, post1.ID)
+	post2, err := testQueries.GetPost(testCtx, "_id", post1.ID)
 	require.Error(t, err)
 	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
 	require.Empty(t, post2)

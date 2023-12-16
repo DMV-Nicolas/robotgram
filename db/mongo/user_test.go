@@ -28,7 +28,7 @@ func randomUser(t *testing.T) User {
 	require.True(t, ok)
 	require.NotEqual(t, primitive.NilObjectID, insertedID)
 
-	user, err := testQueries.GetUser(testCtx, arg.Username)
+	user, err := testQueries.GetUser(testCtx, "_id", insertedID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 
@@ -52,7 +52,7 @@ func TestCreateUser(t *testing.T) {
 func TestGetUser(t *testing.T) {
 	user1 := randomUser(t)
 
-	user2, err := testQueries.GetUser(testCtx, user1.Username)
+	user2, err := testQueries.GetUser(testCtx, "_id", user1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 
@@ -66,9 +66,17 @@ func TestGetUser(t *testing.T) {
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 
-	user3, err := testQueries.GetUser(testCtx, "pepito123")
+	user3, err := testQueries.GetUser(testCtx, "_id", primitive.NewObjectID())
 	require.Error(t, err)
 	require.Empty(t, user3)
+
+	user4, err := testQueries.GetUser(testCtx, "arroz", "arroz")
+	require.Error(t, err)
+	require.Empty(t, user4)
+
+	user5, err := testQueries.GetUser(testCtx, "_id", "invalid-object-id")
+	require.Error(t, err)
+	require.Empty(t, user5)
 }
 
 func TestListUsers(t *testing.T) {
@@ -104,7 +112,7 @@ func TestUpdateUser(t *testing.T) {
 	require.EqualValues(t, 1, result.MatchedCount)
 	require.EqualValues(t, 1, result.ModifiedCount)
 
-	user2, err := testQueries.GetUser(testCtx, user1.Username)
+	user2, err := testQueries.GetUser(testCtx, "_id", user1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 
@@ -127,7 +135,7 @@ func TestDeleteUser(t *testing.T) {
 	require.NotEmpty(t, result)
 	require.EqualValues(t, 1, result.DeletedCount)
 
-	user2, err := testQueries.GetUser(testCtx, user1.Username)
+	user2, err := testQueries.GetUser(testCtx, "_id", user1.ID)
 	require.Error(t, err)
 	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
 	require.Empty(t, user2)
