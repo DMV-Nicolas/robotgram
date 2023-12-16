@@ -7,6 +7,7 @@ import (
 	"github.com/DMV-Nicolas/tinygram/api"
 	db "github.com/DMV-Nicolas/tinygram/db/mongo"
 	"github.com/DMV-Nicolas/tinygram/util"
+	_ "github.com/golang/mock/mockgen/model"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

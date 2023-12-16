@@ -42,7 +42,7 @@ func (server *Server) CreateUser(c echo.Context) error {
 		Gender:         req.Gender,
 	}
 
-	result, err := server.queries.CreateUser(context.TODO(), arg)
+	result, err := server.querier.CreateUser(context.TODO(), arg)
 	if err != nil {
 		if err == db.ErrUsernameTaken || err == db.ErrEmailTaken {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -50,5 +50,5 @@ func (server *Server) CreateUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusCreated, result)
 }

@@ -11,7 +11,7 @@ import (
 
 type Server struct {
 	config  util.Config
-	queries db.Querier
+	querier db.Querier
 	router  *echo.Echo
 }
 
@@ -26,10 +26,10 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	return nil
 }
 
-func NewServer(config util.Config, queries db.Querier) (*Server, error) {
+func NewServer(config util.Config, querier db.Querier) (*Server, error) {
 	server := &Server{
 		config:  config,
-		queries: queries,
+		querier: querier,
 	}
 
 	e := echo.New()
@@ -43,6 +43,7 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	e.GET("/", server.Home)
 
 	e.POST("/users", server.CreateUser)
+	//e.POST("/users/login", server.LoginUser)
 
 	server.router = e
 }
