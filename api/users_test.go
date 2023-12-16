@@ -370,6 +370,91 @@ func TestLoginUserAPI(t *testing.T) {
 	}
 }
 
+func TestGetUserAPI(t *testing.T) {
+	user, _ := randomUser(t)
+	testCases := []struct {
+		name          string
+		username      any
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:     "OK",
+			username: user.Username,
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Eq(user.Username)).
+					Times(1).
+					Return(user, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchUser(t, recorder.Body, user)
+			},
+		},
+		{
+			name:     "UserNotFound",
+			username: user.Username,
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Any()).
+					Times(1).
+					Return(db.User{}, mongo.ErrNoDocuments)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name:     "InternalError",
+			username: user.Username,
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Any()).
+					Times(1).
+					Return(db.User{}, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name:     "NonAlphanumericUsername",
+			username: "Fiesta Pagana!",
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			querier := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(querier)
+
+			// start test server and send request
+			server := newTestServer(t, querier)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/users/%v", tc.username)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			request.Header.Add("Content-Type", "application/json")
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func requireBodyMatchResult(t *testing.T, body *bytes.Buffer, result *mongo.InsertOneResult) {
 	bodyResult := new(mongo.InsertOneResult)
 	err := json.NewDecoder(body).Decode(bodyResult)
@@ -383,6 +468,22 @@ func requireBodyMatchResult(t *testing.T, body *bytes.Buffer, result *mongo.Inse
 	require.True(t, ok)
 
 	require.Equal(t, insertedID, bodyInsertedID)
+}
+
+func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
+	bodyResult := new(db.User)
+	err := json.NewDecoder(body).Decode(bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Equal(t, bodyResult.ID, user.ID)
+	require.Equal(t, bodyResult.Username, user.Username)
+	require.Equal(t, bodyResult.Email, user.Email)
+	require.Equal(t, bodyResult.Description, user.Description)
+	require.Equal(t, bodyResult.FullName, user.FullName)
+	require.Equal(t, bodyResult.Avatar, user.Avatar)
+
+	require.WithinDuration(t, bodyResult.CreatedAt, user.CreatedAt, time.Second)
 }
 
 func randomUser(t *testing.T) (db.User, string) {

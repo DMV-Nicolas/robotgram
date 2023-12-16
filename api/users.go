@@ -8,6 +8,7 @@ import (
 	db "github.com/DMV-Nicolas/tinygram/db/mongo"
 	"github.com/DMV-Nicolas/tinygram/util"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -117,4 +118,52 @@ func (server *Server) LoginUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+type getUserRequest struct {
+	Username string `param:"username" validate:"required,alphanum"`
+}
+
+type getUserResponse struct {
+	ID          primitive.ObjectID `json:"id"`
+	Username    string             `json:"username"`
+	FullName    string             `json:"full_name"`
+	Email       string             `json:"email"`
+	Avatar      string             `json:"avatar"`
+	Description string             `json:"description"`
+	Gender      string             `json:"gender"`
+	CreatedAt   time.Time          `json:"created_at"`
+}
+
+func (server *Server) GetUser(c echo.Context) error {
+	req := new(getUserRequest)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	user, err := server.querier.GetUser(context.TODO(), "username", req.Username)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	res := getUserResponse{
+		ID:          user.ID,
+		Username:    user.Username,
+		FullName:    user.FullName,
+		Email:       user.Email,
+		Avatar:      user.Avatar,
+		Description: user.Description,
+		Gender:      user.Gender,
+		CreatedAt:   user.CreatedAt,
+	}
+
+	return c.JSON(http.StatusOK, res)
+
 }
