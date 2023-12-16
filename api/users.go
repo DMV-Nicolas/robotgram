@@ -117,5 +117,4 @@ func (server *Server) LoginUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
-
 }

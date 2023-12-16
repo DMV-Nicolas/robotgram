@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/DMV-Nicolas/tinygram/api"
@@ -18,7 +19,9 @@ func main() {
 		log.Fatal("cannot load config:", err)
 	}
 
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(config.DBSource))
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", config.DBUsername, config.DBPassword, config.DBHost, config.DBPort)
+
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal("cannot connect to database:", err)
 	}

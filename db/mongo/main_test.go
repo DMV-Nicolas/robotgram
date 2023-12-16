@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -21,7 +22,8 @@ func TestMain(m *testing.M) {
 	}
 
 	testCtx = context.TODO()
-	client, err := mongo.Connect(testCtx, options.Client().ApplyURI(config.DBSource))
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", config.DBUsername, config.DBPassword, config.DBHost, config.DBPort)
+	client, err := mongo.Connect(testCtx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal("Cannot connect to database:", err)
 	}
