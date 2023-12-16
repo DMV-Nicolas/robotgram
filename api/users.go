@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	"time"
 
 	db "github.com/DMV-Nicolas/tinygram/db/mongo"
 	"github.com/DMV-Nicolas/tinygram/util"
@@ -10,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type CreateUserRequest struct {
+type createUserRequest struct {
 	Username string `json:"username" validate:"required,alphanum"`
 	Password string `json:"password" validate:"required,min=8"`
 	FullName string `json:"full_name" validate:"required"`
@@ -20,7 +21,7 @@ type CreateUserRequest struct {
 }
 
 func (server *Server) CreateUser(c echo.Context) error {
-	req := new(CreateUserRequest)
+	req := new(createUserRequest)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -54,14 +55,21 @@ func (server *Server) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, result)
 }
 
-type LoginUserRequest struct {
+type loginUserRequest struct {
 	Username string `json:"username" validate:"required_without=Email"`
 	Email    string `json:"email" validate:"required_without=Username"`
 	Password string `json:"password" validate:"required,min=8"`
 }
 
+type loginUserResponse struct {
+	AccessToken           string    `json:"access_token"`
+	AccessTokenExpiresAt  time.Time `json:"acess_token_expires_at"`
+	RefreshToken          string    `json:"refresh_token"`
+	RefreshTokenExpiresAt time.Time `json:"refresh_token_expires_at"`
+}
+
 func (server *Server) LoginUser(c echo.Context) error {
-	req := new(LoginUserRequest)
+	req := new(loginUserRequest)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -89,8 +97,23 @@ func (server *Server) LoginUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 	}
 
-	// TODO: Create token for the user
+	accessToken, accessPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.AccessTokenDuration)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
 
-	return c.JSON(http.StatusOK, user)
+	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.RefreshTokenDuration)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	res := loginUserResponse{
+		AccessToken:           accessToken,
+		AccessTokenExpiresAt:  accessPayload.ExpiresAt,
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiresAt: refreshPayload.ExpiresAt,
+	}
+
+	return c.JSON(http.StatusOK, res)
 
 }
