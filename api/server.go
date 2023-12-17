@@ -11,12 +11,12 @@ import (
 
 type Server struct {
 	config     util.Config
-	querier    db.Querier
+	queries    db.Querier
 	tokenMaker token.Maker
 	router     *echo.Echo
 }
 
-func NewServer(config util.Config, querier db.Querier) (*Server, error) {
+func NewServer(config util.Config, queries db.Querier) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func NewServer(config util.Config, querier db.Querier) (*Server, error) {
 
 	server := &Server{
 		config:     config,
-		querier:    querier,
+		queries:    queries,
 		tokenMaker: tokenMaker,
 	}
 

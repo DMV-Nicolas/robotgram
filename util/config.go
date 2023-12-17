@@ -34,8 +34,5 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 
 	err = viper.Unmarshal(&config)
-	if config.DBHost == "" {
-		config.DBHost = "localhost"
-	}
 	return
 }

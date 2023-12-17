@@ -45,7 +45,7 @@ func (server *Server) CreateUser(c echo.Context) error {
 		Gender:         req.Gender,
 	}
 
-	result, err := server.querier.CreateUser(context.TODO(), arg)
+	result, err := server.queries.CreateUser(context.TODO(), arg)
 	if err != nil {
 		if err == db.ErrUsernameTaken || err == db.ErrEmailTaken {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -82,9 +82,9 @@ func (server *Server) LoginUser(c echo.Context) error {
 	var err error
 	var user db.User
 	if req.Username != "" {
-		user, err = server.querier.GetUser(context.TODO(), "username", req.Username)
+		user, err = server.queries.GetUser(context.TODO(), "username", req.Username)
 	} else {
-		user, err = server.querier.GetUser(context.TODO(), "email", req.Email)
+		user, err = server.queries.GetUser(context.TODO(), "email", req.Email)
 	}
 
 	if err != nil {
@@ -145,7 +145,7 @@ func (server *Server) GetUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user, err := server.querier.GetUser(context.TODO(), "username", req.Username)
+	user, err := server.queries.GetUser(context.TODO(), "username", req.Username)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return echo.NewHTTPError(http.StatusNotFound, err.Error())
