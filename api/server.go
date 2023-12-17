@@ -6,6 +6,7 @@ import (
 	"github.com/DMV-Nicolas/tinygram/util"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Server struct {
@@ -35,6 +36,10 @@ func NewServer(config util.Config, querier db.Querier) (*Server, error) {
 }
 
 func (server *Server) setupRouter(e *echo.Echo) {
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:52330"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 	e.GET("/", server.Home)
 
 	e.POST("/users", server.CreateUser)
