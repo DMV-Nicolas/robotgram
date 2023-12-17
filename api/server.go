@@ -48,6 +48,8 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	e.POST("/users/login", server.LoginUser)
 	e.GET("/users/:username", server.GetUser)
 
+	e.POST("/posts", server.CreatePost)
+
 	server.router = e
 }
 
