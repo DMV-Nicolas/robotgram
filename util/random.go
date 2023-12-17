@@ -5,7 +5,7 @@ import (
 	"math/rand"
 )
 
-// RandomUsername generates a random username
+// RandomUsername generates a random username.
 func RandomUsername() string {
 	monsters := []string{
 		"Caballo", "Omnitorrinco", "Avion", "HijoDePuta", "Avi",
@@ -29,7 +29,7 @@ func RandomUsername() string {
 	return str
 }
 
-// RandomEmail generates a random valid email
+// RandomEmail generates a random valid email.
 func RandomEmail() string {
 	names := []string{
 		"abuela", "cristian", "santiago",
@@ -60,7 +60,7 @@ func RandomEmail() string {
 	return str
 }
 
-// RandomPassword generates a random password with the given size
+// RandomPassword generates a random password with the given size.
 func RandomPassword(size int) (str string) {
 	digits := "abcdefghijklmnopqrstuvwxyz1234567890"
 	for i := 0; i < size; i++ {

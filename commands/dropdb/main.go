@@ -1,3 +1,4 @@
+// This command works for to drop the database
 package main
 
 import (

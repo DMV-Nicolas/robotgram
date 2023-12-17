@@ -29,7 +29,9 @@ func NewServer(config util.Config, querier db.Querier) (*Server, error) {
 	}
 
 	e := echo.New()
+
 	e.Validator = NewCustomValidator(validator.New())
+
 	server.setupRouter(e)
 
 	return server, nil

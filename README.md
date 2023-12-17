@@ -2,9 +2,7 @@
 ## Table of Contents
 1. [General Info](#general-info)
 2. [Technologies](#technologies)
-3. [Installation](#installation)
-4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
+3. [Installation](#installation) (in process)
 ### General Info
 ***
 Tinygram is a charming social media platform inspired by Instagram 🌐. Designed with simplicity and ease of use in mind, Tinygram offers a streamlined experience for users who appreciate the essence of sharing moments in a visually appealing and compact format 😁.
