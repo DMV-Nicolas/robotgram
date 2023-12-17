@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// Querier is an interface that contains all the methods of the database
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (*mongo.InsertOneResult, error)
 	GetUser(ctx context.Context, key string, value any) (User, error)
@@ -22,9 +23,6 @@ type Querier interface {
 	GetLike(ctx context.Context, id primitive.ObjectID) (Like, error)
 	ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error)
 	DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
-
-	UsernameTaken(ctx context.Context, username string) error
-	EmailTaken(ctx context.Context, email string) error
 }
 
 var _ Querier = (*Queries)(nil)

@@ -127,20 +127,6 @@ func (mr *MockQuerierMockRecorder) DeleteUser(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockQuerier)(nil).DeleteUser), arg0, arg1)
 }
 
-// EmailTaken mocks base method.
-func (m *MockQuerier) EmailTaken(arg0 context.Context, arg1 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EmailTaken", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// EmailTaken indicates an expected call of EmailTaken.
-func (mr *MockQuerierMockRecorder) EmailTaken(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EmailTaken", reflect.TypeOf((*MockQuerier)(nil).EmailTaken), arg0, arg1)
-}
-
 // GetLike mocks base method.
 func (m *MockQuerier) GetLike(arg0 context.Context, arg1 primitive.ObjectID) (db.Like, error) {
 	m.ctrl.T.Helper()
@@ -259,18 +245,4 @@ func (m *MockQuerier) UpdateUser(arg0 context.Context, arg1 db.UpdateUserParams)
 func (mr *MockQuerierMockRecorder) UpdateUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUser", reflect.TypeOf((*MockQuerier)(nil).UpdateUser), arg0, arg1)
-}
-
-// UsernameTaken mocks base method.
-func (m *MockQuerier) UsernameTaken(arg0 context.Context, arg1 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UsernameTaken", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UsernameTaken indicates an expected call of UsernameTaken.
-func (mr *MockQuerierMockRecorder) UsernameTaken(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UsernameTaken", reflect.TypeOf((*MockQuerier)(nil).UsernameTaken), arg0, arg1)
 }

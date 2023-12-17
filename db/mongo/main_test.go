@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	}
 
 	db := client.Database("tinygram")
-	testQueries = New(db)
+	testQueries = NewQuerier(db)
 
 	os.Exit(m.Run())
 }

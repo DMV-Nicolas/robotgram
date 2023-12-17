@@ -194,15 +194,15 @@ func TestCreateUserAPI(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			querier := mockdb.NewMockQuerier(ctrl)
-			tc.buildStubs(querier)
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
 
 			// marshal data body to json
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, querier)
+			server := newTestServer(t, queries)
 			recorder := httptest.NewRecorder()
 
 			url := "/users"
@@ -348,15 +348,15 @@ func TestLoginUserAPI(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			querier := mockdb.NewMockQuerier(ctrl)
-			tc.buildStubs(querier)
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
 
 			// marshal data body to json
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, querier)
+			server := newTestServer(t, queries)
 			recorder := httptest.NewRecorder()
 
 			url := "/users/login"
@@ -437,11 +437,11 @@ func TestGetUserAPI(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			querier := mockdb.NewMockQuerier(ctrl)
-			tc.buildStubs(querier)
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, querier)
+			server := newTestServer(t, queries)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/users/%v", tc.username)

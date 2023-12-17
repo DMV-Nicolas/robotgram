@@ -9,14 +9,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func newTestServer(t *testing.T, querier db.Querier) *Server {
+func newTestServer(t *testing.T, queries db.Querier) *Server {
 	config := util.Config{
 		TokenSymmetricKey:    util.RandomPassword(32),
 		AccessTokenDuration:  time.Minute,
 		RefreshTokenDuration: time.Minute * 2,
 	}
 
-	server, err := NewServer(config, querier)
+	server, err := NewServer(config, queries)
 	require.NoError(t, err)
 
 	return server
