@@ -219,6 +219,110 @@ func TestGetPostAPI(t *testing.T) {
 	}
 }
 
+func TestListPostsAPI(t *testing.T) {
+	n := 5
+	user, _ := randomUser(t)
+	posts := make([]db.Post, n)
+	for i := 0; i < n; i++ {
+		posts[i] = randomPost(t, user.ID)
+	}
+
+	testCases := []struct {
+		name          string
+		limit         string
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:  "OK",
+			limit: fmt.Sprint(n),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Eq(n)).
+					Times(1).
+					Return(posts, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name:  "InternalError",
+			limit: fmt.Sprint(n),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name:  "IncorrectQueryTypes",
+			limit: "rice",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Eq(n)).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name:  "NoID",
+			limit: "",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Eq(n)).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
+
+			// start test server and send request
+			server := newTestServer(t, queries)
+			recorder := httptest.NewRecorder()
+
+			url := "/posts"
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			request.Header.Add("Content-Type", "application/json")
+
+			q := request.URL.Query()
+			q.Add("limit", tc.limit)
+			request.URL.RawQuery = q.Encode()
+
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func randomPost(t *testing.T, userID primitive.ObjectID) db.Post {
 	return db.Post{
 		ID:          util.RandomID(),
