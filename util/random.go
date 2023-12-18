@@ -3,7 +3,22 @@ package util
 import (
 	"fmt"
 	"math/rand"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+func RandomString(size int) (str string) {
+	digits := "abcdefghijklmnopqrstuvwxyz1234567890"
+	for i := 0; i < size; i++ {
+		str += string(digits[rand.Intn(len(digits))])
+	}
+	return str
+}
+
+// RandomID generates a random mongo ObjectID
+func RandomID() primitive.ObjectID {
+	return primitive.NewObjectID()
+}
 
 // RandomUsername generates a random username.
 func RandomUsername() string {
@@ -61,10 +76,29 @@ func RandomEmail() string {
 }
 
 // RandomPassword generates a random password with the given size.
-func RandomPassword(size int) (str string) {
-	digits := "abcdefghijklmnopqrstuvwxyz1234567890"
-	for i := 0; i < size; i++ {
-		str += string(digits[rand.Intn(len(digits))])
+func RandomPassword(size int) string {
+	return RandomString(size)
+}
+
+// RandomImages generates random images.
+func RandomImages(n int) []string {
+	images := make([]string, n)
+	for i := 0; i < n; i++ {
+		images[i] = RandomString(5)
 	}
-	return str
+	return images
+}
+
+// RandomVideos generates random videos.
+func RandomVideos(n int) []string {
+	videos := make([]string, n)
+	for i := 0; i < n; i++ {
+		videos[i] = RandomString(7)
+	}
+	return videos
+}
+
+// RandomDescription generates a random description with the given size.
+func RandomDescription(size int) string {
+	return RandomString(size)
 }

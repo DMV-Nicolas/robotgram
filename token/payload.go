@@ -3,6 +3,8 @@ package token
 import (
 	"errors"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -12,15 +14,15 @@ var (
 
 // Payload contains the payload data of the token
 type Payload struct {
-	Username  string    `json:"username"`
-	IssuedAt  time.Time `json:"issued_at"`
-	ExpiresAt time.Time `json:"expires_at"`
+	UserID    primitive.ObjectID `json:"user_id"`
+	IssuedAt  time.Time          `json:"issued_at"`
+	ExpiresAt time.Time          `json:"expires_at"`
 }
 
 // NewPayload creates a new token payload with a specific username and duration
-func NewPayload(username string, duration time.Duration) *Payload {
+func NewPayload(userID primitive.ObjectID, duration time.Duration) *Payload {
 	return &Payload{
-		Username:  username,
+		UserID:    userID,
 		IssuedAt:  time.Now(),
 		ExpiresAt: time.Now().Add(duration),
 	}

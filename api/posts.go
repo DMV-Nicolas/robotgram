@@ -11,7 +11,6 @@ import (
 )
 
 type createPostRequest struct {
-	UserID      string   `json:"user_id" validate:"required"`
 	Images      []string `json:"images"`
 	Videos      []string `json:"videos" `
 	Description string   `json:"description"`
@@ -23,11 +22,11 @@ func (server *Server) CreatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := c.Validate(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	userID, err := primitive.ObjectIDFromHex(req.UserID)
 	_, err = server.queries.GetUser(context.TODO(), "_id", userID)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
