@@ -138,6 +138,43 @@ func (server *Server) UpdatePost(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+type deletePostRequest struct {
+	ID string `json:"id" validate:"required"`
+}
+
+func (server *Server) DeletePost(c echo.Context) error {
+	req := new(updatePostRequest)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	if err := c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	gotPost, err := server.validPost(c, req.ID)
+	if err != nil {
+		return err
+	}
+
+	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	if gotPost.UserID != userID {
+		err = errors.New("account doesn't belong to the authenticated user")
+		return echo.NewHTTPError(http.StatusUnauthorized, err)
+	}
+
+	result, err := server.queries.DeletePost(context.TODO(), gotPost.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func (server *Server) validPost(c echo.Context, idStr string) (db.Post, error) {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
