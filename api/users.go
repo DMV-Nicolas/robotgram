@@ -24,16 +24,16 @@ type createUserRequest struct {
 func (server *Server) CreateUser(c echo.Context) error {
 	req := new(createUserRequest)
 	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	if err := c.Validate(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	hashedPassword, err := util.HashPassword(req.Password)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	arg := db.CreateUserParams{
@@ -48,9 +48,9 @@ func (server *Server) CreateUser(c echo.Context) error {
 	result, err := server.queries.CreateUser(context.TODO(), arg)
 	if err != nil {
 		if err == db.ErrUsernameTaken || err == db.ErrEmailTaken {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	return c.JSON(http.StatusCreated, result)
@@ -72,11 +72,11 @@ type loginUserResponse struct {
 func (server *Server) LoginUser(c echo.Context) error {
 	req := new(loginUserRequest)
 	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	if err := c.Validate(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	var err error
@@ -89,25 +89,25 @@ func (server *Server) LoginUser(c echo.Context) error {
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	if err := util.CheckPassword(req.Password, user.HashedPassword); err != nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
+		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 
-	accessToken, accessPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.AccessTokenDuration)
+	accessToken, accessPayload, err := server.tokenMaker.CreateToken(user.ID, server.config.AccessTokenDuration)
 	if err != nil {
 		// imposible
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.RefreshTokenDuration)
+	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(user.ID, server.config.RefreshTokenDuration)
 	if err != nil {
 		// imposible
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	res := loginUserResponse{
@@ -138,19 +138,19 @@ type getUserResponse struct {
 func (server *Server) GetUser(c echo.Context) error {
 	req := new(getUserRequest)
 	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	if err := c.Validate(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	user, err := server.queries.GetUser(context.TODO(), "username", req.Username)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return echo.NewHTTPError(http.StatusNotFound, err.Error())
+			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	res := getUserResponse{

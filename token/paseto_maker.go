@@ -6,6 +6,7 @@ import (
 
 	"github.com/aead/chacha20poly1305"
 	"github.com/o1egl/paseto"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // PasetoMaker is a paseto maker
@@ -28,8 +29,8 @@ func NewPasetoMaker(symmetricKey string) (Maker, error) {
 }
 
 // CreateToken creates a new token for the specific username and duration
-func (maker PasetoMaker) CreateToken(username string, duration time.Duration) (string, *Payload, error) {
-	payload := NewPayload(username, duration)
+func (maker PasetoMaker) CreateToken(userID primitive.ObjectID, duration time.Duration) (string, *Payload, error) {
+	payload := NewPayload(userID, duration)
 	token, err := maker.paseto.Encrypt(maker.symmetricKey, payload, nil)
 	return token, payload, err
 }
