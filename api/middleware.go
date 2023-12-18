@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strings"
@@ -41,8 +42,23 @@ func authMiddleware(next echo.HandlerFunc, tokenMaker token.Maker) echo.HandlerF
 			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}
 
-		c.Response().Header().Set(authorizationPayloadKey, payload.UserID.Hex())
+		payloadJSON, err := json.Marshal(payload)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		c.Response().Header().Set(authorizationPayloadKey, string(payloadJSON))
 
 		return next(c)
 	}
+}
+
+func getAuthorizationPayload(c echo.Context) (*token.Payload, error) {
+	payloadJSON := c.Response().Header().Get(authorizationPayloadKey)
+	payload := new(token.Payload)
+	err := json.Unmarshal([]byte(payloadJSON), payload)
+	if err != nil {
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+	return payload, nil
 }

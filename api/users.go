@@ -23,11 +23,7 @@ type createUserRequest struct {
 
 func (server *Server) CreateUser(c echo.Context) error {
 	req := new(createUserRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -71,11 +67,7 @@ type loginUserResponse struct {
 
 func (server *Server) LoginUser(c echo.Context) error {
 	req := new(loginUserRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -137,11 +129,7 @@ type getUserResponse struct {
 
 func (server *Server) GetUser(c echo.Context) error {
 	req := new(getUserRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -165,5 +153,4 @@ func (server *Server) GetUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
-
 }

@@ -19,17 +19,17 @@ type createPostRequest struct {
 
 func (server *Server) CreatePost(c echo.Context) error {
 	req := new(createPostRequest)
-	if err := c.Bind(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	payload, err := getAuthorizationPayload(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
+		return err
 	}
 
 	arg := db.CreatePostParams{
-		UserID:      userID,
+		UserID:      payload.UserID,
 		Images:      req.Images,
 		Videos:      req.Videos,
 		Description: req.Description,
@@ -49,7 +49,7 @@ type getPostRequest struct {
 
 func (server *Server) GetPost(c echo.Context) error {
 	req := new(getPostRequest)
-	if err := c.Bind(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -76,11 +76,7 @@ type listPostsRequest struct {
 
 func (server *Server) ListPosts(c echo.Context) error {
 	req := new(listPostsRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -106,11 +102,7 @@ type updatePostRequest struct {
 
 func (server *Server) UpdatePost(c echo.Context) error {
 	req := new(updatePostRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -119,12 +111,12 @@ func (server *Server) UpdatePost(c echo.Context) error {
 		return err
 	}
 
-	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	payload, err := getAuthorizationPayload(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
+		return err
 	}
 
-	if gotPost.UserID != userID {
+	if gotPost.UserID != payload.UserID {
 		err = errors.New("account doesn't belong to the authenticated user")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
@@ -150,11 +142,7 @@ type deletePostRequest struct {
 
 func (server *Server) DeletePost(c echo.Context) error {
 	req := new(updatePostRequest)
-	if err := c.Bind(req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if err := c.Validate(req); err != nil {
+	if err := bindAndValidate(c, req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
@@ -163,12 +151,12 @@ func (server *Server) DeletePost(c echo.Context) error {
 		return err
 	}
 
-	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	payload, err := getAuthorizationPayload(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
+		return err
 	}
 
-	if gotPost.UserID != userID {
+	if gotPost.UserID != payload.UserID {
 		err = errors.New("account doesn't belong to the authenticated user")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
