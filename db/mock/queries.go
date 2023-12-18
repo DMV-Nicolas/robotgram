@@ -113,7 +113,7 @@ func (mr *MockQuerierMockRecorder) DeletePost(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // DeleteUser mocks base method.
-func (m *MockQuerier) DeleteUser(arg0 context.Context, arg1 string) (*mongo.DeleteResult, error) {
+func (m *MockQuerier) DeleteUser(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.DeleteResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUser", arg0, arg1)
 	ret0, _ := ret[0].(*mongo.DeleteResult)
@@ -188,7 +188,7 @@ func (mr *MockQuerierMockRecorder) ListLikes(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // ListPosts mocks base method.
-func (m *MockQuerier) ListPosts(arg0 context.Context, arg1 int) ([]db.Post, error) {
+func (m *MockQuerier) ListPosts(arg0 context.Context, arg1 db.ListPostsParams) ([]db.Post, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPosts", arg0, arg1)
 	ret0, _ := ret[0].([]db.Post)
@@ -203,7 +203,7 @@ func (mr *MockQuerierMockRecorder) ListPosts(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // ListUsers mocks base method.
-func (m *MockQuerier) ListUsers(arg0 context.Context, arg1 int) ([]db.User, error) {
+func (m *MockQuerier) ListUsers(arg0 context.Context, arg1 db.ListUsersParams) ([]db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUsers", arg0, arg1)
 	ret0, _ := ret[0].([]db.User)

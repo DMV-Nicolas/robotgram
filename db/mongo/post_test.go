@@ -66,9 +66,14 @@ func TestListPosts(t *testing.T) {
 		randomPost(t)
 	}
 
-	posts, err := testQueries.ListPosts(testCtx, 10)
+	arg := ListPostsParams{
+		Offset: int64(n / 2),
+		Limit:  int64(n / 2),
+	}
+
+	posts, err := testQueries.ListPosts(testCtx, arg)
 	require.NoError(t, err)
-	require.Len(t, posts, n)
+	require.Len(t, posts, n/2)
 
 	for _, p := range posts {
 		require.NotEmpty(t, p)

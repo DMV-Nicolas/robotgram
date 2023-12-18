@@ -57,12 +57,17 @@ func (q *Queries) GetUser(ctx context.Context, key string, value any) (User, err
 	return user, err
 }
 
-func (q *Queries) ListUsers(ctx context.Context, limit int) ([]User, error) {
+type ListUsersParams struct {
+	Offset int64 `json:"offset" bson:"offset"`
+	Limit  int64 `json:"limit" bson:"limit"`
+}
+
+func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error) {
 	filter := bson.D{}
 
 	var users []User
 	coll := q.db.Collection("users")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(limit)))
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
 	if err != nil {
 		return nil, err
 	}
@@ -81,16 +86,16 @@ func (q *Queries) ListUsers(ctx context.Context, limit int) ([]User, error) {
 }
 
 type UpdateUserParams struct {
-	Username       string `json:"username" bson:"username"`
-	HashedPassword string `json:"hashed_password" bson:"hashed_password"`
-	FullName       string `json:"full_name" bson:"full_name"`
-	Description    string `json:"description" bson:"description"`
-	Gender         string `json:"gender" bson:"gender"`
-	Avatar         string `json:"avatar" bson:"avatar"`
+	ID             primitive.ObjectID `json:"id" bson:"_id"`
+	HashedPassword string             `json:"hashed_password" bson:"hashed_password"`
+	FullName       string             `json:"full_name" bson:"full_name"`
+	Description    string             `json:"description" bson:"description"`
+	Gender         string             `json:"gender" bson:"gender"`
+	Avatar         string             `json:"avatar" bson:"avatar"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.UpdateResult, error) {
-	filter := bson.M{"username": arg.Username}
+	filter := bson.M{"_id": arg.ID}
 	update := bson.M{
 		"$set": bson.M{
 			"hashed_password": arg.HashedPassword,
@@ -98,7 +103,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.
 			"description":     arg.Description,
 			"gender":          arg.Gender,
 			"avatar":          arg.Avatar,
-			"a":               "a",
 		},
 	}
 
@@ -108,8 +112,8 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (*mongo.
 	return result, err
 }
 
-func (q *Queries) DeleteUser(ctx context.Context, username string) (*mongo.DeleteResult, error) {
-	filter := bson.M{"username": username}
+func (q *Queries) DeleteUser(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
+	filter := bson.M{"_id": id}
 
 	coll := q.db.Collection("users")
 	result, err := coll.DeleteOne(ctx, filter)

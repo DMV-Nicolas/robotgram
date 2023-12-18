@@ -85,9 +85,14 @@ func TestListUsers(t *testing.T) {
 		randomUser(t)
 	}
 
-	users, err := testQueries.ListUsers(testCtx, 10)
+	arg := ListUsersParams{
+		Offset: int64(n / 2),
+		Limit:  int64(n / 2),
+	}
+
+	users, err := testQueries.ListUsers(testCtx, arg)
 	require.NoError(t, err)
-	require.Len(t, users, n)
+	require.Len(t, users, n/2)
 
 	for _, u := range users {
 		require.NotEmpty(t, u)
@@ -98,7 +103,7 @@ func TestUpdateUser(t *testing.T) {
 	user1 := randomUser(t)
 
 	arg := UpdateUserParams{
-		Username:       user1.Username,
+		ID:             user1.ID,
 		HashedPassword: util.RandomPassword(20),
 		FullName:       util.RandomUsername(),
 		Description:    util.RandomPassword(100),
@@ -130,7 +135,7 @@ func TestUpdateUser(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	user1 := randomUser(t)
 
-	result, err := testQueries.DeleteUser(testCtx, user1.Username)
+	result, err := testQueries.DeleteUser(testCtx, user1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, result)
 	require.EqualValues(t, 1, result.DeletedCount)

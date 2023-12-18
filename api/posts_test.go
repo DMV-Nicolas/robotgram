@@ -221,28 +221,36 @@ func TestGetPostAPI(t *testing.T) {
 }
 
 func TestListPostsAPI(t *testing.T) {
-	n := 5
+	offset, limit := 0, 5
 	user, _ := randomUser(t)
-	posts := make([]db.Post, n)
-	for i := 0; i < n; i++ {
+	posts := make([]db.Post, limit)
+	for i := 0; i < limit; i++ {
 		posts[i] = randomPost(t, user.ID)
 	}
 
 	testCases := []struct {
 		name          string
-		limit         string
+		query         map[string]any
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
-			name:  "OK",
-			limit: fmt.Sprint(n),
+			name: "OK",
+			query: map[string]any{
+				"offset": offset,
+				"limit":  limit,
+			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				arg := db.ListPostsParams{
+					Offset: int64(offset),
+					Limit:  int64(limit),
+				}
+
 				querier.EXPECT().
-					ListPosts(gomock.Any(), gomock.Eq(n)).
+					ListPosts(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(posts, nil)
 			},
@@ -251,8 +259,11 @@ func TestListPostsAPI(t *testing.T) {
 			},
 		},
 		{
-			name:  "InternalError",
-			limit: fmt.Sprint(n),
+			name: "InternalError",
+			query: map[string]any{
+				"offset": offset,
+				"limit":  limit,
+			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
@@ -266,27 +277,16 @@ func TestListPostsAPI(t *testing.T) {
 			},
 		},
 		{
-			name:  "IncorrectQueryTypes",
-			limit: "rice",
+			name: "NegativeLimitOrOffset",
+			query: map[string]any{
+				"offset": -1,
+				"limit":  -1,
+			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
-					ListPosts(gomock.Any(), gomock.Eq(n)).
-					Times(0)
-			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
-		{
-			name:  "NoID",
-			limit: "",
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					ListPosts(gomock.Any(), gomock.Eq(n)).
+					ListPosts(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
@@ -314,7 +314,8 @@ func TestListPostsAPI(t *testing.T) {
 			request.Header.Add("Content-Type", "application/json")
 
 			q := request.URL.Query()
-			q.Add("limit", tc.limit)
+			q.Add("offset", fmt.Sprint(tc.query["offset"]))
+			q.Add("limit", fmt.Sprint(tc.query["limit"]))
 			request.URL.RawQuery = q.Encode()
 
 			tc.setupAuth(t, request, server.tokenMaker)

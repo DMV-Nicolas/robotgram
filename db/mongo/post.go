@@ -44,12 +44,17 @@ func (q *Queries) GetPost(ctx context.Context, key string, value any) (Post, err
 	return post, err
 }
 
-func (q *Queries) ListPosts(ctx context.Context, limit int) ([]Post, error) {
+type ListPostsParams struct {
+	Offset int64 `json:"offset" bson:"offset"`
+	Limit  int64 `json:"limit" bson:"limit"`
+}
+
+func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error) {
 	filter := bson.D{}
 
 	var posts []Post
 	coll := q.db.Collection("posts")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(limit)))
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
 	if err != nil {
 		return nil, err
 	}
