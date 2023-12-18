@@ -98,7 +98,7 @@ func TestUpdateUser(t *testing.T) {
 	user1 := randomUser(t)
 
 	arg := UpdateUserParams{
-		Username:       user1.Username,
+		ID:             user1.ID,
 		HashedPassword: util.RandomPassword(20),
 		FullName:       util.RandomUsername(),
 		Description:    util.RandomPassword(100),
@@ -130,7 +130,7 @@ func TestUpdateUser(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	user1 := randomUser(t)
 
-	result, err := testQueries.DeleteUser(testCtx, user1.Username)
+	result, err := testQueries.DeleteUser(testCtx, user1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, result)
 	require.EqualValues(t, 1, result.DeletedCount)
