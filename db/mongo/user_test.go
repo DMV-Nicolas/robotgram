@@ -85,9 +85,14 @@ func TestListUsers(t *testing.T) {
 		randomUser(t)
 	}
 
-	users, err := testQueries.ListUsers(testCtx, 10)
+	arg := ListUsersParams{
+		Offset: int64(n / 2),
+		Limit:  int64(n / 2),
+	}
+
+	users, err := testQueries.ListUsers(testCtx, arg)
 	require.NoError(t, err)
-	require.Len(t, users, n)
+	require.Len(t, users, n/2)
 
 	for _, u := range users {
 		require.NotEmpty(t, u)

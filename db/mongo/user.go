@@ -57,12 +57,17 @@ func (q *Queries) GetUser(ctx context.Context, key string, value any) (User, err
 	return user, err
 }
 
-func (q *Queries) ListUsers(ctx context.Context, limit int) ([]User, error) {
+type ListUsersParams struct {
+	Offset int64 `json:"offset" bson:"offset"`
+	Limit  int64 `json:"limit" bson:"limit"`
+}
+
+func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error) {
 	filter := bson.D{}
 
 	var users []User
 	coll := q.db.Collection("users")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(limit)))
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
 	if err != nil {
 		return nil, err
 	}

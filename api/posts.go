@@ -70,7 +70,8 @@ func (server *Server) GetPost(c echo.Context) error {
 }
 
 type listPostsRequest struct {
-	Limit int `query:"limit" validate:"required,min=1"`
+	Offset int64 `query:"offset" validate:"min=0"`
+	Limit  int64 `query:"limit" validate:"min=1"`
 }
 
 func (server *Server) ListPosts(c echo.Context) error {
@@ -83,7 +84,12 @@ func (server *Server) ListPosts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	posts, err := server.queries.ListPosts(context.TODO(), req.Limit)
+	arg := db.ListPostsParams{
+		Offset: req.Offset,
+		Limit:  req.Limit,
+	}
+
+	posts, err := server.queries.ListPosts(context.TODO(), arg)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
