@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	db "github.com/DMV-Nicolas/tinygram/db/mongo"
@@ -88,4 +89,71 @@ func (server *Server) ListPosts(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, posts)
+}
+
+type updatePostRequest struct {
+	ID          string   `json:"id" validate:"required"`
+	Images      []string `json:"images"`
+	Videos      []string `json:"videos" `
+	Description string   `json:"description"`
+}
+
+func (server *Server) UpdatePost(c echo.Context) error {
+	req := new(updatePostRequest)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	if err := c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	gotPost, err := server.validPost(c, req.ID)
+	if err != nil {
+		return err
+	}
+
+	userID, err := primitive.ObjectIDFromHex(c.Response().Header().Get(authorizationPayloadKey))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	if gotPost.UserID != userID {
+		err = errors.New("account doesn't belong to the authenticated user")
+		return echo.NewHTTPError(http.StatusUnauthorized, err)
+	}
+
+	arg := db.UpdatePostParams{
+		ID:          gotPost.ID,
+		Images:      req.Images,
+		Videos:      req.Videos,
+		Description: req.Description,
+	}
+
+	result, err := server.queries.UpdatePost(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func (server *Server) validPost(c echo.Context, idStr string) (db.Post, error) {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		err = echo.NewHTTPError(http.StatusBadRequest, err)
+		return db.Post{}, err
+	}
+
+	post, err := server.queries.GetPost(context.TODO(), "_id", id)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			err = echo.NewHTTPError(http.StatusNotFound, err)
+			return db.Post{}, err
+		}
+		err = echo.NewHTTPError(http.StatusInternalServerError, err)
+		return db.Post{}, err
+	}
+
+	return post, nil
 }
