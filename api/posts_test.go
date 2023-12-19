@@ -130,16 +130,13 @@ func TestGetPostAPI(t *testing.T) {
 	testCases := []struct {
 		name          string
 		id            any
-		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "OK",
 			id:   post.ID.Hex(),
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
 					Times(1).
@@ -153,9 +150,7 @@ func TestGetPostAPI(t *testing.T) {
 		{
 			name: "NotFound",
 			id:   post.ID.Hex(),
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Any()).
 					Times(1).
@@ -168,9 +163,7 @@ func TestGetPostAPI(t *testing.T) {
 		{
 			name: "InternalError",
 			id:   post.ID.Hex(),
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Any()).
 					Times(1).
@@ -181,11 +174,9 @@ func TestGetPostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "ObjectIDLenIsNot24",
-			id:   post.ID.Hex() + ":)",
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			name: "IDLenIsNot24",
+			id:   ":)",
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
 					Times(0)
@@ -195,11 +186,9 @@ func TestGetPostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "IncorrectObjectID",
+			name: "IncorrectID",
 			id:   "qwertyuiopasdfghjklñzxcv",
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
 					Times(0)
@@ -227,7 +216,6 @@ func TestGetPostAPI(t *testing.T) {
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
 
-			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(t, recorder)
 		})
@@ -245,7 +233,6 @@ func TestListPostsAPI(t *testing.T) {
 	testCases := []struct {
 		name          string
 		query         map[string]any
-		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
@@ -255,9 +242,7 @@ func TestListPostsAPI(t *testing.T) {
 				"offset": offset,
 				"limit":  limit,
 			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				arg := db.ListPostsParams{
 					Offset: int64(offset),
 					Limit:  int64(limit),
@@ -279,9 +264,7 @@ func TestListPostsAPI(t *testing.T) {
 				"offset": offset,
 				"limit":  limit,
 			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					ListPosts(gomock.Any(), gomock.Any()).
 					Times(1).
@@ -297,9 +280,7 @@ func TestListPostsAPI(t *testing.T) {
 				"offset": -1,
 				"limit":  -1,
 			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
+			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					ListPosts(gomock.Any(), gomock.Any()).
 					Times(0)
@@ -333,7 +314,6 @@ func TestListPostsAPI(t *testing.T) {
 			q.Add("limit", fmt.Sprint(tc.query["limit"]))
 			request.URL.RawQuery = q.Encode()
 
-			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(t, recorder)
 		})
@@ -438,9 +418,9 @@ func TestUpdatePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NotFound",
+			name: "InvalidPost",
 			body: map[string]any{
-				"id":          post.ID.Hex(),
+				"id":          "qwertyuiopasdfghjklñzxcv",
 				"images":      post.Images,
 				"videos":      post.Videos,
 				"description": post.Description,
@@ -449,21 +429,20 @@ func TestUpdatePostAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, primitive.NewObjectID(), time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Any()).
-					Times(1).
-					Return(db.Post{}, mongo.ErrNoDocuments)
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
 				querier.EXPECT().
 					UpdatePost(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusNotFound, recorder.Code)
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
 		{
-			name: "NoID",
+			name: "IDLenIsNot24",
 			body: map[string]any{
-				"id":          "",
+				"id":          ":D",
 				"images":      post.Images,
 				"videos":      post.Videos,
 				"description": post.Description,
@@ -585,26 +564,25 @@ func TestDeletePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NotFound",
-			id:   post.ID.Hex(),
+			name: "InvalidPost",
+			id:   "qwertyuiopasdfghjklñzxcv",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Any()).
-					Times(1).
-					Return(db.Post{}, mongo.ErrNoDocuments)
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
 				querier.EXPECT().
 					DeletePost(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusNotFound, recorder.Code)
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
 		{
-			name: "NoID",
-			id:   "",
+			name: "IDLenIsNot24",
+			id:   ":|",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {

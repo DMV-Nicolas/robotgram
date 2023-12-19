@@ -48,8 +48,8 @@ func TestDuplicatedLike(t *testing.T) {
 	like := randomLike(t, post.ID)
 
 	arg := CreateLikeParams{
-		UserID: like.UserID,
-		PostID: like.PostID,
+		UserID:   like.UserID,
+		TargetID: like.TargetID,
 	}
 
 	result, err := testQueries.CreateLike(testCtx, arg)

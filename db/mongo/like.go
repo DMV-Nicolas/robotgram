@@ -11,8 +11,8 @@ import (
 )
 
 type CreateLikeParams struct {
-	UserID primitive.ObjectID `json:"user_id" bson:"user_id"`
-	PostID primitive.ObjectID `json:"post_id" bson:"post_id"`
+	UserID   primitive.ObjectID `json:"user_id" bson:"user_id"`
+	TargetID primitive.ObjectID `json:"target_id" bson:"target_id"`
 }
 
 func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.InsertOneResult, error) {
@@ -23,7 +23,7 @@ func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.
 	like := Like{
 		ID:        primitive.NewObjectID(),
 		UserID:    arg.UserID,
-		PostID:    arg.PostID,
+		TargetID:  arg.TargetID,
 		CreatedAt: time.Now(),
 	}
 
@@ -45,16 +45,17 @@ func (q *Queries) GetLike(ctx context.Context, id primitive.ObjectID) (Like, err
 }
 
 type ListLikesParams struct {
-	PostID primitive.ObjectID `json:"post_id" bson:"post_id"`
-	Limit  int                `json:"limit" bson:"limit"`
+	TargetID primitive.ObjectID `json:"target_id" bson:"target_id"`
+	Offset   int64              `json:"offset" bson:"limit"`
+	Limit    int64              `json:"limit" bson:"limit"`
 }
 
 func (q *Queries) ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error) {
-	filter := bson.D{primitive.E{Key: "post_id", Value: arg.PostID}}
+	filter := bson.D{primitive.E{Key: "target_id", Value: arg.TargetID}}
 
 	var likes []Like
 	coll := q.db.Collection("likes")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(arg.Limit)))
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
 	if err != nil {
 		return nil, err
 	}
@@ -79,4 +80,16 @@ func (q *Queries) DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo
 	result, err := coll.DeleteOne(ctx, filter)
 
 	return result, err
+}
+
+func (q *Queries) CountLikes(ctx context.Context, targetID primitive.ObjectID) (int64, error) {
+	filter := bson.D{primitive.E{Key: "target_id", Value: targetID}}
+
+	coll := q.db.Collection("likes")
+	nLikes, err := coll.CountDocuments(ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	return nLikes, nil
 }
