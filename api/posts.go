@@ -44,7 +44,7 @@ func (server *Server) CreatePost(c echo.Context) error {
 }
 
 type getPostRequest struct {
-	ID string `param:"id"`
+	ID string `param:"id" validate:"required,len=24"`
 }
 
 func (server *Server) GetPost(c echo.Context) error {

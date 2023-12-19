@@ -129,7 +129,7 @@ func TestGetPostAPI(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		id            string
+		id            any
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
@@ -181,8 +181,22 @@ func TestGetPostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "IncorrectObjectID",
+			name: "ObjectIDLenIsNot24",
 			id:   post.ID.Hex() + ":)",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "IncorrectObjectID",
+			id:   "qwertyuiopasdfghjklñzxcv",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
@@ -221,10 +235,10 @@ func TestGetPostAPI(t *testing.T) {
 }
 
 func TestListPostsAPI(t *testing.T) {
-	offset, limit := 0, 5
+	offset, limit := 5, 10
 	user, _ := randomUser(t)
-	posts := make([]db.Post, limit)
-	for i := 0; i < limit; i++ {
+	posts := make([]db.Post, limit-offset)
+	for i := 0; i < limit-offset; i++ {
 		posts[i] = randomPost(t, user.ID)
 	}
 
@@ -256,6 +270,7 @@ func TestListPostsAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchPosts(t, recorder.Body, posts)
 			},
 		},
 		{
@@ -372,6 +387,7 @@ func TestUpdatePostAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchUpdateResult(t, recorder.Body, result)
 			},
 		},
 		{
@@ -466,28 +482,6 @@ func TestUpdatePostAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
-		{
-			name: "InvalidBodyTypes",
-			body: map[string]any{
-				"id":          100,
-				"images":      true,
-				"videos":      false,
-				"description": 5.5,
-			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
-					Times(0)
-				querier.EXPECT().
-					UpdatePost(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
 	}
 
 	for _, tc := range testCases {
@@ -550,6 +544,7 @@ func TestDeletePostAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchDeleteResult(t, recorder.Body, result)
 			},
 		},
 		{
@@ -610,23 +605,6 @@ func TestDeletePostAPI(t *testing.T) {
 		{
 			name: "NoID",
 			id:   "",
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			}, buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
-					Times(0)
-				querier.EXPECT().
-					DeletePost(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
-		{
-			name: "InvalidBodyTypes",
-			id:   true,
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
