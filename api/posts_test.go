@@ -418,7 +418,7 @@ func TestUpdatePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NotFound",
+			name: "InvalidPost",
 			body: map[string]any{
 				"id":          post.ID.Hex(),
 				"images":      post.Images,
@@ -441,9 +441,9 @@ func TestUpdatePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NoID",
+			name: "IDLenIsNot24",
 			body: map[string]any{
-				"id":          "",
+				"id":          ":D",
 				"images":      post.Images,
 				"videos":      post.Videos,
 				"description": post.Description,
@@ -565,7 +565,7 @@ func TestDeletePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NotFound",
+			name: "InvalidPost",
 			id:   post.ID.Hex(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
@@ -583,8 +583,8 @@ func TestDeletePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "NoID",
-			id:   "",
+			name: "IDLenIsNot24",
+			id:   ":|",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
