@@ -64,12 +64,13 @@ func TestListLikes(t *testing.T) {
 
 	arg := ListLikesParams{
 		PostID: post.ID,
-		Limit:  10,
+		Offset: int64(n / 2),
+		Limit:  int64(n / 2),
 	}
 
 	likes, err := testQueries.ListLikes(testCtx, arg)
 	require.NoError(t, err)
-	require.Len(t, likes, n)
+	require.Len(t, likes, n/2)
 
 	for _, l := range likes {
 		require.NotEmpty(t, l)

@@ -25,14 +25,14 @@ func (server *Server) CreateLike(c echo.Context) error {
 		return err
 	}
 
-	postID, err := primitive.ObjectIDFromHex(req.PostID)
+	gotPost, err := server.validPost(c, req.PostID)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	arg := db.CreateLikeParams{
 		UserID: payload.UserID,
-		PostID: postID,
+		PostID: gotPost.ID,
 	}
 
 	result, err := server.queries.CreateLike(context.TODO(), arg)
@@ -44,6 +44,37 @@ func (server *Server) CreateLike(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, result)
+}
+
+type listLikesRequest struct {
+	PostID string `query:"post_id" validate:"required,len=24"`
+	Offset int64  `query:"offset" validate:"min=0"`
+	Limit  int64  `query:"limit" validate:"min=1"`
+}
+
+func (server *Server) ListLikes(c echo.Context) error {
+	req := new(listLikesRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	gotPost, err := server.validPost(c, req.PostID)
+	if err != nil {
+		return err
+	}
+
+	arg := db.ListLikesParams{
+		PostID: gotPost.ID,
+		Offset: req.Offset,
+		Limit:  req.Limit,
+	}
+
+	posts, err := server.queries.ListLikes(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, posts)
 }
 
 type deleteLikeRequest struct {

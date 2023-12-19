@@ -46,7 +46,8 @@ func (q *Queries) GetLike(ctx context.Context, id primitive.ObjectID) (Like, err
 
 type ListLikesParams struct {
 	PostID primitive.ObjectID `json:"post_id" bson:"post_id"`
-	Limit  int                `json:"limit" bson:"limit"`
+	Offset int64              `json:"offset" bson:"limit"`
+	Limit  int64              `json:"limit" bson:"limit"`
 }
 
 func (q *Queries) ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error) {
@@ -54,7 +55,7 @@ func (q *Queries) ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, e
 
 	var likes []Like
 	coll := q.db.Collection("likes")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(int64(arg.Limit)))
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
 	if err != nil {
 		return nil, err
 	}
