@@ -55,7 +55,7 @@ func TestCreatePostAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusCreated, recorder.Code)
-				requireBodyMatchResult(t, recorder.Body, result)
+				requireBodyMatchInsertOneResult(t, recorder.Body, result)
 			},
 		},
 		{
@@ -670,21 +670,6 @@ func TestDeletePostAPI(t *testing.T) {
 			tc.checkResponse(t, recorder)
 		})
 	}
-}
-
-func requireBodyMatchPost(t *testing.T, body *bytes.Buffer, post db.Post) {
-	bodyResult := new(db.Post)
-	err := json.NewDecoder(body).Decode(bodyResult)
-	require.NoError(t, err)
-	require.NotEmpty(t, bodyResult)
-
-	require.Equal(t, bodyResult.ID, post.ID)
-	require.Equal(t, bodyResult.UserID, post.UserID)
-	require.Equal(t, bodyResult.Images, post.Images)
-	require.Equal(t, bodyResult.Videos, post.Videos)
-	require.Equal(t, bodyResult.Description, post.Description)
-
-	require.WithinDuration(t, bodyResult.CreatedAt, post.CreatedAt, time.Second)
 }
 
 func randomPost(t *testing.T, userID primitive.ObjectID) db.Post {

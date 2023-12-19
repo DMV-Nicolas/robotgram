@@ -26,3 +26,16 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	}
 	return nil
 }
+
+// BindAndValidate bind and validate the given request
+func bindAndValidate(c echo.Context, req interface{}) error {
+	if err := c.Bind(req); err != nil {
+		return err
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	return nil
+}
