@@ -142,7 +142,7 @@ func TestCreateLikeAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -279,7 +279,7 @@ func TestDeleteLikeAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -399,7 +399,7 @@ func TestListLikesAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -495,7 +495,7 @@ func TestCountLikesAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes/count"

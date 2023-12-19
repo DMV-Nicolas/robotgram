@@ -130,6 +130,9 @@ func (server *Server) UpdatePost(c echo.Context) error {
 
 	result, err := server.queries.UpdatePost(context.TODO(), arg)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return echo.NewHTTPError(http.StatusNotFound, err)
+		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 

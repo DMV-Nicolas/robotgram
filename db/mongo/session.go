@@ -37,8 +37,8 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (*
 	return result, err
 }
 
-func (q *Queries) GetSession(ctx context.Context, ID primitive.ObjectID) (Session, error) {
-	filter := bson.D{primitive.E{Key: "_id", Value: ID}}
+func (q *Queries) GetSession(ctx context.Context, id primitive.ObjectID) (Session, error) {
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	opts := options.FindOne()
 
 	var session Session

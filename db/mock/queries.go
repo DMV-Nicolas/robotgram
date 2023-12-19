@@ -37,6 +37,21 @@ func (m *MockQuerier) EXPECT() *MockQuerierMockRecorder {
 	return m.recorder
 }
 
+// BlockSession mocks base method.
+func (m *MockQuerier) BlockSession(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.UpdateResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BlockSession", arg0, arg1)
+	ret0, _ := ret[0].(*mongo.UpdateResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BlockSession indicates an expected call of BlockSession.
+func (mr *MockQuerierMockRecorder) BlockSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockSession", reflect.TypeOf((*MockQuerier)(nil).BlockSession), arg0, arg1)
+}
+
 // CountLikes mocks base method.
 func (m *MockQuerier) CountLikes(arg0 context.Context, arg1 primitive.ObjectID) (int64, error) {
 	m.ctrl.T.Helper()
@@ -140,6 +155,21 @@ func (m *MockQuerier) DeletePost(arg0 context.Context, arg1 primitive.ObjectID) 
 func (mr *MockQuerierMockRecorder) DeletePost(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePost", reflect.TypeOf((*MockQuerier)(nil).DeletePost), arg0, arg1)
+}
+
+// DeleteSession mocks base method.
+func (m *MockQuerier) DeleteSession(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.DeleteResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteSession", arg0, arg1)
+	ret0, _ := ret[0].(*mongo.DeleteResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteSession indicates an expected call of DeleteSession.
+func (mr *MockQuerierMockRecorder) DeleteSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSession", reflect.TypeOf((*MockQuerier)(nil).DeleteSession), arg0, arg1)
 }
 
 // DeleteUser mocks base method.

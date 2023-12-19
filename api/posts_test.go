@@ -108,7 +108,7 @@ func TestCreatePostAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/posts"
@@ -208,7 +208,7 @@ func TestGetPostAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/posts/%s", tc.id)
@@ -300,7 +300,7 @@ func TestListPostsAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/posts"
@@ -476,7 +476,7 @@ func TestUpdatePostAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/posts"
@@ -612,7 +612,7 @@ func TestDeletePostAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/posts"

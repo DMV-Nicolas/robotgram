@@ -59,6 +59,7 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
+	SessionID             string    `json:"session_id"`
 	AccessToken           string    `json:"access_token"`
 	AccessTokenExpiresAt  time.Time `json:"acess_token_expires_at"`
 	RefreshToken          string    `json:"refresh_token"`
@@ -102,7 +103,20 @@ func (server *Server) LoginUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
+	arg := db.CreateSessionParams{
+		ID:           refreshPayload.ID,
+		UserID:       refreshPayload.UserID,
+		RefreshToken: refreshToken,
+		UserAgent:    "",
+		ClientIP:     "",
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiresAt,
+	}
+
+	_, err = server.queries.CreateSession(context.TODO(), arg)
+
 	res := loginUserResponse{
+		SessionID:             refreshPayload.ID.Hex(),
 		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  accessPayload.ExpiresAt,
 		RefreshToken:          refreshToken,

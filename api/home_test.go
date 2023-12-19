@@ -9,13 +9,14 @@ import (
 	"time"
 
 	db "github.com/DMV-Nicolas/tinygram/db/mongo"
+	"github.com/DMV-Nicolas/tinygram/util"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func TestHome(t *testing.T) {
-	server := newTestServer(t, nil)
+	server := newTestServer(t, nil, util.RandomPassword(32))
 	recorder := httptest.NewRecorder()
 
 	url := "/"

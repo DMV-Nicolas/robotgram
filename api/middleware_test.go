@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/DMV-Nicolas/tinygram/token"
+	"github.com/DMV-Nicolas/tinygram/util"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -86,7 +87,7 @@ func TestAuthMiddleware(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			// start test server and send request
-			server := newTestServer(t, nil)
+			server := newTestServer(t, nil, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/auth"

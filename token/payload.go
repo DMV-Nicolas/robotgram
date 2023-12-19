@@ -14,6 +14,7 @@ var (
 
 // Payload contains the payload data of the token
 type Payload struct {
+	ID        primitive.ObjectID `json:"id"`
 	UserID    primitive.ObjectID `json:"user_id"`
 	IssuedAt  time.Time          `json:"issued_at"`
 	ExpiresAt time.Time          `json:"expires_at"`
@@ -22,6 +23,7 @@ type Payload struct {
 // NewPayload creates a new token payload with a specific username and duration
 func NewPayload(userID primitive.ObjectID, duration time.Duration) *Payload {
 	return &Payload{
+		ID:        primitive.NewObjectID(),
 		UserID:    userID,
 		IssuedAt:  time.Now(),
 		ExpiresAt: time.Now().Add(duration),
