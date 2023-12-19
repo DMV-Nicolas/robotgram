@@ -3,6 +3,8 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -11,6 +13,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func TestHome(t *testing.T) {
+	server := newTestServer(t, nil)
+	recorder := httptest.NewRecorder()
+
+	url := "/"
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	require.NoError(t, err)
+
+	server.router.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusOK, recorder.Code)
+}
 
 func requireBodyMatchInsertOneResult(t *testing.T, body *bytes.Buffer, result *mongo.InsertOneResult) {
 	bodyResult := new(mongo.InsertOneResult)
@@ -112,5 +126,30 @@ func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, posts []db.Post) {
 		require.Equal(t, posts[i].Videos, bodyResult[i].Videos)
 		require.Equal(t, posts[i].Description, bodyResult[i].Description)
 		require.WithinDuration(t, posts[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
+	}
+}
+
+func requireBodyMatchCountLikes(t *testing.T, body *bytes.Buffer, nLikes int64) {
+	bodyResult := int64(0)
+	err := json.NewDecoder(body).Decode(&bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Equal(t, bodyResult, nLikes)
+}
+
+func requireBodyMatchLikes(t *testing.T, body *bytes.Buffer, likes []db.Like) {
+	bodyResult := make([]db.Like, 0, len(likes))
+	err := json.NewDecoder(body).Decode(&bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Len(t, bodyResult, len(likes))
+
+	for i := range bodyResult {
+		require.Equal(t, likes[i].ID, bodyResult[i].ID)
+		require.Equal(t, likes[i].UserID, bodyResult[i].UserID)
+		require.Equal(t, likes[i].TargetID, bodyResult[i].TargetID)
+		require.WithinDuration(t, likes[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
 	}
 }

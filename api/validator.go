@@ -22,7 +22,7 @@ func NewCustomValidator(validator *validator.Validate) *CustomValidator {
 // Validate validates the struct data
 func (cv *CustomValidator) Validate(i interface{}) error {
 	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 	return nil
 }
@@ -30,7 +30,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 // BindAndValidate bind and validate the given request
 func bindAndValidate(c echo.Context, req interface{}) error {
 	if err := c.Bind(req); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	if err := c.Validate(req); err != nil {

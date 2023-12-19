@@ -17,7 +17,7 @@ type createLikeRequest struct {
 func (server *Server) CreateLike(c echo.Context) error {
 	req := new(createLikeRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	payload, err := getAuthorizationPayload(c)
@@ -55,7 +55,7 @@ type listLikesRequest struct {
 func (server *Server) ListLikes(c echo.Context) error {
 	req := new(listLikesRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
@@ -84,7 +84,7 @@ type deleteLikeRequest struct {
 func (server *Server) DeleteLike(c echo.Context) error {
 	req := new(deleteLikeRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	payload, err := getAuthorizationPayload(c)
@@ -116,7 +116,7 @@ type countLikesRequest struct {
 func (server *Server) CountLikes(c echo.Context) error {
 	req := new(countLikesRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
@@ -124,12 +124,12 @@ func (server *Server) CountLikes(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	result, err := server.queries.CountLikes(context.TODO(), targetID)
+	nLikes, err := server.queries.CountLikes(context.TODO(), targetID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, nLikes)
 }
 
 func (server *Server) validLike(c echo.Context, idStr string) (db.Like, error) {

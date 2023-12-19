@@ -20,7 +20,7 @@ type createPostRequest struct {
 func (server *Server) CreatePost(c echo.Context) error {
 	req := new(createPostRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	payload, err := getAuthorizationPayload(c)
@@ -50,7 +50,7 @@ type getPostRequest struct {
 func (server *Server) GetPost(c echo.Context) error {
 	req := new(getPostRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	id, err := primitive.ObjectIDFromHex(req.ID)
@@ -77,7 +77,7 @@ type listPostsRequest struct {
 func (server *Server) ListPosts(c echo.Context) error {
 	req := new(listPostsRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	arg := db.ListPostsParams{
@@ -103,7 +103,7 @@ type updatePostRequest struct {
 func (server *Server) UpdatePost(c echo.Context) error {
 	req := new(updatePostRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	gotPost, err := server.validPost(c, req.ID)
@@ -143,7 +143,7 @@ type deletePostRequest struct {
 func (server *Server) DeletePost(c echo.Context) error {
 	req := new(updatePostRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	gotPost, err := server.validPost(c, req.ID)

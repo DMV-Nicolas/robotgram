@@ -24,7 +24,7 @@ type createUserRequest struct {
 func (server *Server) CreateUser(c echo.Context) error {
 	req := new(createUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	hashedPassword, err := util.HashPassword(req.Password)
@@ -68,7 +68,7 @@ type loginUserResponse struct {
 func (server *Server) LoginUser(c echo.Context) error {
 	req := new(loginUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	var err error
@@ -130,7 +130,7 @@ type getUserResponse struct {
 func (server *Server) GetUser(c echo.Context) error {
 	req := new(getUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	user, err := server.queries.GetUser(context.TODO(), "username", req.Username)
@@ -163,7 +163,7 @@ type listUsersRequest struct {
 func (server *Server) ListUsers(c echo.Context) error {
 	req := new(listUsersRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	arg := db.ListUsersParams{

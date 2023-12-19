@@ -82,6 +82,21 @@ func (mr *MockQuerierMockRecorder) CreatePost(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePost", reflect.TypeOf((*MockQuerier)(nil).CreatePost), arg0, arg1)
 }
 
+// CreateSession mocks base method.
+func (m *MockQuerier) CreateSession(arg0 context.Context, arg1 db.CreateSessionParams) (*mongo.InsertOneResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSession", arg0, arg1)
+	ret0, _ := ret[0].(*mongo.InsertOneResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockQuerierMockRecorder) CreateSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockQuerier)(nil).CreateSession), arg0, arg1)
+}
+
 // CreateUser mocks base method.
 func (m *MockQuerier) CreateUser(arg0 context.Context, arg1 db.CreateUserParams) (*mongo.InsertOneResult, error) {
 	m.ctrl.T.Helper()
@@ -170,6 +185,21 @@ func (m *MockQuerier) GetPost(arg0 context.Context, arg1 string, arg2 interface{
 func (mr *MockQuerierMockRecorder) GetPost(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPost", reflect.TypeOf((*MockQuerier)(nil).GetPost), arg0, arg1, arg2)
+}
+
+// GetSession mocks base method.
+func (m *MockQuerier) GetSession(arg0 context.Context, arg1 primitive.ObjectID) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSession", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSession indicates an expected call of GetSession.
+func (mr *MockQuerierMockRecorder) GetSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockQuerier)(nil).GetSession), arg0, arg1)
 }
 
 // GetUser mocks base method.

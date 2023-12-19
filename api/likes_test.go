@@ -330,6 +330,7 @@ func TestListLikesAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchLikes(t, recorder.Body, likes)
 			},
 		},
 		{
@@ -443,6 +444,7 @@ func TestCountLikesAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchCountLikes(t, recorder.Body, int64(n))
 			},
 		},
 		{
