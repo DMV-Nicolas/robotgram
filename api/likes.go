@@ -11,7 +11,7 @@ import (
 )
 
 type createLikeRequest struct {
-	PostID string `json:"post_id" validate:"required,len=24"`
+	TargetID string `json:"target_id" validate:"required,len=24"`
 }
 
 func (server *Server) CreateLike(c echo.Context) error {
@@ -25,14 +25,14 @@ func (server *Server) CreateLike(c echo.Context) error {
 		return err
 	}
 
-	gotPost, err := server.validPost(c, req.PostID)
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	arg := db.CreateLikeParams{
-		UserID: payload.UserID,
-		PostID: gotPost.ID,
+		UserID:   payload.UserID,
+		TargetID: targetID,
 	}
 
 	result, err := server.queries.CreateLike(context.TODO(), arg)
@@ -47,9 +47,9 @@ func (server *Server) CreateLike(c echo.Context) error {
 }
 
 type listLikesRequest struct {
-	PostID string `query:"post_id" validate:"required,len=24"`
-	Offset int64  `query:"offset" validate:"min=0"`
-	Limit  int64  `query:"limit" validate:"min=1"`
+	TargetID string `query:"target_id" validate:"required,len=24"`
+	Offset   int64  `query:"offset" validate:"min=0"`
+	Limit    int64  `query:"limit" validate:"min=1"`
 }
 
 func (server *Server) ListLikes(c echo.Context) error {
@@ -58,15 +58,15 @@ func (server *Server) ListLikes(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	gotPost, err := server.validPost(c, req.PostID)
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	arg := db.ListLikesParams{
-		PostID: gotPost.ID,
-		Offset: req.Offset,
-		Limit:  req.Limit,
+		TargetID: targetID,
+		Offset:   req.Offset,
+		Limit:    req.Limit,
 	}
 
 	posts, err := server.queries.ListLikes(context.TODO(), arg)
@@ -110,7 +110,7 @@ func (server *Server) DeleteLike(c echo.Context) error {
 }
 
 type countLikesRequest struct {
-	PostID string `query:"post_id" validate:"required,len=24"`
+	TargetID string `query:"target_id" validate:"required,len=24"`
 }
 
 func (server *Server) CountLikes(c echo.Context) error {
@@ -119,12 +119,12 @@ func (server *Server) CountLikes(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	gotPost, err := server.validPost(c, req.PostID)
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	result, err := server.queries.CountLikes(context.TODO(), gotPost.ID)
+	result, err := server.queries.CountLikes(context.TODO(), targetID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}

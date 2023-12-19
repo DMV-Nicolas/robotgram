@@ -35,19 +35,14 @@ func TestCreateLikeAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: map[string]any{
-				"post_id": like.PostID.Hex(),
+				"target_id": like.TargetID.Hex(),
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), "_id", gomock.Eq(like.PostID)).
-					Times(1).
-					Return(post, nil)
-
 				arg := db.CreateLikeParams{
-					UserID: user.ID,
-					PostID: post.ID,
+					UserID:   user.ID,
+					TargetID: post.ID,
 				}
 
 				querier.EXPECT().
@@ -63,23 +58,13 @@ func TestCreateLikeAPI(t *testing.T) {
 		{
 			name: "DuplicatedLike",
 			body: map[string]any{
-				"post_id": like.PostID.Hex(),
+				"target_id": like.TargetID.Hex(),
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
-					GetPost(gomock.Any(), "_id", gomock.Eq(like.PostID)).
-					Times(1).
-					Return(post, nil)
-
-				arg := db.CreateLikeParams{
-					UserID: user.ID,
-					PostID: post.ID,
-				}
-
-				querier.EXPECT().
-					CreateLike(gomock.Any(), gomock.Eq(arg)).
+					CreateLike(gomock.Any(), gomock.Any()).
 					Times(1).
 					Return(nil, db.ErrDuplicatedLike)
 			},
@@ -90,15 +75,11 @@ func TestCreateLikeAPI(t *testing.T) {
 		{
 			name: "InternalError",
 			body: map[string]any{
-				"post_id": like.PostID.Hex(),
+				"target_id": like.TargetID.Hex(),
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			}, buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), "_id", gomock.Eq(like.PostID)).
-					Times(1).
-					Return(post, nil)
 				querier.EXPECT().
 					CreateLike(gomock.Any(), gomock.Any()).
 					Times(1).
@@ -109,9 +90,9 @@ func TestCreateLikeAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "InvalidPost",
+			name: "InvalidTargetID",
 			body: map[string]any{
-				"post_id": "qwertyuiopasdfghjklñzxcv",
+				"target_id": "qwertyuiopasdfghjklñzxcv",
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
@@ -128,9 +109,9 @@ func TestCreateLikeAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "PostIDLenIsNot24",
+			name: "TargetIDLenIsNot24",
 			body: map[string]any{
-				"post_id": ":S",
+				"target_id": ":S",
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
@@ -331,20 +312,15 @@ func TestListLikesAPI(t *testing.T) {
 		{
 			name: "OK",
 			query: map[string]any{
-				"post_id": post.ID.Hex(),
-				"offset":  offset,
-				"limit":   limit,
+				"target_id": post.ID.Hex(),
+				"offset":    offset,
+				"limit":     limit,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
-					Times(1).
-					Return(post, nil)
-
 				arg := db.ListLikesParams{
-					PostID: post.ID,
-					Offset: int64(offset),
-					Limit:  int64(limit),
+					TargetID: post.ID,
+					Offset:   int64(offset),
+					Limit:    int64(limit),
 				}
 
 				querier.EXPECT().
@@ -359,15 +335,11 @@ func TestListLikesAPI(t *testing.T) {
 		{
 			name: "InternalError",
 			query: map[string]any{
-				"post_id": post.ID.Hex(),
-				"offset":  offset,
-				"limit":   limit,
+				"target_id": post.ID.Hex(),
+				"offset":    offset,
+				"limit":     limit,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
-					Times(1).
-					Return(post, nil)
 				querier.EXPECT().
 					ListLikes(gomock.Any(), gomock.Any()).
 					Times(1).
@@ -378,11 +350,11 @@ func TestListLikesAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "InvalidPost",
+			name: "InvalidTargetID",
 			query: map[string]any{
-				"post_id": "qwertyuiopasdfghjklñzxcv",
-				"offset":  offset,
-				"limit":   limit,
+				"target_id": "qwertyuiopasdfghjklñzxcv",
+				"offset":    offset,
+				"limit":     limit,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -397,11 +369,11 @@ func TestListLikesAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "PostIDLenIsNot24",
+			name: "TargetIDLenIsNot24",
 			query: map[string]any{
-				"post_id": "0-0",
-				"offset":  offset,
-				"limit":   limit,
+				"target_id": "0-0",
+				"offset":    offset,
+				"limit":     limit,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -436,7 +408,7 @@ func TestListLikesAPI(t *testing.T) {
 			request.Header.Add("Content-Type", "application/json")
 
 			q := request.URL.Query()
-			q.Add("post_id", fmt.Sprint(tc.query["post_id"]))
+			q.Add("target_id", fmt.Sprint(tc.query["target_id"]))
 			q.Add("offset", fmt.Sprint(tc.query["offset"]))
 			q.Add("limit", fmt.Sprint(tc.query["limit"]))
 			request.URL.RawQuery = q.Encode()
@@ -456,18 +428,14 @@ func TestCountLikesAPI(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		postID        any
+		targetID      any
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
-			name:   "OK",
-			postID: post.ID.Hex(),
+			name:     "OK",
+			targetID: post.ID.Hex(),
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
-					Times(1).
-					Return(post, nil)
 				querier.EXPECT().
 					CountLikes(gomock.Any(), gomock.Eq(post.ID)).
 					Times(1).
@@ -478,13 +446,9 @@ func TestCountLikesAPI(t *testing.T) {
 			},
 		},
 		{
-			name:   "InternalError",
-			postID: post.ID.Hex(),
+			name:     "InternalError",
+			targetID: post.ID.Hex(),
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
-					Times(1).
-					Return(post, nil)
 				querier.EXPECT().
 					CountLikes(gomock.Any(), gomock.Any()).
 					Times(1).
@@ -495,12 +459,9 @@ func TestCountLikesAPI(t *testing.T) {
 			},
 		},
 		{
-			name:   "InvalidPost",
-			postID: "qwertyuiopasdfghjklñzxcv",
+			name:     "InvalidTargetID",
+			targetID: "qwertyuiopasdfghjklñzxcv",
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
-					Times(0)
 				querier.EXPECT().
 					CountLikes(gomock.Any(), gomock.Any()).
 					Times(0)
@@ -510,12 +471,9 @@ func TestCountLikesAPI(t *testing.T) {
 			},
 		},
 		{
-			name:   "PostIDLenIsNot24",
-			postID: "<3",
+			name:     "TargetIDLenIsNot24",
+			targetID: "<3",
 			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
-					Times(0)
 				querier.EXPECT().
 					CountLikes(gomock.Any(), gomock.Any()).
 					Times(0)
@@ -545,7 +503,7 @@ func TestCountLikesAPI(t *testing.T) {
 			request.Header.Add("Content-Type", "application/json")
 
 			q := request.URL.Query()
-			q.Add("post_id", fmt.Sprint(tc.postID))
+			q.Add("target_id", fmt.Sprint(tc.targetID))
 			request.URL.RawQuery = q.Encode()
 
 			server.router.ServeHTTP(recorder, request)
@@ -554,10 +512,10 @@ func TestCountLikesAPI(t *testing.T) {
 	}
 }
 
-func randomLike(t *testing.T, userID, postID primitive.ObjectID) db.Like {
+func randomLike(t *testing.T, userID, targetID primitive.ObjectID) db.Like {
 	return db.Like{
-		ID:     util.RandomID(),
-		UserID: userID,
-		PostID: postID,
+		ID:       util.RandomID(),
+		UserID:   userID,
+		TargetID: targetID,
 	}
 }

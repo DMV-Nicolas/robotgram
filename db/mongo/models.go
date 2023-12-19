@@ -30,6 +30,6 @@ type Post struct {
 type Like struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	UserID    primitive.ObjectID `json:"user_id" bson:"user_id"`
-	PostID    primitive.ObjectID `json:"post_id" bson:"post_id"`
+	TargetID  primitive.ObjectID `json:"post_id" bson:"post_id"`
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }

@@ -9,11 +9,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func randomLike(t *testing.T, postID primitive.ObjectID) Like {
+func randomLike(t *testing.T, targetID primitive.ObjectID) Like {
 	user := randomUser(t)
 	arg := CreateLikeParams{
-		UserID: user.ID,
-		PostID: postID,
+		UserID:   user.ID,
+		TargetID: targetID,
 	}
 
 	result, err := testQueries.CreateLike(testCtx, arg)
@@ -30,7 +30,7 @@ func randomLike(t *testing.T, postID primitive.ObjectID) Like {
 
 	require.Equal(t, insertedID, like.ID)
 	require.Equal(t, arg.UserID, like.UserID)
-	require.Equal(t, arg.PostID, like.PostID)
+	require.Equal(t, arg.TargetID, like.TargetID)
 	require.WithinDuration(t, time.Now(), like.CreatedAt, time.Second)
 
 	return like
@@ -51,7 +51,7 @@ func TestGetLike(t *testing.T) {
 
 	require.Equal(t, like1.ID, like2.ID)
 	require.Equal(t, like1.UserID, like2.UserID)
-	require.Equal(t, like1.PostID, like2.PostID)
+	require.Equal(t, like1.TargetID, like2.TargetID)
 	require.WithinDuration(t, like1.CreatedAt, like2.CreatedAt, time.Second)
 }
 
@@ -63,9 +63,9 @@ func TestListLikes(t *testing.T) {
 	}
 
 	arg := ListLikesParams{
-		PostID: post.ID,
-		Offset: int64(n / 2),
-		Limit:  int64(n / 2),
+		TargetID: post.ID,
+		Offset:   int64(n / 2),
+		Limit:    int64(n / 2),
 	}
 
 	likes, err := testQueries.ListLikes(testCtx, arg)

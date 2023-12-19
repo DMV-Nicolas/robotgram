@@ -48,7 +48,7 @@ func (q *Queries) EmailTaken(ctx context.Context, email string) error {
 func (q *Queries) DuplicatedLike(ctx context.Context, arg CreateLikeParams) error {
 	filter := bson.D{
 		primitive.E{Key: "user_id", Value: arg.UserID},
-		primitive.E{Key: "post_id", Value: arg.PostID},
+		primitive.E{Key: "target_id", Value: arg.TargetID},
 	}
 	opts := options.FindOne()
 
