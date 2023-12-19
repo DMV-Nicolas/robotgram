@@ -109,6 +109,29 @@ func (server *Server) DeleteLike(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+type countLikesRequest struct {
+	PostID string `query:"post_id" validate:"required,len=24"`
+}
+
+func (server *Server) CountLikes(c echo.Context) error {
+	req := new(countLikesRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	gotPost, err := server.validPost(c, req.PostID)
+	if err != nil {
+		return err
+	}
+
+	result, err := server.queries.CountLikes(context.TODO(), gotPost.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func (server *Server) validLike(c echo.Context, idStr string) (db.Like, error) {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {

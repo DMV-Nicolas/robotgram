@@ -91,3 +91,16 @@ func TestDeleteLike(t *testing.T) {
 	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
 	require.Empty(t, like2)
 }
+
+func TestCountLikes(t *testing.T) {
+	post := randomPost(t)
+	n := 10
+	for i := 0; i < n; i++ {
+		randomLike(t, post.ID)
+	}
+
+	nLikes, err := testQueries.CountLikes(testCtx, post.ID)
+	require.NoError(t, err)
+	require.NotZero(t, nLikes)
+	require.EqualValues(t, n, nLikes)
+}

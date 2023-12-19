@@ -447,6 +447,113 @@ func TestListLikesAPI(t *testing.T) {
 	}
 }
 
+func TestCountLikesAPI(t *testing.T) {
+	n := 10
+	post := randomPost(t, primitive.NewObjectID())
+	for i := 0; i < n; i++ {
+		randomLike(t, primitive.NewObjectID(), post.ID)
+	}
+
+	testCases := []struct {
+		name          string
+		postID        any
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:   "OK",
+			postID: post.ID.Hex(),
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
+					Times(1).
+					Return(post, nil)
+				querier.EXPECT().
+					CountLikes(gomock.Any(), gomock.Eq(post.ID)).
+					Times(1).
+					Return(int64(n), nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name:   "InternalError",
+			postID: post.ID.Hex(),
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
+					Times(1).
+					Return(post, nil)
+				querier.EXPECT().
+					CountLikes(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(int64(0), mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name:   "InvalidPost",
+			postID: "qwertyuiopasdfghjklñzxcv",
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+				querier.EXPECT().
+					CountLikes(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name:   "PostIDLenIsNot24",
+			postID: "<3",
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+				querier.EXPECT().
+					CountLikes(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
+
+			// start test server and send request
+			server := newTestServer(t, queries)
+			recorder := httptest.NewRecorder()
+
+			url := "/likes/count"
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			request.Header.Add("Content-Type", "application/json")
+
+			q := request.URL.Query()
+			q.Add("post_id", fmt.Sprint(tc.postID))
+			request.URL.RawQuery = q.Encode()
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func randomLike(t *testing.T, userID, postID primitive.ObjectID) db.Like {
 	return db.Like{
 		ID:     util.RandomID(),

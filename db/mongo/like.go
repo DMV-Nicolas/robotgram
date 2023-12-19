@@ -81,3 +81,15 @@ func (q *Queries) DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo
 
 	return result, err
 }
+
+func (q *Queries) CountLikes(ctx context.Context, postID primitive.ObjectID) (int64, error) {
+	filter := bson.D{primitive.E{Key: "post_id", Value: postID}}
+
+	coll := q.db.Collection("likes")
+	nLikes, err := coll.CountDocuments(ctx, filter, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	return nLikes, nil
+}
