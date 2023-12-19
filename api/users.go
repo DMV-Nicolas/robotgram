@@ -24,7 +24,7 @@ type createUserRequest struct {
 func (server *Server) CreateUser(c echo.Context) error {
 	req := new(createUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	hashedPassword, err := util.HashPassword(req.Password)
@@ -59,6 +59,7 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
+	SessionID             string    `json:"session_id"`
 	AccessToken           string    `json:"access_token"`
 	AccessTokenExpiresAt  time.Time `json:"acess_token_expires_at"`
 	RefreshToken          string    `json:"refresh_token"`
@@ -68,7 +69,7 @@ type loginUserResponse struct {
 func (server *Server) LoginUser(c echo.Context) error {
 	req := new(loginUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	var err error
@@ -102,7 +103,20 @@ func (server *Server) LoginUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
+	arg := db.CreateSessionParams{
+		ID:           refreshPayload.ID,
+		UserID:       refreshPayload.UserID,
+		RefreshToken: refreshToken,
+		UserAgent:    "",
+		ClientIP:     "",
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiresAt,
+	}
+
+	_, err = server.queries.CreateSession(context.TODO(), arg)
+
 	res := loginUserResponse{
+		SessionID:             refreshPayload.ID.Hex(),
 		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  accessPayload.ExpiresAt,
 		RefreshToken:          refreshToken,
@@ -130,7 +144,7 @@ type getUserResponse struct {
 func (server *Server) GetUser(c echo.Context) error {
 	req := new(getUserRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	user, err := server.queries.GetUser(context.TODO(), "username", req.Username)
@@ -163,7 +177,7 @@ type listUsersRequest struct {
 func (server *Server) ListUsers(c echo.Context) error {
 	req := new(listUsersRequest)
 	if err := bindAndValidate(c, req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return err
 	}
 
 	arg := db.ListUsersParams{

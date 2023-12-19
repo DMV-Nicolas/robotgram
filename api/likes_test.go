@@ -142,7 +142,7 @@ func TestCreateLikeAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -279,7 +279,7 @@ func TestDeleteLikeAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -330,6 +330,7 @@ func TestListLikesAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchLikes(t, recorder.Body, likes)
 			},
 		},
 		{
@@ -398,7 +399,7 @@ func TestListLikesAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes"
@@ -443,6 +444,7 @@ func TestCountLikesAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchCountLikes(t, recorder.Body, int64(n))
 			},
 		},
 		{
@@ -493,7 +495,7 @@ func TestCountLikesAPI(t *testing.T) {
 			tc.buildStubs(queries)
 
 			// start test server and send request
-			server := newTestServer(t, queries)
+			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
 			url := "/likes/count"

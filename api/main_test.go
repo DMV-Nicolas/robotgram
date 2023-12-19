@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func newTestServer(t *testing.T, queries db.Querier) *Server {
+func newTestServer(t *testing.T, queries db.Querier, tokenSymmetricKey string) *Server {
 	config := util.Config{
-		TokenSymmetricKey:    util.RandomPassword(32),
+		TokenSymmetricKey:    tokenSymmetricKey,
 		AccessTokenDuration:  time.Minute,
 		RefreshTokenDuration: time.Minute * 2,
 	}
