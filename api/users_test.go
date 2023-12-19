@@ -455,6 +455,103 @@ func TestGetUserAPI(t *testing.T) {
 	}
 }
 
+func TestListUsersAPI(t *testing.T) {
+	offset, limit := 0, 5
+	users := make([]db.User, limit)
+	for i := 0; i < limit; i++ {
+		user, _ := randomUser(t)
+		users[i] = user
+	}
+
+	testCases := []struct {
+		name          string
+		query         map[string]any
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			query: map[string]any{
+				"offset": offset,
+				"limit":  limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				arg := db.ListUsersParams{
+					Offset: int64(offset),
+					Limit:  int64(limit),
+				}
+
+				querier.EXPECT().
+					ListUsers(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(users, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name: "InternalError",
+			query: map[string]any{
+				"offset": offset,
+				"limit":  limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListUsers(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "NegativeLimitOrOffset",
+			query: map[string]any{
+				"offset": -1,
+				"limit":  -1,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListUsers(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
+
+			// start test server and send request
+			server := newTestServer(t, queries)
+			recorder := httptest.NewRecorder()
+
+			url := "/users"
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			request.Header.Add("Content-Type", "application/json")
+
+			q := request.URL.Query()
+			q.Add("offset", fmt.Sprint(tc.query["offset"]))
+			q.Add("limit", fmt.Sprint(tc.query["limit"]))
+			request.URL.RawQuery = q.Encode()
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func requireBodyMatchResult(t *testing.T, body *bytes.Buffer, result *mongo.InsertOneResult) {
 	bodyResult := new(mongo.InsertOneResult)
 	err := json.NewDecoder(body).Decode(bodyResult)
@@ -498,7 +595,7 @@ func randomUser(t *testing.T) (db.User, string) {
 		FullName:       util.RandomUsername(),
 		Email:          util.RandomEmail(),
 		Avatar:         util.RandomPassword(10),
-		Description:    util.RandomPassword(5),
+		Description:    util.RandomDescription(10),
 		Gender:         "male",
 		CreatedAt:      time.Now(),
 	}, password

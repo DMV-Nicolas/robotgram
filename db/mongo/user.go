@@ -64,10 +64,19 @@ type ListUsersParams struct {
 
 func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error) {
 	filter := bson.D{}
+	projection := bson.D{
+		primitive.E{Key: "hashed_password", Value: 0},
+		primitive.E{Key: "email", Value: 0},
+		primitive.E{Key: "description", Value: 0},
+	}
 
 	var users []User
 	coll := q.db.Collection("users")
-	cursor, err := coll.Find(ctx, filter, options.Find().SetSkip(arg.Offset).SetLimit(arg.Limit))
+	cursor, err := coll.Find(ctx, filter, options.Find().
+		SetSkip(arg.Offset).
+		SetLimit(arg.Limit).
+		SetProjection(projection))
+
 	if err != nil {
 		return nil, err
 	}

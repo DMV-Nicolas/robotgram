@@ -154,3 +154,27 @@ func (server *Server) GetUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, res)
 }
+
+type listUsersRequest struct {
+	Offset int64 `query:"offset" validate:"min=0"`
+	Limit  int64 `query:"limit" validate:"min=1"`
+}
+
+func (server *Server) ListUsers(c echo.Context) error {
+	req := new(listUsersRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	arg := db.ListUsersParams{
+		Offset: req.Offset,
+		Limit:  req.Limit,
+	}
+
+	users, err := server.queries.ListUsers(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
