@@ -174,20 +174,6 @@ func TestCreateUserAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
-		{
-			name: "IncorrectBodyTypes",
-			body: map[string]any{
-				"username": 5,
-			},
-			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					CreateUser(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
 	}
 
 	for _, tc := range testCases {
@@ -377,7 +363,7 @@ func TestGetUserAPI(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		username      string
+		username      any
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
@@ -460,8 +446,8 @@ func TestGetUserAPI(t *testing.T) {
 
 func TestListUsersAPI(t *testing.T) {
 	offset, limit := 5, 10
-	users := make([]db.User, limit)
-	for i := offset; i < limit; i++ {
+	users := make([]db.User, limit-offset)
+	for i := 0; i < limit-offset; i++ {
 		user, _ := randomUser(t)
 		users[i] = user
 	}

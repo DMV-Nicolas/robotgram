@@ -27,6 +27,27 @@ func requireBodyMatchInsertOneResult(t *testing.T, body *bytes.Buffer, result *m
 	require.Equal(t, insertedID, bodyInsertedID)
 }
 
+func requireBodyMatchUpdateResult(t *testing.T, body *bytes.Buffer, result *mongo.UpdateResult) {
+	bodyResult := new(mongo.UpdateResult)
+	err := json.NewDecoder(body).Decode(bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Equal(t, result.MatchedCount, bodyResult.MatchedCount)
+	require.Equal(t, result.ModifiedCount, bodyResult.ModifiedCount)
+	require.Equal(t, result.UpsertedCount, bodyResult.UpsertedCount)
+	require.EqualValues(t, result.UpsertedID, bodyResult.UpsertedID)
+}
+
+func requireBodyMatchDeleteResult(t *testing.T, body *bytes.Buffer, result *mongo.DeleteResult) {
+	bodyResult := new(mongo.DeleteResult)
+	err := json.NewDecoder(body).Decode(bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Equal(t, result.DeletedCount, bodyResult.DeletedCount)
+}
+
 func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
 	bodyResult := new(db.User)
 	err := json.NewDecoder(body).Decode(bodyResult)
@@ -57,6 +78,7 @@ func requireBodyMatchUsers(t *testing.T, body *bytes.Buffer, users []db.User) {
 		require.Equal(t, users[i].FullName, bodyResult[i].FullName)
 		require.Equal(t, users[i].Avatar, bodyResult[i].Avatar)
 		require.Equal(t, users[i].Gender, bodyResult[i].Gender)
+		require.WithinDuration(t, users[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
 	}
 }
 
@@ -73,4 +95,22 @@ func requireBodyMatchPost(t *testing.T, body *bytes.Buffer, post db.Post) {
 	require.Equal(t, bodyResult.Description, post.Description)
 
 	require.WithinDuration(t, bodyResult.CreatedAt, post.CreatedAt, time.Second)
+}
+
+func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, posts []db.Post) {
+	bodyResult := make([]db.Post, 0, len(posts))
+	err := json.NewDecoder(body).Decode(&bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Len(t, bodyResult, len(posts))
+
+	for i := range bodyResult {
+		require.Equal(t, posts[i].ID, bodyResult[i].ID)
+		require.Equal(t, posts[i].UserID, bodyResult[i].UserID)
+		require.Equal(t, posts[i].Images, bodyResult[i].Images)
+		require.Equal(t, posts[i].Videos, bodyResult[i].Videos)
+		require.Equal(t, posts[i].Description, bodyResult[i].Description)
+		require.WithinDuration(t, posts[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
+	}
 }
