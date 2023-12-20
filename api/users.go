@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	db "github.com/DMV-Nicolas/tinygram/db/mongo"
-	"github.com/DMV-Nicolas/tinygram/util"
+	db "github.com/DMV-Nicolas/robotgram/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

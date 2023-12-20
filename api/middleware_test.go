@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/DMV-Nicolas/tinygram/token"
-	"github.com/DMV-Nicolas/tinygram/util"
+	"github.com/DMV-Nicolas/robotgram/token"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	db "github.com/DMV-Nicolas/tinygram/db/mongo"
+	db "github.com/DMV-Nicolas/robotgram/db/mongo"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

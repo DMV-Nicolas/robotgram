@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/DMV-Nicolas/tinygram/util"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -19,7 +19,7 @@ func main() {
 
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", config.DBUsername, config.DBPassword, config.DBHost, config.DBPort)
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	db := client.Database("tinygram")
+	db := client.Database(config.DBName)
 
 	db.Drop(context.TODO())
 }

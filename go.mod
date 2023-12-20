@@ -1,4 +1,4 @@
-module github.com/DMV-Nicolas/tinygram
+module github.com/DMV-Nicolas/robotgram
 
 go 1.21.5
 

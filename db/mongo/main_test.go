@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/DMV-Nicolas/tinygram/util"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 		log.Fatal("Cannot connect to database:", err)
 	}
 
-	db := client.Database("tinygram")
+	db := client.Database(config.DBName)
 	testQueries = NewQuerier(db)
 
 	os.Exit(m.Run())
