@@ -7,5 +7,5 @@ import (
 )
 
 func (server *Server) Home(c echo.Context) error {
-	return c.String(http.StatusOK, "Tinygram!")
+	return c.String(http.StatusOK, "Robotgram!")
 }

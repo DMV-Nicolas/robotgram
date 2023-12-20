@@ -3,7 +3,7 @@ package db
 import (
 	"testing"
 
-	"github.com/DMV-Nicolas/tinygram/util"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"github.com/stretchr/testify/require"
 )
 

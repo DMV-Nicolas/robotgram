@@ -1,10 +1,10 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "Tinygram tour",
+  "title": "Robotgram tour",
   "steps": [
     {
       "file": "README.md",
-      "description": "Bienvenido al tour de Tinygram!",
+      "description": "Bienvenido al tour de Robotgram!",
       "line": 22
     },
     {

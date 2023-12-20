@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	db "github.com/DMV-Nicolas/tinygram/db/mongo"
-	"github.com/DMV-Nicolas/tinygram/util"
+	db "github.com/DMV-Nicolas/robotgram/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"github.com/stretchr/testify/require"
 )
 

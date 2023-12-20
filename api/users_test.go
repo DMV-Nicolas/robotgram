@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	mockdb "github.com/DMV-Nicolas/tinygram/db/mock"
-	db "github.com/DMV-Nicolas/tinygram/db/mongo"
-	"github.com/DMV-Nicolas/tinygram/util"
+	mockdb "github.com/DMV-Nicolas/robotgram/db/mock"
+	db "github.com/DMV-Nicolas/robotgram/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/util"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"

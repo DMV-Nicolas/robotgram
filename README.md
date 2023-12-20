@@ -1,4 +1,4 @@
-# Tinygram!
+# Robotgram! 🤖
 ## Table of Contents
 1. [General Info](#general-info)
 2. [Technologies](#technologies)
@@ -6,7 +6,7 @@
 4. [Code Tour](#code-tour) (in process)
 ### General Info
 ***
-Tinygram is a charming social media platform inspired by Instagram 🌐. Designed with simplicity and ease of use in mind, Tinygram offers a streamlined experience for users who appreciate the essence of sharing moments in a visually appealing and compact format 😁.
+Robotgram is a charming social media platform inspired by Instagram but for robots 🤖! Designed with simplicity and ease of use in mind, Robotgram offers a streamlined experience for robots who appreciate the essence of sharing moments in a visually appealing and compact format.
 ## Technologies
 ***
 List of technologies used within the project:
