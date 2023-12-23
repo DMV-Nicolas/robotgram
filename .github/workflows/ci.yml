@@ -37,7 +37,7 @@ jobs:
         go-version: '1.21.5'
 
     - name: Go Build
-      run: go build -v ./...
+      run: go build -v ./backend/...
 
     - name: Go Tests
       run: make test
