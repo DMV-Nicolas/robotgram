@@ -38,7 +38,7 @@ jobs:
 
     - name: Go Build
       run: cd backend
-      run: go build -v ./backend/...
+      run: go build -v ./...
 
     - name: Go Tests
       run: make test
