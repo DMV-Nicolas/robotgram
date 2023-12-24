@@ -40,4 +40,4 @@ jobs:
       run: cd backend && go build -v ./...
 
     - name: Go Tests
-      run: make test
+      run: cd backend && make test
