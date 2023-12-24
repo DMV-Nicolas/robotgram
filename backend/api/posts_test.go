@@ -597,6 +597,42 @@ func TestDeletePostAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
+		{
+			name: "ValidPostNotFound",
+			id:   post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.Post{}, mongo.ErrNoDocuments)
+				querier.EXPECT().
+					DeletePost(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name: "ValidPostInternalError",
+			id:   post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.Post{}, mongo.ErrClientDisconnected)
+				querier.EXPECT().
+					DeletePost(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
