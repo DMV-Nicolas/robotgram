@@ -1,0 +1,131 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Robotgram tour",
+  "steps": [
+    {
+      "file": "README.md",
+      "description": "Bienvenido al tour de Robotgram!",
+      "line": 22
+    },
+    {
+      "file": "Makefile",
+      "description": "#### Comandos\nAqui estan todos los comandos personalizados:\n\n- make mongo: crear un contenedor de docker con la imagen de mongo.\n- make server: inicar el servidor.\n- make test: ejecutar todas las pruebas.\n- make mock: generar codigos de Go para burlar la base de datos y hacer pruebas.\n- make dropdb: ejecuta el archivo ./commands/dropdb/main.go para eliminar la base de datos.",
+      "line": 13
+    },
+    {
+      "file": "main.go",
+      "description": "#### Configuracion\nPrimeramente se carga la configuracion de las variables de entorno.",
+      "line": 22
+    },
+    {
+      "file": "util/config.go",
+      "description": "#### Configuracion\nPara cargar la configuracion usamos Viper y leemos el archivo \"app.env\". Despues se carga dicha configuracion en la estructura llamada \"config\".",
+      "line": 38
+    },
+    {
+      "file": "main.go",
+      "description": "#### Base de datos\nDespues de cargar la configuracion, nos conectamos a la base de datos.",
+      "line": 29
+    },
+    {
+      "file": "main.go",
+      "description": "#### Base de datos\nPosteriormente, se crea un objeto \"queries\" el cual se encarga de proveer todas las funciones de la base de datos.",
+      "line": 32
+    },
+    {
+      "file": "db/mongo/querier.go",
+      "description": "#### Base de datos\nEl objeto \"queries\" implementa la interfaz \"Querier\", la cual indica cuales son todas las funciones que debe tener \"queries\". Ademas Gomock lee esta interfaz para generar sus codigos de burla.",
+      "line": 29
+    },
+    {
+      "file": "db/mongo/models.go",
+      "description": "#### Base de datos\nEstos son los modelos utilizados para implementar todas las funciones mencionadas anteriormente.",
+      "line": 36
+    },
+    {
+      "file": "main.go",
+      "description": "#### Servidor\nDespues de crear el objeto \"queries\" y el objeto \"config\" se crea el servidor utilizando dichos objetos.",
+      "line": 38
+    },
+    {
+      "file": "api/server.go",
+      "description": "#### Servidor\nCuando se crea un nuevo servidor se genera un \"tokenMaker\", el cual provee funciones para crear y verificar tokens",
+      "line": 24,
+      "selection": {
+        "start": {
+          "line": 1,
+          "character": 1
+        },
+        "end": {
+          "line": 2,
+          "character": 1
+        }
+      }
+    },
+    {
+      "file": "token/maker.go",
+      "description": "#### Tokens\nEsta es la interfaz \"Maker\" que indica las funciones que debe tener un creador de tokens. ",
+      "line": 13
+    },
+    {
+      "file": "token/paseto_maker.go",
+      "description": "#### Tokens\nComo creador de tokens usamos Paseto. \n\n¿Porque no JWT?, bueno es principalmente porque tiene varios deficits de diseño que generan problemas de seguridad:\n\n- Algoritmos de firma debiles: JWT ofrece una gran cantidad de algoritmos incluyendo algoritmos que ya se sabe que son vulnerables, por lo tanto debemos tener sumamente cuidado a la hora de escoger un algoritmo.\n\n- Falsificación trivial: JWT incluye el algoritmo de firma en el encabezado del token, por lo tanto un atacante puede configurar el algoritmo como ninguno para evitar el proceso de verificacion de firma, este problema ha sido solucionado en muchas bibliotecas, sin embargo se debe tener cuidado al escoger una biblioteca para JWT\n\nPuede leer mas sobre estos problemas de seguridad en: https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid\n\nPor lo tanto usamos Paseto, ya que este soluciona los problemas ya mencionados.",
+      "line": 16
+    },
+    {
+      "file": "api/server.go",
+      "description": "#### Servidor\nPosteriormente de crear el tokenMaker, iniciamos una nueva instancia de Echo y le agregamos un validador customizado para posteriores validaciones como validar el email, la contraseña, el genero, etc.",
+      "line": 34
+    },
+    {
+      "file": "api/server.go",
+      "description": "#### Servidor\nConfiguramos el enrutador.",
+      "line": 36
+    },
+    {
+      "file": "api/server.go",
+      "description": "#### Servidor\nEn la configuracion del enrutador, agregamos el middleware para CORS y las rutas de la API.",
+      "line": 52
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nLa API de crear usuario posee una estructura para obtener la request, la cual indica a su vez que validaciones tiene cada campo.",
+      "line": 22
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nPrimero se obtiene el body con c.Bind(req).",
+      "line": 28
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nDespues se valida la request",
+      "line": 32
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nY posteriormente se encripta la contraseña para guardarla en la base de datos",
+      "line": 37
+    },
+    {
+      "file": "util/passwords.go",
+      "description": "#### Hashing\nLa funcion de HashPassword simplemente llama al paquete bycript y devuelve la contraseña hasheada como un string.",
+      "line": 15
+    },
+    {
+      "file": "util/passwords.go",
+      "description": "#### Hashing\nLa funcion de CheckPassword tambien llama a bcrypt para comparar el hash y la contraseña.",
+      "line": 20
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nSe llama a server.queries para crear el usuario con los argumentos que necesita la funcion, los cuales ya estan definidos por la estructura db.CreateUserParams",
+      "line": 54
+    },
+    {
+      "file": "api/users.go",
+      "description": "#### API\nY finalmente se retorna un codigo de estado 201 con el resultado de la operacion.\n\nSi quiere ver como estan implementadas las otras APIs puede consultar los archivos de home.go, users.go posts.go que estan en ./api",
+      "line": 56
+    }
+  ]
+}
