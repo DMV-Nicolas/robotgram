@@ -6,7 +6,7 @@ test:
 	go clean -testcache
 	go test -v --cover ./...
 mock:
-	mockgen -package mockdb -destination db/mock/queries.go github.com/DMV-Nicolas/robotgram/db/mongo Querier
+	mockgen -package mockdb -destination db/mock/queries.go github.com/DMV-Nicolas/robotgram/backend/db/mongo Querier
 dropdb:
 	go run ./commands/dropdb/main.go
 .PHONY: docker test server mock

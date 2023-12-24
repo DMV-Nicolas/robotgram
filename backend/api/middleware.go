@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/DMV-Nicolas/robotgram/token"
+	"github.com/DMV-Nicolas/robotgram/backend/token"
 	"github.com/labstack/echo/v4"
 )
 

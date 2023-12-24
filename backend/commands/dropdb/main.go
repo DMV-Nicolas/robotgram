@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/DMV-Nicolas/robotgram/util"
+	"github.com/DMV-Nicolas/robotgram/backend/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

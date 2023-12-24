@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/DMV-Nicolas/robotgram/util"
+	"github.com/DMV-Nicolas/robotgram/backend/util"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

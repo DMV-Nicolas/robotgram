@@ -1,9 +1,9 @@
 package api
 
 import (
-	db "github.com/DMV-Nicolas/robotgram/db/mongo"
-	"github.com/DMV-Nicolas/robotgram/token"
-	"github.com/DMV-Nicolas/robotgram/util"
+	db "github.com/DMV-Nicolas/robotgram/backend/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/backend/token"
+	"github.com/DMV-Nicolas/robotgram/backend/util"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

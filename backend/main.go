@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/DMV-Nicolas/robotgram/api"
-	db "github.com/DMV-Nicolas/robotgram/db/mongo"
-	"github.com/DMV-Nicolas/robotgram/util"
+	"github.com/DMV-Nicolas/robotgram/backend/api"
+	db "github.com/DMV-Nicolas/robotgram/backend/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/backend/util"
 	_ "github.com/golang/mock/mockgen/model"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

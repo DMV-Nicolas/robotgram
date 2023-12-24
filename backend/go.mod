@@ -1,4 +1,4 @@
-module github.com/DMV-Nicolas/robotgram
+module github.com/DMV-Nicolas/robotgram/backend
 
 go 1.21.5
 

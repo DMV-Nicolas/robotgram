@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	db "github.com/DMV-Nicolas/robotgram/db/mongo"
-	"github.com/DMV-Nicolas/robotgram/util"
+	db "github.com/DMV-Nicolas/robotgram/backend/db/mongo"
+	"github.com/DMV-Nicolas/robotgram/backend/util"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
