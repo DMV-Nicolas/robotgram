@@ -39,7 +39,7 @@ func NewServer(config util.Config, queries db.Querier) (*Server, error) {
 
 func (server *Server) setupRouter(e *echo.Echo) {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:52330"},
+		AllowOrigins: []string{"http://localhost:5173"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.GET("/", server.Home)
