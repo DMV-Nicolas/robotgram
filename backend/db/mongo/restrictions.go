@@ -44,7 +44,7 @@ func (q *Queries) EmailTaken(ctx context.Context, email string) error {
 	return ErrEmailTaken
 }
 
-// DuplicatedLike verfies in the database if the entered like is already registered
+// DuplicatedLike verifies in the database if the entered like is already registered
 func (q *Queries) DuplicatedLike(ctx context.Context, arg CreateLikeParams) error {
 	filter := bson.D{
 		primitive.E{Key: "user_id", Value: arg.UserID},

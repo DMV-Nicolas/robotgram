@@ -49,7 +49,7 @@ func (server *Server) RefreshToken(c echo.Context) error {
 	}
 
 	if session.RefreshToken != req.RefreshToken {
-		err := errors.New("Mistmached session token")
+		err := errors.New("Mismatched session token")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 

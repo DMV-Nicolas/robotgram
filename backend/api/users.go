@@ -61,7 +61,7 @@ type loginUserRequest struct {
 type loginUserResponse struct {
 	SessionID             string    `json:"session_id"`
 	AccessToken           string    `json:"access_token"`
-	AccessTokenExpiresAt  time.Time `json:"acess_token_expires_at"`
+	AccessTokenExpiresAt  time.Time `json:"access_token_expires_at"`
 	RefreshToken          string    `json:"refresh_token"`
 	RefreshTokenExpiresAt time.Time `json:"refresh_token_expires_at"`
 }
@@ -93,13 +93,13 @@ func (server *Server) LoginUser(c echo.Context) error {
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(user.ID, server.config.AccessTokenDuration)
 	if err != nil {
-		// imposible
+		// impossible
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(user.ID, server.config.RefreshTokenDuration)
 	if err != nil {
-		// imposible
+		// impossible
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 

@@ -51,7 +51,7 @@ func TestRefreshTokenAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "MistmachedSessionToken",
+			name: "MismatchedSessionToken",
 			body: map[string]any{
 				"refresh_token": session.RefreshToken,
 			},

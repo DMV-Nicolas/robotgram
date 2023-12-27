@@ -32,7 +32,7 @@ func authMiddleware(next echo.HandlerFunc, tokenMaker token.Maker) echo.HandlerF
 
 		authorizationType := strings.ToLower(fields[0])
 		if authorizationType != authorizationTypeBearer {
-			err := errors.New("unsopported authorization type: " + authorizationType)
+			err := errors.New("unsupported authorization type: " + authorizationType)
 			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}
 
