@@ -94,7 +94,7 @@ func (server *Server) ListPosts(c echo.Context) error {
 }
 
 type updatePostRequest struct {
-	ID          string   `json:"id" validate:"required,len=24"`
+	ID          string   `param:"id" validate:"required,len=24"`
 	Images      []string `json:"images"`
 	Videos      []string `json:"videos" `
 	Description string   `json:"description"`

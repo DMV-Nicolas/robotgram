@@ -479,7 +479,7 @@ func TestUpdatePostAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
+			url := fmt.Sprintf("/posts/%v", tc.body["id"])
 			request, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
