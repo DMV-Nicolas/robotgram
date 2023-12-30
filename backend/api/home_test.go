@@ -19,7 +19,7 @@ func TestHome(t *testing.T) {
 	server := newTestServer(t, nil, util.RandomPassword(32))
 	recorder := httptest.NewRecorder()
 
-	url := "/"
+	url := "/v1/"
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 

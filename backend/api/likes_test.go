@@ -156,7 +156,7 @@ func TestToggleLikeAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/likes"
+			url := "/v1/likes"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -275,7 +275,7 @@ func TestListLikesAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/likes/%v", tc.query["target_id"])
+			url := fmt.Sprintf("/v1/likes/%v", tc.query["target_id"])
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -370,7 +370,7 @@ func TestCountLikesAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/likes/%v/count", tc.targetID)
+			url := fmt.Sprintf("/v1/likes/%v/count", tc.targetID)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 			request.Header.Add("Content-Type", "application/json")
