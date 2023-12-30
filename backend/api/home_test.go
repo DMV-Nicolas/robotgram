@@ -130,11 +130,19 @@ func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, posts []db.Post) {
 	}
 }
 
-func requireBodyMatchLiked(t *testing.T, body *bytes.Buffer, liked bool) {
-	bodyResult := false
-	err := json.NewDecoder(body).Decode(&bodyResult)
+func requireBodyMatchToggleLikeResponse(t *testing.T, body *bytes.Buffer, res toggleLikeResponse) {
+	bodyResult := new(toggleLikeResponse)
+	err := json.NewDecoder(body).Decode(bodyResult)
 	require.NoError(t, err)
-	require.Equal(t, liked, bodyResult)
+	require.NotEmpty(t, bodyResult)
+
+	if res.CreatedResult != nil {
+		require.Equal(t, res.CreatedResult.InsertedID.(primitive.ObjectID).Hex(), bodyResult.CreatedResult.InsertedID)
+		require.Equal(t, res.DeletedResult, bodyResult.DeletedResult)
+	} else {
+		require.Equal(t, res.CreatedResult, bodyResult.CreatedResult)
+		require.Equal(t, res.DeletedResult, bodyResult.DeletedResult)
+	}
 }
 
 func requireBodyMatchCountLikes(t *testing.T, body *bytes.Buffer, nLikes int64) {
