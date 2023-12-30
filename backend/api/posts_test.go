@@ -643,16 +643,12 @@ func TestDeletePostAPI(t *testing.T) {
 			queries := mockdb.NewMockQuerier(ctrl)
 			tc.buildStubs(queries)
 
-			// marshal data body to json
-			data, err := json.Marshal(map[string]any{"id": tc.id})
-			require.NoError(t, err)
-
 			// start test server and send request
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
-			request, err := http.NewRequest(http.MethodDelete, url, bytes.NewReader(data))
+			url := fmt.Sprintf("/posts/%v", tc.id)
+			request, err := http.NewRequest(http.MethodDelete, url, nil)
 			require.NoError(t, err)
 
 			request.Header.Add("Content-Type", "application/json")

@@ -52,8 +52,8 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	e.POST("/posts", authMiddleware(server.CreatePost, server.tokenMaker))
 	e.GET("/posts", server.ListPosts)
 	e.GET("/posts/:id", server.GetPost)
-	e.PUT("/posts", authMiddleware(server.UpdatePost, server.tokenMaker))
-	e.DELETE("/posts", authMiddleware(server.DeletePost, server.tokenMaker))
+	e.PUT("/posts/:id", authMiddleware(server.UpdatePost, server.tokenMaker))
+	e.DELETE("/posts/:id", authMiddleware(server.DeletePost, server.tokenMaker))
 
 	e.POST("/likes/toggle", authMiddleware(server.ToggleLike, server.tokenMaker))
 	e.POST("/likes", authMiddleware(server.CreateLike, server.tokenMaker))

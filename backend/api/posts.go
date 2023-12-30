@@ -140,11 +140,11 @@ func (server *Server) UpdatePost(c echo.Context) error {
 }
 
 type deletePostRequest struct {
-	ID string `json:"id" validate:"required,len=24"`
+	ID string `param:"id" validate:"required,len=24"`
 }
 
 func (server *Server) DeletePost(c echo.Context) error {
-	req := new(updatePostRequest)
+	req := new(deletePostRequest)
 	if err := bindAndValidate(c, req); err != nil {
 		return err
 	}
