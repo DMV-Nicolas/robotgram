@@ -9,10 +9,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func randomLike(t *testing.T, targetID primitive.ObjectID) Like {
-	user := randomUser(t)
+func randomLike(t *testing.T, userID primitive.ObjectID, targetID primitive.ObjectID) Like {
 	arg := CreateLikeParams{
-		UserID:   user.ID,
+		UserID:   userID,
 		TargetID: targetID,
 	}
 
@@ -37,13 +36,13 @@ func randomLike(t *testing.T, targetID primitive.ObjectID) Like {
 }
 
 func TestCreateLike(t *testing.T) {
+	user := randomUser(t)
 	post := randomPost(t)
-	randomLike(t, post.ID)
+	randomLike(t, user.ID, post.ID)
 }
 
 func TestGetLike(t *testing.T) {
-	post := randomPost(t)
-	like1 := randomLike(t, post.ID)
+	like1 := randomLike(t, primitive.NewObjectID(), primitive.NewObjectID())
 
 	like2, err := testQueries.GetLike(testCtx, like1.ID)
 	require.NoError(t, err)
@@ -59,7 +58,7 @@ func TestListLikes(t *testing.T) {
 	post := randomPost(t)
 	n := 10
 	for i := 0; i < n; i++ {
-		randomLike(t, post.ID)
+		randomLike(t, primitive.NewObjectID(), post.ID)
 	}
 
 	arg := ListLikesParams{
@@ -78,8 +77,7 @@ func TestListLikes(t *testing.T) {
 }
 
 func TestDeleteLike(t *testing.T) {
-	post := randomPost(t)
-	like1 := randomLike(t, post.ID)
+	like1 := randomLike(t, primitive.NewObjectID(), primitive.NewObjectID())
 
 	result, err := testQueries.DeleteLike(testCtx, like1.ID)
 	require.NoError(t, err)
@@ -96,11 +94,30 @@ func TestCountLikes(t *testing.T) {
 	post := randomPost(t)
 	n := 10
 	for i := 0; i < n; i++ {
-		randomLike(t, post.ID)
+		randomLike(t, primitive.NewObjectID(), post.ID)
 	}
 
 	nLikes, err := testQueries.CountLikes(testCtx, post.ID)
 	require.NoError(t, err)
 	require.NotZero(t, nLikes)
 	require.EqualValues(t, n, nLikes)
+}
+
+func TestToggleLike(t *testing.T) {
+	user := randomUser(t)
+	post := randomPost(t)
+	randomLike(t, user.ID, post.ID)
+
+	arg := CreateLikeParams{
+		UserID:   user.ID,
+		TargetID: post.ID,
+	}
+
+	liked, err := testQueries.ToggleLike(testCtx, arg)
+	require.NoError(t, err)
+	require.False(t, liked)
+
+	liked, err = testQueries.ToggleLike(testCtx, arg)
+	require.NoError(t, err)
+	require.True(t, liked)
 }
