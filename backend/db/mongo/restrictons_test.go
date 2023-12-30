@@ -44,8 +44,9 @@ func TestEmailTaken(t *testing.T) {
 }
 
 func TestDuplicatedLike(t *testing.T) {
+	user := randomUser(t)
 	post := randomPost(t)
-	like := randomLike(t, post.ID)
+	like := randomLike(t, user.ID, post.ID)
 
 	arg := CreateLikeParams{
 		UserID:   like.UserID,

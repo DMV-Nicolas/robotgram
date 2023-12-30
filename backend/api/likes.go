@@ -10,6 +10,39 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type toggleLikeRequest struct {
+	TargetID string `json:"target_id" validate:"required,len=24"`
+}
+
+func (server *Server) ToggleLike(c echo.Context) error {
+	req := new(toggleLikeRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	payload, err := getAuthorizationPayload(c)
+	if err != nil {
+		return err
+	}
+
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	arg := db.CreateLikeParams{
+		UserID:   payload.UserID,
+		TargetID: targetID,
+	}
+
+	liked, err := server.queries.ToggleLike(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, liked)
+}
+
 type createLikeRequest struct {
 	TargetID string `json:"target_id" validate:"required,len=24"`
 }
@@ -46,37 +79,6 @@ func (server *Server) CreateLike(c echo.Context) error {
 	return c.JSON(http.StatusCreated, result)
 }
 
-type listLikesRequest struct {
-	TargetID string `query:"target_id" validate:"required,len=24"`
-	Offset   int64  `query:"offset" validate:"min=0"`
-	Limit    int64  `query:"limit" validate:"min=1"`
-}
-
-func (server *Server) ListLikes(c echo.Context) error {
-	req := new(listLikesRequest)
-	if err := bindAndValidate(c, req); err != nil {
-		return err
-	}
-
-	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	arg := db.ListLikesParams{
-		TargetID: targetID,
-		Offset:   req.Offset,
-		Limit:    req.Limit,
-	}
-
-	posts, err := server.queries.ListLikes(context.TODO(), arg)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
-	}
-
-	return c.JSON(http.StatusOK, posts)
-}
-
 type deleteLikeRequest struct {
 	ID string `json:"id" validate:"required,len=24"`
 }
@@ -107,6 +109,37 @@ func (server *Server) DeleteLike(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, result)
+}
+
+type listLikesRequest struct {
+	TargetID string `query:"target_id" validate:"required,len=24"`
+	Offset   int64  `query:"offset" validate:"min=0"`
+	Limit    int64  `query:"limit" validate:"min=1"`
+}
+
+func (server *Server) ListLikes(c echo.Context) error {
+	req := new(listLikesRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	arg := db.ListLikesParams{
+		TargetID: targetID,
+		Offset:   req.Offset,
+		Limit:    req.Limit,
+	}
+
+	posts, err := server.queries.ListLikes(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, posts)
 }
 
 type countLikesRequest struct {

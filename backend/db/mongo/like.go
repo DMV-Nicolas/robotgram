@@ -16,8 +16,8 @@ type CreateLikeParams struct {
 }
 
 func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.InsertOneResult, error) {
-	if err := q.DuplicatedLike(ctx, arg); err != nil {
-		return nil, err
+	if _, liked := q.IsLiked(ctx, arg); liked {
+		return nil, ErrDuplicatedLike
 	}
 
 	like := Like{
@@ -29,6 +29,15 @@ func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.
 
 	coll := q.db.Collection("likes")
 	result, err := coll.InsertOne(ctx, like)
+
+	return result, err
+}
+
+func (q *Queries) DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
+	filter := bson.M{"_id": id}
+
+	coll := q.db.Collection("likes")
+	result, err := coll.DeleteOne(ctx, filter)
 
 	return result, err
 }
@@ -73,23 +82,21 @@ func (q *Queries) ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, e
 	return likes, nil
 }
 
-func (q *Queries) DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
-	filter := bson.M{"_id": id}
-
-	coll := q.db.Collection("likes")
-	result, err := coll.DeleteOne(ctx, filter)
-
-	return result, err
-}
-
 func (q *Queries) CountLikes(ctx context.Context, targetID primitive.ObjectID) (int64, error) {
 	filter := bson.D{primitive.E{Key: "target_id", Value: targetID}}
 
 	coll := q.db.Collection("likes")
 	nLikes, err := coll.CountDocuments(ctx, filter, nil)
-	if err != nil {
-		return 0, err
-	}
 
-	return nLikes, nil
+	return nLikes, err
+}
+
+func (q *Queries) ToggleLike(ctx context.Context, arg CreateLikeParams) (bool, error) {
+	if like, liked := q.IsLiked(ctx, arg); liked {
+		_, err := q.DeleteLike(ctx, like.ID)
+		return false, err
+	} else {
+		_, err := q.CreateLike(ctx, arg)
+		return true, err
+	}
 }

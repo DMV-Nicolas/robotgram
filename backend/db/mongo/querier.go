@@ -26,6 +26,7 @@ type Querier interface {
 	ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error)
 	DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
 	CountLikes(ctx context.Context, targetID primitive.ObjectID) (int64, error)
+	ToggleLike(ctx context.Context, arg CreateLikeParams) (bool, error)
 
 	CreateSession(ctx context.Context, arg CreateSessionParams) (*mongo.InsertOneResult, error)
 	GetSession(ctx context.Context, id primitive.ObjectID) (Session, error)

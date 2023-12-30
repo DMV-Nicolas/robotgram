@@ -44,8 +44,8 @@ func (q *Queries) EmailTaken(ctx context.Context, email string) error {
 	return ErrEmailTaken
 }
 
-// DuplicatedLike verifies in the database if the entered like is already registered
-func (q *Queries) DuplicatedLike(ctx context.Context, arg CreateLikeParams) error {
+// IsLiked verifies in the database if the entered like is already registered
+func (q *Queries) IsLiked(ctx context.Context, arg CreateLikeParams) (Like, bool) {
 	filter := bson.D{
 		primitive.E{Key: "user_id", Value: arg.UserID},
 		primitive.E{Key: "target_id", Value: arg.TargetID},
@@ -57,8 +57,8 @@ func (q *Queries) DuplicatedLike(ctx context.Context, arg CreateLikeParams) erro
 	err := coll.FindOne(ctx, filter, opts).Decode(&like)
 
 	if err != nil {
-		return nil
+		return Like{}, false
 	}
 
-	return ErrDuplicatedLike
+	return like, true
 }

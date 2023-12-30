@@ -292,6 +292,21 @@ func (mr *MockQuerierMockRecorder) ListUsers(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockQuerier)(nil).ListUsers), arg0, arg1)
 }
 
+// ToggleLike mocks base method.
+func (m *MockQuerier) ToggleLike(arg0 context.Context, arg1 db.CreateLikeParams) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleLike", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleLike indicates an expected call of ToggleLike.
+func (mr *MockQuerierMockRecorder) ToggleLike(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleLike", reflect.TypeOf((*MockQuerier)(nil).ToggleLike), arg0, arg1)
+}
+
 // UpdatePost mocks base method.
 func (m *MockQuerier) UpdatePost(arg0 context.Context, arg1 db.UpdatePostParams) (*mongo.UpdateResult, error) {
 	m.ctrl.T.Helper()
