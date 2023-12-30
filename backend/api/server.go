@@ -38,30 +38,29 @@ func NewServer(config util.Config, queries db.Querier) (*Server, error) {
 }
 
 func (server *Server) setupRouter(e *echo.Echo) {
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	v1 := e.Group("/v1")
+	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:5173"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
-	e.GET("/", server.Home)
+	v1.GET("/", server.Home)
 
-	e.POST("/users", server.CreateUser)
-	e.POST("/users/login", server.LoginUser)
-	e.GET("/users/:username", server.GetUser)
-	e.GET("/users", server.ListUsers)
+	v1.POST("/users", server.CreateUser)
+	v1.POST("/users/login", server.LoginUser)
+	v1.GET("/users/:username", server.GetUser)
+	v1.GET("/users", server.ListUsers)
 
-	e.POST("/posts", authMiddleware(server.CreatePost, server.tokenMaker))
-	e.GET("/posts", server.ListPosts)
-	e.GET("/posts/:id", server.GetPost)
-	e.PUT("/posts", authMiddleware(server.UpdatePost, server.tokenMaker))
-	e.DELETE("/posts", authMiddleware(server.DeletePost, server.tokenMaker))
+	v1.POST("/posts", authMiddleware(server.CreatePost, server.tokenMaker))
+	v1.GET("/posts", server.ListPosts)
+	v1.GET("/posts/:id", server.GetPost)
+	v1.PUT("/posts/:id", authMiddleware(server.UpdatePost, server.tokenMaker))
+	v1.DELETE("/posts/:id", authMiddleware(server.DeletePost, server.tokenMaker))
 
-	e.POST("/likes/toggle", authMiddleware(server.ToggleLike, server.tokenMaker))
-	e.POST("/likes", authMiddleware(server.CreateLike, server.tokenMaker))
-	e.GET("/likes", server.ListLikes)
-	e.GET("/likes/count", server.CountLikes)
-	e.DELETE("/likes", authMiddleware(server.DeleteLike, server.tokenMaker))
+	v1.POST("/likes", authMiddleware(server.ToggleLike, server.tokenMaker))
+	v1.GET("/likes/:target_id", server.ListLikes)
+	v1.GET("/likes/:target_id/count", server.CountLikes)
 
-	e.POST("/token/refresh", server.RefreshToken)
+	v1.POST("/token/refresh", server.RefreshToken)
 
 	server.router = e
 }

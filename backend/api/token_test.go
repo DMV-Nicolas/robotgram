@@ -171,7 +171,7 @@ func TestRefreshTokenAPI(t *testing.T) {
 			server := newTestServer(t, queries, tokenSymmetricKey)
 			recorder := httptest.NewRecorder()
 
-			url := "/token/refresh"
+			url := "/v1/token/refresh"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)

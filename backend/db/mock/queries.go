@@ -67,21 +67,6 @@ func (mr *MockQuerierMockRecorder) CountLikes(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountLikes", reflect.TypeOf((*MockQuerier)(nil).CountLikes), arg0, arg1)
 }
 
-// CreateLike mocks base method.
-func (m *MockQuerier) CreateLike(arg0 context.Context, arg1 db.CreateLikeParams) (*mongo.InsertOneResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateLike", arg0, arg1)
-	ret0, _ := ret[0].(*mongo.InsertOneResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateLike indicates an expected call of CreateLike.
-func (mr *MockQuerierMockRecorder) CreateLike(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateLike", reflect.TypeOf((*MockQuerier)(nil).CreateLike), arg0, arg1)
-}
-
 // CreatePost mocks base method.
 func (m *MockQuerier) CreatePost(arg0 context.Context, arg1 db.CreatePostParams) (*mongo.InsertOneResult, error) {
 	m.ctrl.T.Helper()
@@ -125,21 +110,6 @@ func (m *MockQuerier) CreateUser(arg0 context.Context, arg1 db.CreateUserParams)
 func (mr *MockQuerierMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockQuerier)(nil).CreateUser), arg0, arg1)
-}
-
-// DeleteLike mocks base method.
-func (m *MockQuerier) DeleteLike(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.DeleteResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteLike", arg0, arg1)
-	ret0, _ := ret[0].(*mongo.DeleteResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DeleteLike indicates an expected call of DeleteLike.
-func (mr *MockQuerierMockRecorder) DeleteLike(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteLike", reflect.TypeOf((*MockQuerier)(nil).DeleteLike), arg0, arg1)
 }
 
 // DeletePost mocks base method.
@@ -293,12 +263,13 @@ func (mr *MockQuerierMockRecorder) ListUsers(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // ToggleLike mocks base method.
-func (m *MockQuerier) ToggleLike(arg0 context.Context, arg1 db.CreateLikeParams) (bool, error) {
+func (m *MockQuerier) ToggleLike(arg0 context.Context, arg1 db.ToggleLikeParams) (*mongo.InsertOneResult, *mongo.DeleteResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ToggleLike", arg0, arg1)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(*mongo.InsertOneResult)
+	ret1, _ := ret[1].(*mongo.DeleteResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // ToggleLike indicates an expected call of ToggleLike.

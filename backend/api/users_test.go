@@ -192,7 +192,7 @@ func TestCreateUserAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/users"
+			url := "/v1/users"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -368,7 +368,7 @@ func TestLoginUserAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/users/login"
+			url := "/v1/users/login"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -454,7 +454,7 @@ func TestGetUserAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/users/%s", tc.username)
+			url := fmt.Sprintf("/v1/users/%s", tc.username)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -546,7 +546,7 @@ func TestListUsersAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/users"
+			url := "/v1/users"
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 

@@ -111,7 +111,7 @@ func TestCreatePostAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
+			url := "/v1/posts"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -211,7 +211,7 @@ func TestGetPostAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/posts/%s", tc.id)
+			url := fmt.Sprintf("/v1/posts/%s", tc.id)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
@@ -303,7 +303,7 @@ func TestListPostsAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
+			url := "/v1/posts"
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -479,7 +479,7 @@ func TestUpdatePostAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
+			url := fmt.Sprintf("/v1/posts/%v", tc.body["id"])
 			request, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
@@ -643,16 +643,12 @@ func TestDeletePostAPI(t *testing.T) {
 			queries := mockdb.NewMockQuerier(ctrl)
 			tc.buildStubs(queries)
 
-			// marshal data body to json
-			data, err := json.Marshal(map[string]any{"id": tc.id})
-			require.NoError(t, err)
-
 			// start test server and send request
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
-			request, err := http.NewRequest(http.MethodDelete, url, bytes.NewReader(data))
+			url := fmt.Sprintf("/v1/posts/%v", tc.id)
+			request, err := http.NewRequest(http.MethodDelete, url, nil)
 			require.NoError(t, err)
 
 			request.Header.Add("Content-Type", "application/json")

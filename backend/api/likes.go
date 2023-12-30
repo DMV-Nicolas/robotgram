@@ -14,6 +14,11 @@ type toggleLikeRequest struct {
 	TargetID string `json:"target_id" validate:"required,len=24"`
 }
 
+type toggleLikeResponse struct {
+	CreatedResult *mongo.InsertOneResult
+	DeletedResult *mongo.DeleteResult
+}
+
 func (server *Server) ToggleLike(c echo.Context) error {
 	req := new(toggleLikeRequest)
 	if err := bindAndValidate(c, req); err != nil {
@@ -30,89 +35,26 @@ func (server *Server) ToggleLike(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	arg := db.CreateLikeParams{
+	arg := db.ToggleLikeParams{
 		UserID:   payload.UserID,
 		TargetID: targetID,
 	}
 
-	liked, err := server.queries.ToggleLike(context.TODO(), arg)
+	createdResult, deletedResult, err := server.queries.ToggleLike(context.TODO(), arg)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusOK, liked)
-}
-
-type createLikeRequest struct {
-	TargetID string `json:"target_id" validate:"required,len=24"`
-}
-
-func (server *Server) CreateLike(c echo.Context) error {
-	req := new(createLikeRequest)
-	if err := bindAndValidate(c, req); err != nil {
-		return err
+	res := toggleLikeResponse{
+		CreatedResult: createdResult,
+		DeletedResult: deletedResult,
 	}
 
-	payload, err := getAuthorizationPayload(c)
-	if err != nil {
-		return err
-	}
-
-	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	arg := db.CreateLikeParams{
-		UserID:   payload.UserID,
-		TargetID: targetID,
-	}
-
-	result, err := server.queries.CreateLike(context.TODO(), arg)
-	if err != nil {
-		if err == db.ErrDuplicatedLike {
-			return echo.NewHTTPError(http.StatusBadRequest, err)
-		}
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
-	}
-
-	return c.JSON(http.StatusCreated, result)
-}
-
-type deleteLikeRequest struct {
-	ID string `json:"id" validate:"required,len=24"`
-}
-
-func (server *Server) DeleteLike(c echo.Context) error {
-	req := new(deleteLikeRequest)
-	if err := bindAndValidate(c, req); err != nil {
-		return err
-	}
-
-	payload, err := getAuthorizationPayload(c)
-	if err != nil {
-		return err
-	}
-
-	gotLike, err := server.validLike(c, req.ID)
-	if err != nil {
-		return err
-	}
-
-	if gotLike.UserID != payload.UserID {
-		return echo.NewHTTPError(http.StatusUnauthorized, err)
-	}
-
-	result, err := server.queries.DeleteLike(context.TODO(), gotLike.ID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err)
-	}
-
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, res)
 }
 
 type listLikesRequest struct {
-	TargetID string `query:"target_id" validate:"required,len=24"`
+	TargetID string `param:"target_id" validate:"required,len=24"`
 	Offset   int64  `query:"offset" validate:"min=0"`
 	Limit    int64  `query:"limit" validate:"min=1"`
 }
@@ -143,7 +85,7 @@ func (server *Server) ListLikes(c echo.Context) error {
 }
 
 type countLikesRequest struct {
-	TargetID string `query:"target_id" validate:"required,len=24"`
+	TargetID string `param:"target_id" validate:"required,len=24"`
 }
 
 func (server *Server) CountLikes(c echo.Context) error {
@@ -163,24 +105,4 @@ func (server *Server) CountLikes(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, nLikes)
-}
-
-func (server *Server) validLike(c echo.Context, idStr string) (db.Like, error) {
-	id, err := primitive.ObjectIDFromHex(idStr)
-	if err != nil {
-		err = echo.NewHTTPError(http.StatusBadRequest, err)
-		return db.Like{}, err
-	}
-
-	like, err := server.queries.GetLike(context.TODO(), id)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			err = echo.NewHTTPError(http.StatusNotFound, err)
-			return db.Like{}, err
-		}
-		err = echo.NewHTTPError(http.StatusInternalServerError, err)
-		return db.Like{}, err
-	}
-
-	return like, nil
 }

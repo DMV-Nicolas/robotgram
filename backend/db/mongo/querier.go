@@ -21,12 +21,10 @@ type Querier interface {
 	UpdatePost(ctx context.Context, arg UpdatePostParams) (*mongo.UpdateResult, error)
 	DeletePost(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
 
-	CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.InsertOneResult, error)
 	GetLike(ctx context.Context, id primitive.ObjectID) (Like, error)
 	ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error)
-	DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error)
 	CountLikes(ctx context.Context, targetID primitive.ObjectID) (int64, error)
-	ToggleLike(ctx context.Context, arg CreateLikeParams) (bool, error)
+	ToggleLike(ctx context.Context, arg ToggleLikeParams) (*mongo.InsertOneResult, *mongo.DeleteResult, error)
 
 	CreateSession(ctx context.Context, arg CreateSessionParams) (*mongo.InsertOneResult, error)
 	GetSession(ctx context.Context, id primitive.ObjectID) (Session, error)

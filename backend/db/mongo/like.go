@@ -10,36 +10,34 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type CreateLikeParams struct {
+type ToggleLikeParams struct {
 	UserID   primitive.ObjectID `json:"user_id" bson:"user_id"`
 	TargetID primitive.ObjectID `json:"target_id" bson:"target_id"`
 }
 
-func (q *Queries) CreateLike(ctx context.Context, arg CreateLikeParams) (*mongo.InsertOneResult, error) {
-	if _, liked := q.IsLiked(ctx, arg); liked {
-		return nil, ErrDuplicatedLike
+func (q *Queries) ToggleLike(ctx context.Context, arg ToggleLikeParams) (*mongo.InsertOneResult, *mongo.DeleteResult, error) {
+	if like, liked := q.IsLiked(ctx, arg); liked {
+		// delete like
+		filter := bson.M{"_id": like.ID}
+
+		coll := q.db.Collection("likes")
+		result, err := coll.DeleteOne(ctx, filter)
+
+		return nil, result, err
+	} else {
+		// create like
+		like := Like{
+			ID:        primitive.NewObjectID(),
+			UserID:    arg.UserID,
+			TargetID:  arg.TargetID,
+			CreatedAt: time.Now(),
+		}
+
+		coll := q.db.Collection("likes")
+		result, err := coll.InsertOne(ctx, like)
+
+		return result, nil, err
 	}
-
-	like := Like{
-		ID:        primitive.NewObjectID(),
-		UserID:    arg.UserID,
-		TargetID:  arg.TargetID,
-		CreatedAt: time.Now(),
-	}
-
-	coll := q.db.Collection("likes")
-	result, err := coll.InsertOne(ctx, like)
-
-	return result, err
-}
-
-func (q *Queries) DeleteLike(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
-	filter := bson.M{"_id": id}
-
-	coll := q.db.Collection("likes")
-	result, err := coll.DeleteOne(ctx, filter)
-
-	return result, err
 }
 
 func (q *Queries) GetLike(ctx context.Context, id primitive.ObjectID) (Like, error) {
@@ -89,14 +87,4 @@ func (q *Queries) CountLikes(ctx context.Context, targetID primitive.ObjectID) (
 	nLikes, err := coll.CountDocuments(ctx, filter, nil)
 
 	return nLikes, err
-}
-
-func (q *Queries) ToggleLike(ctx context.Context, arg CreateLikeParams) (bool, error) {
-	if like, liked := q.IsLiked(ctx, arg); liked {
-		_, err := q.DeleteLike(ctx, like.ID)
-		return false, err
-	} else {
-		_, err := q.CreateLike(ctx, arg)
-		return true, err
-	}
 }

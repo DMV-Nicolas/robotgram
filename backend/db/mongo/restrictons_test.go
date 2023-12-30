@@ -42,19 +42,3 @@ func TestEmailTaken(t *testing.T) {
 	require.EqualError(t, ErrEmailTaken, err.Error())
 	require.Empty(t, result)
 }
-
-func TestDuplicatedLike(t *testing.T) {
-	user := randomUser(t)
-	post := randomPost(t)
-	like := randomLike(t, user.ID, post.ID)
-
-	arg := CreateLikeParams{
-		UserID:   like.UserID,
-		TargetID: like.TargetID,
-	}
-
-	result, err := testQueries.CreateLike(testCtx, arg)
-	require.Error(t, err)
-	require.EqualError(t, ErrDuplicatedLike, err.Error())
-	require.Empty(t, result)
-}

@@ -45,7 +45,7 @@ func (q *Queries) EmailTaken(ctx context.Context, email string) error {
 }
 
 // IsLiked verifies in the database if the entered like is already registered
-func (q *Queries) IsLiked(ctx context.Context, arg CreateLikeParams) (Like, bool) {
+func (q *Queries) IsLiked(ctx context.Context, arg ToggleLikeParams) (Like, bool) {
 	filter := bson.D{
 		primitive.E{Key: "user_id", Value: arg.UserID},
 		primitive.E{Key: "target_id", Value: arg.TargetID},

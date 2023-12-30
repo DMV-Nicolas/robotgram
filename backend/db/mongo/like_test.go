@@ -6,20 +6,20 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func randomLike(t *testing.T, userID primitive.ObjectID, targetID primitive.ObjectID) Like {
-	arg := CreateLikeParams{
+	arg := ToggleLikeParams{
 		UserID:   userID,
 		TargetID: targetID,
 	}
 
-	result, err := testQueries.CreateLike(testCtx, arg)
+	createdResult, deletedResult, err := testQueries.ToggleLike(testCtx, arg)
 	require.NoError(t, err)
-	require.NotEmpty(t, result)
+	require.NotEmpty(t, createdResult)
+	require.Empty(t, deletedResult)
 
-	insertedID, ok := result.InsertedID.(primitive.ObjectID)
+	insertedID, ok := createdResult.InsertedID.(primitive.ObjectID)
 	require.True(t, ok)
 	require.NotEqual(t, primitive.NilObjectID, insertedID)
 
@@ -35,10 +35,25 @@ func randomLike(t *testing.T, userID primitive.ObjectID, targetID primitive.Obje
 	return like
 }
 
-func TestCreateLike(t *testing.T) {
+func TestToggleLike(t *testing.T) {
 	user := randomUser(t)
 	post := randomPost(t)
 	randomLike(t, user.ID, post.ID)
+
+	arg := ToggleLikeParams{
+		UserID:   user.ID,
+		TargetID: post.ID,
+	}
+
+	createdResult, deletedResult, err := testQueries.ToggleLike(testCtx, arg)
+	require.NoError(t, err)
+	require.Empty(t, createdResult)
+	require.NotEmpty(t, deletedResult)
+
+	createdResult, deletedResult, err = testQueries.ToggleLike(testCtx, arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, createdResult)
+	require.Empty(t, deletedResult)
 }
 
 func TestGetLike(t *testing.T) {
@@ -76,20 +91,6 @@ func TestListLikes(t *testing.T) {
 	}
 }
 
-func TestDeleteLike(t *testing.T) {
-	like1 := randomLike(t, primitive.NewObjectID(), primitive.NewObjectID())
-
-	result, err := testQueries.DeleteLike(testCtx, like1.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, result)
-	require.EqualValues(t, 1, result.DeletedCount)
-
-	like2, err := testQueries.GetLike(testCtx, like1.ID)
-	require.Error(t, err)
-	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
-	require.Empty(t, like2)
-}
-
 func TestCountLikes(t *testing.T) {
 	post := randomPost(t)
 	n := 10
@@ -101,23 +102,4 @@ func TestCountLikes(t *testing.T) {
 	require.NoError(t, err)
 	require.NotZero(t, nLikes)
 	require.EqualValues(t, n, nLikes)
-}
-
-func TestToggleLike(t *testing.T) {
-	user := randomUser(t)
-	post := randomPost(t)
-	randomLike(t, user.ID, post.ID)
-
-	arg := CreateLikeParams{
-		UserID:   user.ID,
-		TargetID: post.ID,
-	}
-
-	liked, err := testQueries.ToggleLike(testCtx, arg)
-	require.NoError(t, err)
-	require.False(t, liked)
-
-	liked, err = testQueries.ToggleLike(testCtx, arg)
-	require.NoError(t, err)
-	require.True(t, liked)
 }
