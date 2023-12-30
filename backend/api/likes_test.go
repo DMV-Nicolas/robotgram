@@ -168,7 +168,7 @@ func TestToggleLikeAPI(t *testing.T) {
 	}
 }
 
-func TestListPostLikesAPI(t *testing.T) {
+func TestListLikesAPI(t *testing.T) {
 	offset, limit := 5, 10
 	post := randomPost(t, primitive.NewObjectID())
 	likes := make([]db.Like, limit-offset)
@@ -275,14 +275,13 @@ func TestListPostLikesAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/posts/%v/likes", tc.query["target_id"])
+			url := fmt.Sprintf("/likes/%v", tc.query["target_id"])
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
 			request.Header.Add("Content-Type", "application/json")
 
 			q := request.URL.Query()
-			q.Add("target_id", fmt.Sprint(tc.query["target_id"]))
 			q.Add("offset", fmt.Sprint(tc.query["offset"]))
 			q.Add("limit", fmt.Sprint(tc.query["limit"]))
 			request.URL.RawQuery = q.Encode()
@@ -371,7 +370,7 @@ func TestCountLikesAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/posts/%v/count-likes", tc.targetID)
+			url := fmt.Sprintf("/likes/%v/count", tc.targetID)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 			request.Header.Add("Content-Type", "application/json")

@@ -53,14 +53,14 @@ func (server *Server) ToggleLike(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-type listPostLikesRequest struct {
-	TargetID string `param:"id" validate:"required,len=24"`
+type listLikesRequest struct {
+	TargetID string `param:"target_id" validate:"required,len=24"`
 	Offset   int64  `query:"offset" validate:"min=0"`
 	Limit    int64  `query:"limit" validate:"min=1"`
 }
 
-func (server *Server) ListPostLikes(c echo.Context) error {
-	req := new(listPostLikesRequest)
+func (server *Server) ListLikes(c echo.Context) error {
+	req := new(listLikesRequest)
 	if err := bindAndValidate(c, req); err != nil {
 		return err
 	}
@@ -84,12 +84,12 @@ func (server *Server) ListPostLikes(c echo.Context) error {
 	return c.JSON(http.StatusOK, posts)
 }
 
-type countPostLikesRequest struct {
-	TargetID string `param:"id" validate:"required,len=24"`
+type countLikesRequest struct {
+	TargetID string `param:"target_id" validate:"required,len=24"`
 }
 
-func (server *Server) CountPostLikes(c echo.Context) error {
-	req := new(countPostLikesRequest)
+func (server *Server) CountLikes(c echo.Context) error {
+	req := new(countLikesRequest)
 	if err := bindAndValidate(c, req); err != nil {
 		return err
 	}
