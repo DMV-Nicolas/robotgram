@@ -22,6 +22,9 @@ function App() {
     <>
       <h1>Robotgram</h1>
       <PostCard post={p} user={u} likes={10} />
+      <PostCard post={p} user={u} likes={10} />
+      <PostCard post={p} user={u} likes={10} />
+      <PostCard post={p} user={u} likes={10} />
     </>
   )
 }
