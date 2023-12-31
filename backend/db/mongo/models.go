@@ -22,7 +22,6 @@ type Post struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id"`
 	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
 	Images      []string           `json:"images" bson:"images"`
-	Videos      []string           `json:"videos" bson:"videos"`
 	Description string             `json:"description" bson:"description"`
 	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
 }

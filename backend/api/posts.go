@@ -13,7 +13,6 @@ import (
 
 type createPostRequest struct {
 	Images      []string `json:"images"`
-	Videos      []string `json:"videos" `
 	Description string   `json:"description"`
 }
 
@@ -31,7 +30,6 @@ func (server *Server) CreatePost(c echo.Context) error {
 	arg := db.CreatePostParams{
 		UserID:      payload.UserID,
 		Images:      req.Images,
-		Videos:      req.Videos,
 		Description: req.Description,
 	}
 
@@ -96,7 +94,6 @@ func (server *Server) ListPosts(c echo.Context) error {
 type updatePostRequest struct {
 	ID          string   `param:"id" validate:"required,len=24"`
 	Images      []string `json:"images"`
-	Videos      []string `json:"videos" `
 	Description string   `json:"description"`
 }
 
@@ -124,7 +121,6 @@ func (server *Server) UpdatePost(c echo.Context) error {
 	arg := db.UpdatePostParams{
 		ID:          gotPost.ID,
 		Images:      req.Images,
-		Videos:      req.Videos,
 		Description: req.Description,
 	}
 

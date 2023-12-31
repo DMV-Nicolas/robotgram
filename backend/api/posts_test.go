@@ -35,7 +35,6 @@ func TestCreatePostAPI(t *testing.T) {
 			name: "OK",
 			body: map[string]any{
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -44,7 +43,6 @@ func TestCreatePostAPI(t *testing.T) {
 				arg := db.CreatePostParams{
 					UserID:      user.ID,
 					Images:      post.Images,
-					Videos:      post.Videos,
 					Description: post.Description,
 				}
 
@@ -62,7 +60,6 @@ func TestCreatePostAPI(t *testing.T) {
 			name: "InternalError",
 			body: map[string]any{
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -81,7 +78,6 @@ func TestCreatePostAPI(t *testing.T) {
 			name: "IncorrectBodyTypes",
 			body: map[string]any{
 				"images":      "incorrect",
-				"videos":      "incorrect",
 				"description": 100,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -342,7 +338,6 @@ func TestUpdatePostAPI(t *testing.T) {
 			body: map[string]any{
 				"id":          post.ID.Hex(),
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -356,7 +351,6 @@ func TestUpdatePostAPI(t *testing.T) {
 				arg := db.UpdatePostParams{
 					ID:          post.ID,
 					Images:      post.Images,
-					Videos:      post.Videos,
 					Description: post.Description,
 				}
 
@@ -375,7 +369,6 @@ func TestUpdatePostAPI(t *testing.T) {
 			body: map[string]any{
 				"id":          post.ID.Hex(),
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -399,7 +392,6 @@ func TestUpdatePostAPI(t *testing.T) {
 			body: map[string]any{
 				"id":          post.ID.Hex(),
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -422,7 +414,6 @@ func TestUpdatePostAPI(t *testing.T) {
 			body: map[string]any{
 				"id":          "qwertyuiopasdfghjklñzxcv",
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -444,7 +435,6 @@ func TestUpdatePostAPI(t *testing.T) {
 			body: map[string]any{
 				"id":          ":D",
 				"images":      post.Images,
-				"videos":      post.Videos,
 				"description": post.Description,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
@@ -665,7 +655,6 @@ func randomPost(t *testing.T, userID primitive.ObjectID) db.Post {
 		ID:          util.RandomID(),
 		UserID:      userID,
 		Images:      util.RandomImages(1),
-		Videos:      util.RandomVideos(1),
 		Description: util.RandomDescription(100),
 	}
 }

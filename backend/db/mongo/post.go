@@ -13,7 +13,6 @@ import (
 type CreatePostParams struct {
 	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
 	Images      []string           `json:"images" bson:"images"`
-	Videos      []string           `json:"videos" bson:"videos"`
 	Description string             `json:"description" bson:"description"`
 }
 
@@ -22,7 +21,6 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (*mongo.
 		ID:          primitive.NewObjectID(),
 		UserID:      arg.UserID,
 		Images:      arg.Images,
-		Videos:      arg.Videos,
 		Description: arg.Description,
 		CreatedAt:   time.Now(),
 	}
@@ -75,7 +73,6 @@ func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, e
 type UpdatePostParams struct {
 	ID          primitive.ObjectID `json:"id" bson:"_id"`
 	Images      []string           `json:"images" bson:"images"`
-	Videos      []string           `json:"videos" bson:"videos"`
 	Description string             `json:"description" bson:"description"`
 }
 
@@ -84,7 +81,6 @@ func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (*mongo.
 	update := bson.M{
 		"$set": bson.M{
 			"images":      arg.Images,
-			"videos":      arg.Videos,
 			"description": arg.Description,
 		},
 	}

@@ -89,15 +89,6 @@ func RandomImages(n int) []string {
 	return images
 }
 
-// RandomVideos generates random videos.
-func RandomVideos(n int) []string {
-	videos := make([]string, n)
-	for i := 0; i < n; i++ {
-		videos[i] = RandomString(7)
-	}
-	return videos
-}
-
 // RandomDescription generates a random description with the given size.
 func RandomDescription(size int) string {
 	return RandomString(size)

@@ -15,7 +15,6 @@ func randomPost(t *testing.T) Post {
 	arg := CreatePostParams{
 		UserID:      user.ID,
 		Images:      []string{"ai", "bi", "ci"},
-		Videos:      []string{"av", "bv", "cv"},
 		Description: util.RandomPassword(100),
 	}
 
@@ -34,7 +33,6 @@ func randomPost(t *testing.T) Post {
 	require.Equal(t, insertedID, post.ID)
 	require.Equal(t, arg.UserID, post.UserID)
 	require.Equal(t, arg.Images, post.Images)
-	require.Equal(t, arg.Videos, post.Videos)
 	require.Equal(t, arg.Description, post.Description)
 	require.WithinDuration(t, time.Now(), post.CreatedAt, time.Second)
 
@@ -55,7 +53,6 @@ func TestGetPost(t *testing.T) {
 	require.Equal(t, post1.ID, post2.ID)
 	require.Equal(t, post1.UserID, post2.UserID)
 	require.Equal(t, post1.Images, post2.Images)
-	require.Equal(t, post1.Videos, post2.Videos)
 	require.Equal(t, post1.Description, post2.Description)
 	require.WithinDuration(t, post1.CreatedAt, post2.CreatedAt, time.Second)
 }
@@ -86,7 +83,6 @@ func TestUpdatePost(t *testing.T) {
 	arg := UpdatePostParams{
 		ID:          post1.ID,
 		Images:      []string{"1y", "2y", "3y"},
-		Videos:      []string{"1x", "2x", "3x"},
 		Description: util.RandomPassword(200),
 	}
 
@@ -103,7 +99,6 @@ func TestUpdatePost(t *testing.T) {
 	require.Equal(t, post1.ID, post2.ID)
 	require.Equal(t, post1.UserID, post2.UserID)
 	require.NotEqual(t, post1.Images, post2.Images)
-	require.NotEqual(t, post1.Videos, post2.Videos)
 	require.NotEqual(t, post1.Description, post2.Description)
 }
 
