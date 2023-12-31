@@ -6,7 +6,7 @@ function App() {
   let p: post = {
     _id: "123",
     user_id: "123",
-    images: ["a", "b", "c"],
+    images: ["https://img.freepik.com/vector-gratis/juguete-robot-vintage-sobre-fondo-blanco_1308-77501.jpg", "https://www.lavanguardia.com/andro4all/hero/2023/10/fabrica-de-robots.png", "c"],
     description: "arroz con agua",
     created_at: "ayer"
   }

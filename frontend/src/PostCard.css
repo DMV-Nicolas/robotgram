@@ -1,0 +1,32 @@
+.rg-postCard {
+    display: flex;
+    flex-direction: column;
+    width: 30em;
+    margin: auto;
+}
+
+.rg-postCard-header {
+    display: flex;
+    align-items: center;
+    padding: .875em 0;
+    gap: .5em;
+}
+
+.rg-postCard-avatar {
+    width: 2em;
+    border-radius: 50%;
+}
+
+.rg-postCard-username {
+    font-size: .875em;
+}
+
+.rg-postCard-body {
+    width: 100%;
+}
+
+.rg-postCard-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

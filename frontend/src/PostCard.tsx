@@ -22,15 +22,21 @@ type postCardParams = {
 }
 
 export function PostCard({ post, user, likes }: postCardParams) {
+    let genderEmoji: string
+    if (user.gender == "male") {
+        genderEmoji = "♂️"
+    } else {
+        genderEmoji = "♀️"
+    }
+
     return (
         <article className="rg-postCard">
             <header className="rg-postCard-header">
                 <img className="rg-postCard-avatar" src={user.avatar} alt="avatar" />
-                <strong className="tg-postCard-username">@{user.username}</strong>
-                <i>{user.gender}</i>
+                <strong className="rg-postCard-username">{user.username} {genderEmoji}</strong>
             </header>
             <div className="rg-postCard-body">
-                {post.images.map((url) => <img src={url} rel="post_image" />)}
+                {post.images.map((url, i) => <img className="rg-postCard-image" src={url} rel="post_image" key={i + post._id} />)}
             </div>
             <footer className="rg-postCard-footer">
                 <span>❤️ {likes}</span>
