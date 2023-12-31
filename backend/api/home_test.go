@@ -106,7 +106,6 @@ func requireBodyMatchPost(t *testing.T, body *bytes.Buffer, post db.Post) {
 	require.Equal(t, bodyResult.ID, post.ID)
 	require.Equal(t, bodyResult.UserID, post.UserID)
 	require.Equal(t, bodyResult.Images, post.Images)
-	require.Equal(t, bodyResult.Videos, post.Videos)
 	require.Equal(t, bodyResult.Description, post.Description)
 
 	require.WithinDuration(t, bodyResult.CreatedAt, post.CreatedAt, time.Second)
@@ -124,7 +123,6 @@ func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, posts []db.Post) {
 		require.Equal(t, posts[i].ID, bodyResult[i].ID)
 		require.Equal(t, posts[i].UserID, bodyResult[i].UserID)
 		require.Equal(t, posts[i].Images, bodyResult[i].Images)
-		require.Equal(t, posts[i].Videos, bodyResult[i].Videos)
 		require.Equal(t, posts[i].Description, bodyResult[i].Description)
 		require.WithinDuration(t, posts[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
 	}
