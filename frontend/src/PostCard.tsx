@@ -57,24 +57,26 @@ function Slider({ images, postID }: sliderParams) {
     }
 
     return (
-        <div className="rg-postCard-slider">
-            <div className="leftArrow" onClick={() => scrollToImage("prev")}></div>
-            <div className="rightArrow" onClick={() => scrollToImage("next")}></div>
-            <div className="rg-postCard-images">
-                <ul ref={listRef}>
-                    {images.map((url, i) => <li key={postID + i}>
-                        <img className="rg-postCard-image" src={url} width={468} height={585} />
-                    </li>)}
-                </ul>
+        <>
+            <div className="rg-postCard-slider">
+                <div className="leftArrow" onClick={() => scrollToImage("prev")}></div>
+                <div className="rightArrow" onClick={() => scrollToImage("next")}></div>
+                <div className="rg-postCard-images">
+                    <ul ref={listRef}>
+                        {images.map((url, i) => <li key={postID + i}>
+                            <img className="rg-postCard-image" src={url} width={468} height={585} />
+                        </li>)}
+                    </ul>
+                </div>
             </div>
             <div className="dots-container">
-                {images.map((_, idx) => (<div key={idx}
+                {images.map((_, idx) => (<div key={postID + idx}
                     className={`dot-container-item ${idx === currentIndex ? "active" : ""}`}
                     onClick={() => goToSlide(idx)}>
                     &#9865;
                 </div>))}
             </div>
-        </div>
+        </>
     )
 
 }
@@ -103,7 +105,7 @@ export function PostCard({ post, user, likes }: postCardParams) {
                 <Slider images={post.images} postID={post._id} />
             </div>
             <footer className="rg-postCard-footer">
-                <span></span>
+                <span>{likes}</span>
             </footer>
         </article>
     )
