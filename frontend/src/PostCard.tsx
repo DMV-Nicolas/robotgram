@@ -1,38 +1,40 @@
-function PostCardHeader() {
-    return (
-        <header className="rg-postCard-header">
-            <img className="rg-postCard-avatar" src="https://unavatar.io/dmvnicolas" alt="avatar" />
-            <div>
-                <strong>Nicolas David</strong>
-                <span>@dmvnicolas</span>
-            </div>
-        </header>
-    )
+import "./PostCard.css"
+
+export type user = {
+    _id: string
+    username: string
+    avatar: string
+    gender: "male" | "female"
 }
 
-function PostCardBody() {
-    return (
-        <body>
-            <img src="https://png.pngtree.com/background/20230612/original/pngtree-wolf-animals-images-wallpaper-for-pc-384x480-picture-image_3180467.jpg" alt="post" />
-        </body>
-    )
+export type post = {
+    _id: string
+    user_id: string
+    images: string[]
+    description: string
+    created_at: string
 }
 
-function PostCardFooter() {
-    return (
-        <footer>
-            <span>Like</span>
-            <span>Comments</span>
-        </footer>
-    )
+type postCardParams = {
+    user: user
+    post: post
+    likes: number
 }
 
-export function PostCard() {
+export function PostCard({ post, user, likes }: postCardParams) {
     return (
         <article className="rg-postCard">
-            <PostCardHeader />
-            <PostCardBody />
-            <PostCardFooter />
+            <header className="rg-postCard-header">
+                <img className="rg-postCard-avatar" src={user.avatar} alt="avatar" />
+                <strong className="tg-postCard-username">@{user.username}</strong>
+                <i>{user.gender}</i>
+            </header>
+            <div className="rg-postCard-body">
+                {post.images.map((url) => <img src={url} rel="post_image" />)}
+            </div>
+            <footer className="rg-postCard-footer">
+                <span>❤️ {likes}</span>
+            </footer>
         </article>
     )
 }
