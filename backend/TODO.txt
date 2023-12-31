@@ -1,2 +1,0 @@
-Montar mejor las carpetas
-Devolver mejores errores en la API
