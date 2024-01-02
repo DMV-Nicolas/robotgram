@@ -89,3 +89,12 @@ func (q *Queries) UpdateComment(ctx context.Context, arg UpdateCommentParams) (*
 
 	return result, err
 }
+
+func (q *Queries) DeleteComment(ctx context.Context, id primitive.ObjectID) (*mongo.DeleteResult, error) {
+	filter := bson.M{"_id": id}
+
+	coll := q.db.Collection("comments")
+	result, err := coll.DeleteOne(ctx, filter)
+
+	return result, err
+}

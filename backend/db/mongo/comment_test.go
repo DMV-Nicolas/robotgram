@@ -7,6 +7,7 @@ import (
 	"github.com/DMV-Nicolas/robotgram/backend/util"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func randomComment(t *testing.T, userID, targetID primitive.ObjectID) Comment {
@@ -100,4 +101,18 @@ func TestUpdateComment(t *testing.T) {
 	require.Equal(t, comment1.TargetID, comment2.TargetID)
 	require.NotEqual(t, comment1.Content, comment2.Content)
 	require.WithinDuration(t, comment1.CreatedAt, comment2.CreatedAt, time.Second)
+}
+
+func TestDeleteComment(t *testing.T) {
+	comment1 := randomComment(t, primitive.NewObjectID(), primitive.NewObjectID())
+
+	result, err := testQueries.DeleteComment(testCtx, comment1.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.DeletedCount)
+
+	comment2, err := testQueries.GetComment(testCtx, comment1.ID)
+	require.Error(t, err)
+	require.EqualError(t, mongo.ErrNoDocuments, err.Error())
+	require.Empty(t, comment2)
 }

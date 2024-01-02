@@ -127,6 +127,21 @@ func (mr *MockQuerierMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockQuerier)(nil).CreateUser), arg0, arg1)
 }
 
+// DeleteComment mocks base method.
+func (m *MockQuerier) DeleteComment(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.DeleteResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteComment", arg0, arg1)
+	ret0, _ := ret[0].(*mongo.DeleteResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteComment indicates an expected call of DeleteComment.
+func (mr *MockQuerierMockRecorder) DeleteComment(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteComment", reflect.TypeOf((*MockQuerier)(nil).DeleteComment), arg0, arg1)
+}
+
 // DeletePost mocks base method.
 func (m *MockQuerier) DeletePost(arg0 context.Context, arg1 primitive.ObjectID) (*mongo.DeleteResult, error) {
 	m.ctrl.T.Helper()
