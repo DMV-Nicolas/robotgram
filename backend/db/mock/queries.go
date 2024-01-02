@@ -67,6 +67,21 @@ func (mr *MockQuerierMockRecorder) CountLikes(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountLikes", reflect.TypeOf((*MockQuerier)(nil).CountLikes), arg0, arg1)
 }
 
+// CreateComment mocks base method.
+func (m *MockQuerier) CreateComment(arg0 context.Context, arg1 db.CreateCommentParams) (*mongo.InsertOneResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateComment", arg0, arg1)
+	ret0, _ := ret[0].(*mongo.InsertOneResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateComment indicates an expected call of CreateComment.
+func (mr *MockQuerierMockRecorder) CreateComment(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComment", reflect.TypeOf((*MockQuerier)(nil).CreateComment), arg0, arg1)
+}
+
 // CreatePost mocks base method.
 func (m *MockQuerier) CreatePost(arg0 context.Context, arg1 db.CreatePostParams) (*mongo.InsertOneResult, error) {
 	m.ctrl.T.Helper()
@@ -155,6 +170,21 @@ func (m *MockQuerier) DeleteUser(arg0 context.Context, arg1 primitive.ObjectID) 
 func (mr *MockQuerierMockRecorder) DeleteUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockQuerier)(nil).DeleteUser), arg0, arg1)
+}
+
+// GetComment mocks base method.
+func (m *MockQuerier) GetComment(arg0 context.Context, arg1 primitive.ObjectID) (db.Comment, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetComment", arg0, arg1)
+	ret0, _ := ret[0].(db.Comment)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetComment indicates an expected call of GetComment.
+func (mr *MockQuerierMockRecorder) GetComment(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetComment", reflect.TypeOf((*MockQuerier)(nil).GetComment), arg0, arg1)
 }
 
 // GetLike mocks base method.
