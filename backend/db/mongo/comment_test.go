@@ -76,3 +76,28 @@ func TestListComments(t *testing.T) {
 		require.NotEmpty(t, c)
 	}
 }
+
+func TestUpdateComment(t *testing.T) {
+	comment1 := randomComment(t, primitive.NewObjectID(), primitive.NewObjectID())
+
+	arg := UpdateCommentParams{
+		ID:      comment1.ID,
+		Content: util.RandomString(20),
+	}
+
+	result, err := testQueries.UpdateComment(testCtx, arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+	require.EqualValues(t, 1, result.MatchedCount)
+	require.EqualValues(t, 1, result.ModifiedCount)
+
+	comment2, err := testQueries.GetComment(testCtx, comment1.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, comment2)
+
+	require.Equal(t, comment1.ID, comment2.ID)
+	require.Equal(t, comment1.UserID, comment2.UserID)
+	require.Equal(t, comment1.TargetID, comment2.TargetID)
+	require.NotEqual(t, comment1.Content, comment2.Content)
+	require.WithinDuration(t, comment1.CreatedAt, comment2.CreatedAt, time.Second)
+}

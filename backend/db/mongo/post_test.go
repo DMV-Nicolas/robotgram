@@ -100,6 +100,7 @@ func TestUpdatePost(t *testing.T) {
 	require.Equal(t, post1.UserID, post2.UserID)
 	require.NotEqual(t, post1.Images, post2.Images)
 	require.NotEqual(t, post1.Description, post2.Description)
+	require.WithinDuration(t, post1.CreatedAt, post2.CreatedAt, time.Second)
 }
 
 func TestDeletePost(t *testing.T) {

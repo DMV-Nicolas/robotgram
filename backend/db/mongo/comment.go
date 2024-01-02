@@ -70,3 +70,22 @@ func (q *Queries) ListComments(ctx context.Context, arg ListCommentsParams) ([]C
 
 	return comments, nil
 }
+
+type UpdateCommentParams struct {
+	ID      primitive.ObjectID `json:"id" bson:"_id"`
+	Content string             `json:"content" bson:"content"`
+}
+
+func (q *Queries) UpdateComment(ctx context.Context, arg UpdateCommentParams) (*mongo.UpdateResult, error) {
+	filter := bson.M{"_id": arg.ID}
+	update := bson.M{
+		"$set": bson.M{
+			"content": arg.Content,
+		},
+	}
+
+	coll := q.db.Collection("comments")
+	result, err := coll.UpdateOne(ctx, filter, update)
+
+	return result, err
+}

@@ -29,6 +29,7 @@ type Querier interface {
 	CreateComment(ctx context.Context, arg CreateCommentParams) (*mongo.InsertOneResult, error)
 	GetComment(ctx context.Context, id primitive.ObjectID) (Comment, error)
 	ListComments(ctx context.Context, arg ListCommentsParams) ([]Comment, error)
+	UpdateComment(ctx context.Context, arg UpdateCommentParams) (*mongo.UpdateResult, error)
 
 	CreateSession(ctx context.Context, arg CreateSessionParams) (*mongo.InsertOneResult, error)
 	GetSession(ctx context.Context, id primitive.ObjectID) (Session, error)
