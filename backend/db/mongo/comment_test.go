@@ -54,3 +54,25 @@ func TestGetComment(t *testing.T) {
 	require.Equal(t, comment1.Content, comment2.Content)
 	require.WithinDuration(t, comment1.CreatedAt, comment2.CreatedAt, time.Second)
 }
+
+func TestListComments(t *testing.T) {
+	post := randomPost(t)
+	n := 10
+	for i := 0; i < n; i++ {
+		randomComment(t, primitive.NewObjectID(), post.ID)
+	}
+
+	arg := ListCommentsParams{
+		TargetID: post.ID,
+		Offset:   int64(n / 2),
+		Limit:    int64(n / 2),
+	}
+
+	comments, err := testQueries.ListComments(testCtx, arg)
+	require.NoError(t, err)
+	require.Len(t, comments, n/2)
+
+	for _, c := range comments {
+		require.NotEmpty(t, c)
+	}
+}

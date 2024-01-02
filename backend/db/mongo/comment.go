@@ -42,7 +42,7 @@ func (q *Queries) GetComment(ctx context.Context, id primitive.ObjectID) (Commen
 	return comment, err
 }
 
-/*type ListCommentsParams struct {
+type ListCommentsParams struct {
 	TargetID primitive.ObjectID `json:"target_id" bson:"target_id"`
 	Offset   int64              `json:"offset" bson:"limit"`
 	Limit    int64              `json:"limit" bson:"limit"`
@@ -69,4 +69,4 @@ func (q *Queries) ListComments(ctx context.Context, arg ListCommentsParams) ([]C
 	}
 
 	return comments, nil
-}*/
+}
