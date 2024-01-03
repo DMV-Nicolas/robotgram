@@ -119,7 +119,7 @@ func (server *Server) UpdateComment(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-/*type deleteCommentRequest struct {
+type deleteCommentRequest struct {
 	ID string `param:"id" validate:"required,len=24"`
 }
 
@@ -153,7 +153,7 @@ func (server *Server) DeleteComment(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, result)
-}*/
+}
 
 func (server *Server) validComment(c echo.Context, idStr string) (db.Comment, error) {
 	id, err := primitive.ObjectIDFromHex(idStr)
