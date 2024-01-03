@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -132,6 +133,124 @@ func TestCreateCommentAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
+func TestListCommentsAPI(t *testing.T) {
+	offset, limit := 5, 10
+	post := randomPost(t, primitive.NewObjectID())
+	comments := make([]db.Comment, limit-offset)
+	for i := 0; i < limit-offset; i++ {
+		comments[i] = randomComment(t, primitive.NewObjectID(), post.ID)
+	}
+
+	testCases := []struct {
+		name          string
+		query         map[string]any
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			query: map[string]any{
+				"target_id": post.ID.Hex(),
+				"offset":    offset,
+				"limit":     limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				arg := db.ListCommentsParams{
+					TargetID: post.ID,
+					Offset:   int64(offset),
+					Limit:    int64(limit),
+				}
+
+				querier.EXPECT().
+					ListComments(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(comments, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchComments(t, recorder.Body, comments)
+			},
+		},
+		{
+			name: "InternalError",
+			query: map[string]any{
+				"target_id": post.ID.Hex(),
+				"offset":    offset,
+				"limit":     limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListComments(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "InvalidTargetID",
+			query: map[string]any{
+				"target_id": "qwertyuiopasdfghjklñzxcv",
+				"offset":    offset,
+				"limit":     limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListComments(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "TargetIDLenIsNot24",
+			query: map[string]any{
+				"target_id": "s-s",
+				"offset":    offset,
+				"limit":     limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListComments(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
+
+			// start test server and send request
+			server := newTestServer(t, queries, util.RandomPassword(32))
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/v1/comments/%v", tc.query["target_id"])
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			request.Header.Add("Content-Type", "application/json")
+
+			q := request.URL.Query()
+			q.Add("offset", fmt.Sprint(tc.query["offset"]))
+			q.Add("limit", fmt.Sprint(tc.query["limit"]))
+			request.URL.RawQuery = q.Encode()
+
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(t, recorder)
 		})

@@ -167,3 +167,20 @@ func requireBodyMatchLikes(t *testing.T, body *bytes.Buffer, likes []db.Like) {
 		require.WithinDuration(t, likes[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
 	}
 }
+
+func requireBodyMatchComments(t *testing.T, body *bytes.Buffer, comments []db.Comment) {
+	bodyResult := make([]db.Comment, 0, len(comments))
+	err := json.NewDecoder(body).Decode(&bodyResult)
+	require.NoError(t, err)
+	require.NotEmpty(t, bodyResult)
+
+	require.Len(t, bodyResult, len(comments))
+
+	for i := range bodyResult {
+		require.Equal(t, comments[i].ID, bodyResult[i].ID)
+		require.Equal(t, comments[i].UserID, bodyResult[i].UserID)
+		require.Equal(t, comments[i].TargetID, bodyResult[i].TargetID)
+		require.Equal(t, comments[i].Content, bodyResult[i].Content)
+		require.WithinDuration(t, comments[i].CreatedAt, bodyResult[i].CreatedAt, time.Second)
+	}
+}
