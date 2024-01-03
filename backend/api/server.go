@@ -62,6 +62,8 @@ func (server *Server) setupRouter(e *echo.Echo) {
 
 	v1.POST("/comments", authMiddleware(server.CreateComment, server.tokenMaker))
 	v1.GET("/comments/:target_id", server.ListComments)
+	v1.PUT("/comments/:id", authMiddleware(server.UpdateComment, server.tokenMaker))
+	//v1.DELETE("/comments/:id", authMiddleware(server.DeleteComment, server.tokenMaker))
 
 	v1.POST("/token/refresh", server.RefreshToken)
 

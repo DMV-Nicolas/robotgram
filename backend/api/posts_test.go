@@ -388,6 +388,29 @@ func TestUpdatePostAPI(t *testing.T) {
 			},
 		},
 		{
+			name: "PostNotFound",
+			body: map[string]any{
+				"id":          post.ID.Hex(),
+				"images":      post.Images,
+				"description": post.Description,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
+					Times(1).
+					Return(post, nil)
+				querier.EXPECT().
+					UpdatePost(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrNoDocuments)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
 			name: "NonPostOwner",
 			body: map[string]any{
 				"id":          post.ID.Hex(),
@@ -533,6 +556,25 @@ func TestDeletePostAPI(t *testing.T) {
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "PostNotFound",
+			id:   post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetPost(gomock.Any(), gomock.Eq("_id"), gomock.Eq(post.ID)).
+					Times(1).
+					Return(post, nil)
+				querier.EXPECT().
+					DeletePost(gomock.Any(), gomock.Eq(post.ID)).
+					Times(1).
+					Return(nil, mongo.ErrNoDocuments)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
 			},
 		},
 		{
