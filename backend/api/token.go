@@ -64,5 +64,4 @@ func (server *Server) RefreshToken(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
-
 }

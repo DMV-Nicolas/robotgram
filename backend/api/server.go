@@ -60,6 +60,11 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	v1.GET("/likes/:target_id", server.ListLikes)
 	v1.GET("/likes/:target_id/count", server.CountLikes)
 
+	v1.POST("/comments", authMiddleware(server.CreateComment, server.tokenMaker))
+	v1.GET("/comments/:target_id", server.ListComments)
+	v1.PUT("/comments/:id", authMiddleware(server.UpdateComment, server.tokenMaker))
+	v1.DELETE("/comments/:id", authMiddleware(server.DeleteComment, server.tokenMaker))
+
 	v1.POST("/token/refresh", server.RefreshToken)
 
 	server.router = e

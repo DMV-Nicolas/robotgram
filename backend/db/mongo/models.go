@@ -33,6 +33,14 @@ type Like struct {
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
 
+type Comment struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	UserID    primitive.ObjectID `json:"user_id" bson:"user_id"`
+	TargetID  primitive.ObjectID `json:"target_id" bson:"target_id"`
+	Content   string             `json:"content" bson:"content"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
+}
+
 type Session struct {
 	ID           primitive.ObjectID `json:"id" bson:"_id"`
 	UserID       primitive.ObjectID `json:"user_id" bson:"user_id"`

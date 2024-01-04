@@ -162,6 +162,9 @@ func (server *Server) DeletePost(c echo.Context) error {
 
 	result, err := server.queries.DeletePost(context.TODO(), gotPost.ID)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return echo.NewHTTPError(http.StatusNotFound, err)
+		}
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
