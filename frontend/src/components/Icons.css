@@ -1,0 +1,41 @@
+.optionsIcon {
+    color: #fafafa;
+    cursor: pointer;
+}
+
+.optionsIcon:hover {
+    color: #cacaca
+}
+
+.emptyHeartIcon {
+    color: #fafafa;
+    cursor: pointer;
+}
+
+.emptyHeartIcon:hover {
+    color: #cacaca;
+    cursor: pointer;
+}
+
+.heartIcon {
+    color: #ff3040;
+    cursor: pointer;
+}
+
+.commentIcon {
+    color: #fafafa;
+    cursor: pointer;
+}
+
+.commentIcon:hover {
+    color: #cacaca;
+}
+
+.shareIcon {
+    color: #fafafa;
+    cursor: pointer;
+}
+
+.shareIcon:hover {
+    color: #cacaca;
+}
