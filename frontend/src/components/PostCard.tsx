@@ -61,7 +61,7 @@ function PostCardBody({ postImages, username }: PostCardBodyParams) {
     )
 }
 
-type PostCardFooterParams = {
+/*type PostCardFooterParams = {
     postLikes: number
     postDescription: string
     liked: boolean
@@ -84,7 +84,7 @@ function PostCardFooter({ postLikes, liked }: PostCardFooterParams) {
         </footer>
     )
 }
-
+*/
 type PostCardParams = {
     post: Post
     user: User
