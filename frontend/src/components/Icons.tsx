@@ -20,12 +20,12 @@ export function Heart() {
 
 export function Comment() {
     return (
-        <svg className="commentIcon" aria-label="Comentar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Comment</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
+        <svg className="commentIcon" aria-label="Comentar" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Comment</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2"></path></svg>
     )
 }
 
 export function Share() {
     return (
-        <svg className="shareIcon" aria-label="Compartir publicación" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Share post</title><line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="22" x2="9.218" y1="3" y2="10.083"></line><polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></polygon></svg>
+        <svg className="shareIcon" aria-label="Compartir publicación" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Share post</title><line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="22" x2="9.218" y1="3" y2="10.083"></line><polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" strokeLinejoin="round" strokeWidth="2"></polygon></svg>
     )
 }

@@ -27,10 +27,11 @@ function PostCardHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderP
 
 type PostCardBodyParams = {
     postImages: string[]
+    postID: string,
     username: string
 }
 
-function PostCardBody({ postImages, username }: PostCardBodyParams) {
+function PostCardBody({ postImages, postID, username }: PostCardBodyParams) {
     const [slide, setSlide] = useState(0)
 
     const prevSlide = () => {
@@ -44,16 +45,16 @@ function PostCardBody({ postImages, username }: PostCardBodyParams) {
     return (
         <div className="postCardBody">
             {slide > 0 &&
-                <span className="leftArrow instagramIcon" onClick={prevSlide}></span>
+                <span className="leftArrow instagramIcons" onClick={prevSlide}></span>
             }
             <img className="image" src="https://random.imagecdn.app/500/500" alt={`Post image of ${username}`} />
             {slide < postImages.length - 1 &&
-                <span className="rightArrow instagramIcon" onClick={nextSlide}></span>
+                <span className="rightArrow instagramIcons" onClick={nextSlide}></span>
             }
             <div className="indicators">
                 {
                     postImages.map((_, idx) => (
-                        <span className={`indicator ${slide === idx && "indicatorSelected"}`} onClick={() => setSlide(idx)}></span>
+                        <span key={`${postID}-${idx}`} className={`indicator ${slide === idx && "indicatorSelected"}`} onClick={() => setSlide(idx)}></span>
                     ))
                 }
             </div>
@@ -101,6 +102,7 @@ export function PostCard({ post, user, likes }: PostCardParams) {
             />
             <PostCardBody
                 postImages={post.images}
+                postID={post.id}
                 username={user.username}
             />
             <PostCardFooter
