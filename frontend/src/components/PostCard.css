@@ -1,0 +1,105 @@
+.postCard {
+    width: 450px;
+    background-color: #222;
+    font-family: 'Signika Negative', sans-serif;
+}
+
+.postCardHeader {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.postCardHeader .user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.postCardHeader .avatar {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.postCardHeader .username {
+    color: #fafafa;
+}
+
+.postCardBody {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.postCardBody .image {
+    width: 100%;
+    object-fit: cover;
+}
+
+.postCardBody .rightArrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: -162px -98px;
+    height: 30px;
+    width: 30px
+}
+
+.postCardBody .leftArrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: -130px -98px;
+    height: 30px;
+    width: 30px
+}
+
+.postCardBody .indicators {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 10px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+}
+
+.postCardBody .indicator {
+    background-color: #999999;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color linear .1s;
+}
+
+.postCardBody .indicatorSelected {
+    background-color: #fafafa;
+}
+
+.postCardFooter {
+    padding: 10px 0;
+}
+
+.postCardFooter .actions {
+    display: flex;
+    gap: 10px;
+}
+
+.postCardFooter .likeCount {
+    padding-top: 10px;
+}
+
+.postCardFooter .likeCount p {
+    color: #fafafa;
+    margin: 0;
+}

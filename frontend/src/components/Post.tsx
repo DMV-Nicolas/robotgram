@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Post, User } from "../types";
-import { PostCard } from "../../../f/src/components/PostCard";
+import { PostCard } from "./PostCard";
 
 type PostParams = {
     post: Post
