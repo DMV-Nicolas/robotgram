@@ -1,14 +1,23 @@
-import './App.css'
-import { PostCard } from './PostCard'
-
+import { Post } from './components/Post'
+import { usePosts } from './hooks/usePosts'
+import "./App.css"
 
 function App() {
-  return (
-    <>
-      <h1>Robotgram</h1>
-      <PostCard />
-    </>
-  )
+    const { posts } = usePosts()
+
+    return (
+        <main>
+            <ul>
+                {
+                    posts.map((post) => (
+                        <li key={post.id}>
+                            <Post post={post} />
+                        </li>
+                    ))
+                }
+            </ul>
+        </main>
+    )
 }
 
 export default App
