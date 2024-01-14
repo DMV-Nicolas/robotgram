@@ -47,7 +47,7 @@ func (server *Server) setupRouter(e *echo.Echo) {
 
 	v1.POST("/users", server.CreateUser)
 	v1.POST("/users/login", server.LoginUser)
-	v1.GET("/users/:username", server.GetUser)
+	v1.GET("/users/:id", server.GetUser)
 	v1.GET("/users", server.ListUsers)
 
 	v1.POST("/posts", authMiddleware(server.CreatePost, server.tokenMaker))

@@ -384,16 +384,16 @@ func TestGetUserAPI(t *testing.T) {
 
 	testCases := []struct {
 		name          string
-		username      any
+		id            any
 		buildStubs    func(store *mockdb.MockQuerier)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
 		{
-			name:     "OK",
-			username: user.Username,
+			name: "OK",
+			id:   user.ID.Hex(),
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
-					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Eq(user.Username)).
+					GetUser(gomock.Any(), gomock.Eq("_id"), gomock.Eq(user.ID)).
 					Times(1).
 					Return(user, nil)
 			},
@@ -403,8 +403,8 @@ func TestGetUserAPI(t *testing.T) {
 			},
 		},
 		{
-			name:     "UserNotFound",
-			username: user.Username,
+			name: "UserNotFound",
+			id:   user.ID.Hex(),
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
@@ -416,8 +416,8 @@ func TestGetUserAPI(t *testing.T) {
 			},
 		},
 		{
-			name:     "InternalError",
-			username: user.Username,
+			name: "InternalError",
+			id:   user.ID.Hex(),
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
@@ -429,8 +429,20 @@ func TestGetUserAPI(t *testing.T) {
 			},
 		},
 		{
-			name:     "NonAlphanumericUsername",
-			username: "Fiesta Pagana!",
+			name: "IncorrectID",
+			id:   "qwertyuiopasdfghjklñzxcv",
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "IDLenIsNot24",
+			id:   "@,@",
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
 					GetUser(gomock.Any(), gomock.Any(), gomock.Any()).
@@ -454,7 +466,7 @@ func TestGetUserAPI(t *testing.T) {
 			server := newTestServer(t, queries, util.RandomPassword(32))
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/v1/users/%s", tc.username)
+			url := fmt.Sprintf("/v1/users/%s", tc.id)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			request.Header.Add("Content-Type", "application/json")
 			require.NoError(t, err)
