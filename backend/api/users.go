@@ -127,7 +127,7 @@ func (server *Server) LoginUser(c echo.Context) error {
 }
 
 type getUserRequest struct {
-	Username string `param:"username" validate:"required,alphanum"`
+	ID string `param:"id" validate:"required,len=24"`
 }
 
 type getUserResponse struct {
@@ -147,7 +147,12 @@ func (server *Server) GetUser(c echo.Context) error {
 		return err
 	}
 
-	user, err := server.queries.GetUser(context.TODO(), "username", req.Username)
+	id, err := primitive.ObjectIDFromHex(req.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	user, err := server.queries.GetUser(context.TODO(), "_id", id)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return echo.NewHTTPError(http.StatusNotFound, err)
