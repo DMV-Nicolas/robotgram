@@ -80,11 +80,16 @@ func RandomPassword(size int) string {
 	return RandomString(size)
 }
 
+// RandomImage generates a random image.
+func RandomImage() string {
+	return "https://random.imagecdn.app/500/500"
+}
+
 // RandomImages generates random images.
 func RandomImages(n int) []string {
 	images := make([]string, n)
 	for i := 0; i < n; i++ {
-		images[i] = RandomString(5)
+		images[i] = RandomImage()
 	}
 	return images
 }

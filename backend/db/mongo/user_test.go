@@ -16,7 +16,7 @@ func randomUser(t *testing.T) User {
 		HashedPassword: util.RandomPassword(16),
 		FullName:       util.RandomUsername(),
 		Email:          util.RandomEmail(),
-		Avatar:         "avatar.png",
+		Avatar:         util.RandomImage(),
 		Gender:         "male",
 	}
 

@@ -14,7 +14,7 @@ func randomPost(t *testing.T) Post {
 	user := randomUser(t)
 	arg := CreatePostParams{
 		UserID:      user.ID,
-		Images:      []string{"ai", "bi", "ci"},
+		Images:      util.RandomImages(3),
 		Description: util.RandomPassword(100),
 	}
 
