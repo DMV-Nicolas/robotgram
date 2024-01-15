@@ -1,6 +1,7 @@
 .post {
     width: 450px;
-    background-color: #222;
+    background-color: #111;
+    border-radius: 10px;
     font-family: 'Nunito', sans-serif;
 }
 
@@ -22,6 +23,7 @@
 
 .postHeader .avatar {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
