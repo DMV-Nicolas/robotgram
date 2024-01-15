@@ -5,7 +5,7 @@ export function usePosts() {
     const [posts, setPosts] = useState<Post[]>([])
     useEffect(() => {
         const getPosts = async () => {
-            const res = await fetch("http://localhost:5000/v1/posts?offset=0&limit=10")
+            const res = await fetch("http://localhost:5000/v1/posts?offset=0&limit=1000")
             const data = await res.json()
             const posts = data.map((dataPost) => {
                 const post: Post = {

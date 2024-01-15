@@ -1,7 +1,7 @@
 .postCard {
     width: 450px;
     background-color: #222;
-    font-family: 'Signika Negative', sans-serif;
+    font-family: 'Nunito', sans-serif;
 }
 
 .postCardHeader {
@@ -28,6 +28,10 @@
     color: #fafafa;
 }
 
+.postCardHeader .elapsedTime {
+    color: #fafafa;
+}
+
 .postCardBody {
     position: relative;
     width: 100%;
@@ -36,7 +40,6 @@
 
 .postCardBody .image {
     width: 100%;
-    object-fit: cover;
 }
 
 .postCardBody .rightArrow {
@@ -100,6 +103,16 @@
 }
 
 .postCardFooter .likeCount p {
+    font-weight: 600;
     color: #fafafa;
     margin: 0;
+}
+
+.postCardFooter .description {
+    padding-top: 5px;
+}
+
+.postCardFooter .description p {
+    color: #fafafa;
+    margin: 0
 }

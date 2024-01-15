@@ -16,7 +16,8 @@ function PostCardHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderP
         <header className="postCardHeader">
             <div className="user">
                 <img className="avatar" src={userAvatar} alt={`Avatar image of ${username}`} />
-                <span className="username">{username} • {elapsedTime}</span>
+                <strong className="username">{username} </strong>
+                <span className="elapsedTime">• {elapsedTime}</span>
             </div>
             <div className="options">
                 <Options />
@@ -47,14 +48,14 @@ function PostCardBody({ postImages, postID, username }: PostCardBodyParams) {
             {slide > 0 &&
                 <span className="leftArrow instagramIcons" onClick={prevSlide}></span>
             }
-            <img className="image" src="https://random.imagecdn.app/500/500" alt={`Post image of ${username}`} />
+            <img className="image" src={postImages[slide]} alt={`Post image of ${username}`} />
             {slide < postImages.length - 1 &&
                 <span className="rightArrow instagramIcons" onClick={nextSlide}></span>
             }
             <div className="indicators">
                 {
                     postImages.map((_, idx) => (
-                        <span key={`${postID}-${idx}`} className={`indicator ${slide === idx && "indicatorSelected"}`} onClick={() => setSlide(idx)}></span>
+                        <span key={`${postID}-${idx}`} className={`indicator ${slide === idx ? "indicatorSelected" : ""}`} onClick={() => setSlide(idx)}></span>
                     ))
                 }
             </div>
@@ -63,12 +64,13 @@ function PostCardBody({ postImages, postID, username }: PostCardBodyParams) {
 }
 
 type PostCardFooterParams = {
+    username: string
     postLikes: number
     postDescription: string
     liked: boolean
 }
 
-function PostCardFooter({ postLikes, liked }: PostCardFooterParams) {
+function PostCardFooter({ username, postLikes, postDescription, liked }: PostCardFooterParams) {
     return (
         <footer className="postCardFooter">
             <section className="actions">
@@ -81,6 +83,9 @@ function PostCardFooter({ postLikes, liked }: PostCardFooterParams) {
             </section>
             <section className="likeCount">
                 <p>{postLikes} Me gusta</p>
+            </section>
+            <section className="description">
+                <p><strong>{username}</strong> {postDescription}</p>
             </section>
         </footer>
     )
@@ -106,6 +111,7 @@ export function PostCard({ post, user, likes }: PostCardParams) {
                 username={user.username}
             />
             <PostCardFooter
+                username={user.username}
                 postLikes={likes}
                 postDescription={post.description}
                 liked={false}
