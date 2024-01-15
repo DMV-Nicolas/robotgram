@@ -23,7 +23,7 @@ export function Post({ post }: PostParams) {
     // TODO: create countLikes service
     useEffect(() => {
         const getUser = async () => {
-            const res = await fetch("http://localhost:5000/v1/users/65a46ecfe490c8aafa09579b")
+            const res = await fetch("http://localhost:5000/v1/users/65a52b7493c975d3dbf186e7")
             const data = await res.json()
             setUser(data)
         }

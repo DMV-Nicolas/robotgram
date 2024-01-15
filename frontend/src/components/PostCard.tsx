@@ -1,4 +1,4 @@
-import { Comment, EmptyHeart, Heart, Options, Share } from "./Icons"
+import { Comment, EmptyHeart, Heart, Options, Save, Share } from "./Icons"
 import { Post, User } from "../types"
 import { getTimeElapsed } from "../services/time"
 import "./PostCard.css"
@@ -74,12 +74,17 @@ function PostCardFooter({ username, postLikes, postDescription, liked }: PostCar
     return (
         <footer className="postCardFooter">
             <section className="actions">
-                {liked
-                    ? <Heart />
-                    : <EmptyHeart />
-                }
-                <Comment />
-                <Share />
+                <div className="leftActions">
+                    {liked
+                        ? <Heart />
+                        : <EmptyHeart />
+                    }
+                    <Comment />
+                    <Share />
+                </div>
+                <div className="rightActions">
+                    <Save />
+                </div>
             </section>
             <section className="likeCount">
                 <p>{postLikes} Me gusta</p>

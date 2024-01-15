@@ -39,3 +39,12 @@
 .shareIcon:hover {
     color: #cacaca;
 }
+
+.saveIcon {
+    color: #fafafa;
+    cursor: pointer;
+}
+
+.saveIcon:hover {
+    color: #cacaca
+}

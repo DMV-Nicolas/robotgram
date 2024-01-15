@@ -82,8 +82,8 @@ func RandomPassword(size int) string {
 
 // RandomImage generates a random image.
 func RandomImage() string {
-	n1 := rand.Intn(100)
-	n2 := rand.Intn(100)
+	n1 := rand.Intn(100) + 400
+	n2 := rand.Intn(100) + 400
 	image := fmt.Sprintf("https://random.imagecdn.app/%d/%d", n1, n2)
 	return image
 }

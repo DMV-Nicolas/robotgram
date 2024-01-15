@@ -90,12 +90,17 @@
 }
 
 .postCardFooter {
-    padding: 10px 0;
+    padding: 10px 7px;
 }
 
 .postCardFooter .actions {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+}
+
+.postCardFooter .leftActions {
+    display: flex;
+    gap: 13px;
 }
 
 .postCardFooter .likeCount {
@@ -110,6 +115,7 @@
 
 .postCardFooter .description {
     padding-top: 5px;
+    word-wrap: break-word;
 }
 
 .postCardFooter .description p {
