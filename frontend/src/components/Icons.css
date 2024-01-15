@@ -48,3 +48,10 @@
 .saveIcon:hover {
     color: #cacaca
 }
+
+.robotgramTitle {
+    color: #fff;
+    font-family: "Silkscreen";
+    font-weight: 100;
+    margin: 0;
+}
