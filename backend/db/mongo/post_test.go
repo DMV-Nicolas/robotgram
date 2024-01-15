@@ -82,7 +82,7 @@ func TestUpdatePost(t *testing.T) {
 
 	arg := UpdatePostParams{
 		ID:          post1.ID,
-		Images:      []string{"1y", "2y", "3y"},
+		Images:      util.RandomImages(5),
 		Description: util.RandomPassword(200),
 	}
 

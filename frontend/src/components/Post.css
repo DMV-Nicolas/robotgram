@@ -1,10 +1,11 @@
-.postCard {
+.post {
     width: 450px;
-    background-color: #222;
-    font-family: 'Signika Negative', sans-serif;
+    background-color: #111;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
 }
 
-.postCardHeader {
+.postHeader {
     width: 100%;
     height: 60px;
     display: flex;
@@ -13,33 +14,39 @@
     padding: 10px;
 }
 
-.postCardHeader .user {
+.postHeader .user {
     display: flex;
     align-items: center;
     gap: 10px;
+    word-wrap: break-word;
 }
 
-.postCardHeader .avatar {
+.postHeader .avatar {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
-.postCardHeader .username {
+.postHeader .username {
+    max-width: 70%;
     color: #fafafa;
 }
 
-.postCardBody {
+.postHeader .elapsedTime {
+    color: #fafafa;
+}
+
+.postBody {
     position: relative;
     width: 100%;
     overflow: hidden;
 }
 
-.postCardBody .image {
+.postBody .image {
     width: 100%;
-    object-fit: cover;
 }
 
-.postCardBody .rightArrow {
+.postBody .rightArrow {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -52,7 +59,7 @@
     width: 30px
 }
 
-.postCardBody .leftArrow {
+.postBody .leftArrow {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -64,7 +71,7 @@
     width: 30px
 }
 
-.postCardBody .indicators {
+.postBody .indicators {
     position: absolute;
     right: 0;
     left: 0;
@@ -75,31 +82,47 @@
     gap: 3px;
 }
 
-.postCardBody .indicator {
-    background-color: #999999;
+.postBody .indicator {
+    background-color: #6e6c73;
     padding: 5px;
     cursor: pointer;
     transition: background-color linear .1s;
 }
 
-.postCardBody .indicatorSelected {
+.postBody .indicatorSelected {
     background-color: #fafafa;
 }
 
-.postCardFooter {
-    padding: 10px 0;
+.postFooter {
+    padding: 10px 7px;
 }
 
-.postCardFooter .actions {
+.postFooter .actions {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
 }
 
-.postCardFooter .likeCount {
+.postFooter .leftActions {
+    display: flex;
+    gap: 13px;
+}
+
+.postFooter .likeCount {
     padding-top: 10px;
 }
 
-.postCardFooter .likeCount p {
+.postFooter .likeCount p {
+    font-weight: 600;
     color: #fafafa;
     margin: 0;
+}
+
+.postFooter .description {
+    padding-top: 5px;
+    word-wrap: break-word;
+}
+
+.postFooter .description p {
+    color: #fafafa;
+    margin: 0
 }

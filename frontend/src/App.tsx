@@ -1,21 +1,14 @@
-import { Post } from './components/Post'
-import { usePosts } from './hooks/usePosts'
 import "./App.css"
+import { PostList } from "./components/PostList"
+import { Navbar } from "./components/Navbar"
 
 function App() {
-    const { posts } = usePosts()
+    // TODO: create application router
 
     return (
         <main>
-            <ul>
-                {
-                    posts.map((post) => (
-                        <li key={post.id}>
-                            <Post post={post} />
-                        </li>
-                    ))
-                }
-            </ul>
+            <Navbar />
+            <PostList />
         </main>
     )
 }
