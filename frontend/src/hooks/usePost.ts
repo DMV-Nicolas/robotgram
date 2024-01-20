@@ -17,7 +17,7 @@ export function usePost({ post }: { post: PostType }) {
     const [likes, setLikes] = useState(0)
 
     useEffect(() => {
-        const getUser = async () => {
+        const fetchGetUser = async () => {
             const res = await fetch(`http://localhost:5000/v1/users/${post.userID}`)
             const data: UserResponse = await res.json()
             const user: UserType = {
@@ -33,17 +33,17 @@ export function usePost({ post }: { post: PostType }) {
             setUser(user)
         }
 
-        getUser()
+        fetchGetUser()
     }, [post.userID])
 
     useEffect(() => {
-        const getCountOfLikes = async () => {
+        const fetchCountLikes = async () => {
             const res = await fetch(`http://localhost:5000/v1/likes/${post.id}/count`)
             const data = await res.json()
             setLikes(data)
         }
 
-        getCountOfLikes()
+        fetchCountLikes()
     }, [post.id])
 
     return { user, likes }
