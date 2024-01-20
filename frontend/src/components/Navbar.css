@@ -1,0 +1,50 @@
+.navbar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    gap: 32px;
+    background-color: #111;
+}
+
+.navbar .title {
+    color: #fff;
+    font-size: 1.5em;
+    font-family: "Silkscreen";
+    font-weight: 100;
+    margin: 20px 0;
+}
+
+.navbar .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.navbar ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.navbar ul li {
+    height: auto;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+}
+
+.navbar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    color: #fff;
+    transition: background-color linear .1s;
+}
+
+.navbar ul li a:hover {
+    background-color: #222;
+}
