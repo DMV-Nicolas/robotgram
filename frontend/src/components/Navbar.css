@@ -1,0 +1,69 @@
+.navbar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    gap: 32px;
+    background-color: #111;
+}
+
+.navbar .title {
+    color: #fff;
+    font-size: 1.5em;
+    font-family: "Silkscreen";
+    font-weight: 100;
+    margin: 20px 0;
+}
+
+.navbar .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.navbar ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.navbar ul div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.navbar li {
+    height: auto;
+}
+
+.navbarLink {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    color: #fff;
+    transition: background-color linear .1s;
+}
+
+.navbarLink:hover {
+    background-color: #222;
+
+    .navbarLinkBlank {
+        color: #bbbbbb
+    }
+}
+
+.navbarLinkBlank {
+    position: absolute;
+    right: 0;
+    padding: 0 12px;
+    color: transparent
+}
