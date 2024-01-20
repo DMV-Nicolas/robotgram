@@ -24,27 +24,46 @@
 }
 
 .navbar ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.navbar ul div {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.navbar ul li {
+.navbar li {
     height: auto;
-    font-family: 'Nunito', sans-serif;
-    font-weight: bold;
 }
 
-.navbar ul li a {
+.navbarLink {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
     border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
     color: #fff;
     transition: background-color linear .1s;
 }
 
-.navbar ul li a:hover {
+.navbarLink:hover {
     background-color: #222;
+
+    .navbarLinkBlank {
+        color: #bbbbbb
+    }
+}
+
+.navbarLinkBlank {
+    position: absolute;
+    right: 0;
+    padding: 0 12px;
+    color: transparent
 }
