@@ -1,20 +1,19 @@
-import { usePosts } from "../hooks/usePosts"
-import { Post } from "./Post"
-import "./PostList.css"
+import { usePosts } from '../hooks/usePosts'
+import { Post } from './Post'
+import './PostList.css'
 
-export function PostList() {
-    const { posts } = usePosts()
+export const PostList = (): JSX.Element => {
+  const { posts } = usePosts()
 
-    return (
-        <ul className="postList">
-            {
-                posts.map((post) => (
-                    <li key={post.id}>
-                        <Post post={post} />
-                    </li>
-                ))
-            }
-        </ul>
-
-    )
+  return (
+    <ul className="postList">
+      {
+        posts.map((post) => (
+          <li key={post.id}>
+            <Post post={post} />
+          </li>
+        ))
+      }
+    </ul>
+  )
 }
