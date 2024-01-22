@@ -1,7 +1,7 @@
 import { Blank, Create, EmptyHeart, Explore, Github, Home, Search } from './Icons'
 import './Navbar.css'
 
-export const Navbar = (): JSX.Element => {
+export function Navbar() {
   return (
     <nav className="navbar">
       <h1 className="title">Robotgram</h1>

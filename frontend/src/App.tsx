@@ -2,7 +2,7 @@ import { PostList } from './components/PostList'
 import { Navbar } from './components/Navbar'
 import './App.css'
 
-const App = (): JSX.Element => {
+function App() {
   // TODO: create application router
 
   return (

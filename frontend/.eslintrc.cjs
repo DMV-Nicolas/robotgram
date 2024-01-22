@@ -1,13 +1,13 @@
 module.exports = {
-    "env": {
+    env: {
         "browser": true,
         "es2021": true
     },
-    "extends": [
+    extends: [
         "standard-with-typescript",
         "plugin:react/recommended"
     ],
-    "overrides": [
+    overrides: [
         {
             "env": {
                 "node": true
@@ -20,15 +20,19 @@ module.exports = {
             }
         }
     ],
-    "parserOptions": {
+    parserOptions: {
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": "./tsconfig.json"
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": __dirname,
     },
-    "plugins": [
+    plugins: [
         "react"
     ],
-    "rules": {
-        "react/react-in-jsx-scope": "off"
-    }
+    rules: {
+        "react/react-in-jsx-scope": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/space-before-function-paren": "off"
+    },
+    ignorePatterns: [".eslintrc.cjs", "vite.config.ts"],
 }

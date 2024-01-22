@@ -11,7 +11,7 @@ interface PostCardHeaderProps {
   postCreatedAt: string
 }
 
-const PostHeader = ({ username, userAvatar, postCreatedAt }: PostCardHeaderProps): JSX.Element => {
+function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps) {
   const elapsedTime = getTimeElapsed(postCreatedAt)
   return (
     <header className="postHeader">
@@ -33,7 +33,7 @@ interface PostCardBodyProps {
   username: string
 }
 
-const PostBody = ({ postImages, postID, username }: PostCardBodyProps): JSX.Element => {
+function PostBody({ postImages, postID, username }: PostCardBodyProps) {
   const [slide, setSlide] = useState(0)
 
   const prevSlide = (): void => {
@@ -71,7 +71,7 @@ interface PostCardFooterProps {
   liked: boolean
 }
 
-const PostFooter = ({ username, postLikes, postDescription, liked }: PostCardFooterProps): JSX.Element => {
+function PostFooter({ username, postLikes, postDescription, liked }: PostCardFooterProps) {
   return (
     <footer className="postFooter">
       <section className="actions">
@@ -101,7 +101,7 @@ interface PostProps {
   post: PostType
 }
 
-export const Post = ({ post }: PostProps): JSX.Element => {
+export function Post({ post }: PostProps) {
   const { user, likes } = usePost({ post })
 
   return (

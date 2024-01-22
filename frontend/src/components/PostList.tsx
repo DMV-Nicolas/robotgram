@@ -2,7 +2,7 @@ import { usePosts } from '../hooks/usePosts'
 import { Post } from './Post'
 import './PostList.css'
 
-export const PostList = (): JSX.Element => {
+export function PostList() {
   const { posts } = usePosts()
 
   return (
