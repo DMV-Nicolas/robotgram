@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     padding: 18px;
-    gap: 32px;
+    gap: 2em;
     background-color: #111;
 }
 
@@ -40,7 +40,7 @@
     height: auto;
 }
 
-.navbarLink {
+.navbar a {
     position: relative;
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@
     transition: background-color linear .1s;
 }
 
-.navbarLink:hover {
+.navbar a:hover {
     background-color: #222;
 
     .navbarLinkBlank {

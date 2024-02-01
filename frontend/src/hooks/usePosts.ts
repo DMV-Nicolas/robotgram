@@ -20,7 +20,7 @@ export function usePosts() {
       setPosts(posts)
     }
 
-    fetchListPosts().catch(() => { })
+    fetchListPosts()
   }, [])
 
   return { posts }

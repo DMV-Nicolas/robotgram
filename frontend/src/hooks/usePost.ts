@@ -17,7 +17,7 @@ export const usePost = ({ post }: { post: PostType }) => {
   const [likes, setLikes] = useState(0)
 
   useEffect(() => {
-    const fetchGetUser = async (): Promise<void> => {
+    const fetchGetUser = async () => {
       const res = await fetch(`http://localhost:5000/v1/users/${post.userID}`)
       const data: UserResponse = await res.json()
       const user: UserType = {
@@ -33,7 +33,7 @@ export const usePost = ({ post }: { post: PostType }) => {
       setUser(user)
     }
 
-    fetchGetUser().catch(() => { })
+    fetchGetUser()
   }, [post.userID])
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const usePost = ({ post }: { post: PostType }) => {
       setLikes(data)
     }
 
-    fetchCountLikes().catch(() => { })
+    fetchCountLikes()
   }, [post.id])
 
   return { user, likes }

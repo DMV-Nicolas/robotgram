@@ -8,37 +8,37 @@ export function Navbar() {
       <ul>
         <div>
           <li>
-            <a className="navbarLink" href="/">
+            <a href="/">
               <Home />
               <p>Home</p>
             </a>
           </li>
           <li>
-            <a className="navbarLink" href="/search">
+            <a href="/search">
               <Search />
               <p>Search</p>
             </a>
           </li>
           <li>
-            <a className="navbarLink" href="/explore">
+            <a href="/explore">
               <Explore />
               <p>Explore</p>
             </a>
           </li>
           <li>
-            <a className="navbarLink" href="/notifications">
+            <a href="/notifications">
               <EmptyHeart />
               <p>Notifications</p>
             </a>
           </li>
           <li>
-            <a className="navbarLink" href="/create">
+            <a href="/create">
               <Create />
               <p>Create</p>
             </a>
           </li>
           <li>
-            <a className="navbarLink" href="/profile">
+            <a href="/profile">
               <img className="avatar" src="https://avatars.githubusercontent.com/u/69326361?v=4" alt="avatar" />
               <p>Profile</p>
             </a>
@@ -46,7 +46,7 @@ export function Navbar() {
         </div>
         <div>
           <li>
-            <a className="navbarLink" href="https://github.com/DMV-Nicolas/robotgram" target="_blank" rel="noreferrer">
+            <a href="https://github.com/DMV-Nicolas/robotgram" target="_blank" rel="noreferrer">
               <Github />
               <p>Github</p>
               <span className="navbarLinkBlank">

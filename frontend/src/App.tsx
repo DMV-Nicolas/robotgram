@@ -1,14 +1,12 @@
-import { PostList } from './components/PostList'
-import { Navbar } from './components/Navbar'
 import './App.css'
+import { LoginPage } from './pages/Login'
 
 function App() {
   // TODO: create application router
 
   return (
     <main className="app">
-      <Navbar />
-      <PostList />
+      <LoginPage />
     </main>
   )
 }
