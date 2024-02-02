@@ -1,0 +1,14 @@
+.notFound {
+    width: 70%;
+    margin: auto;
+    padding: 1em;
+    text-align: center;
+    color: #fff;
+    background-color: #111;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.notFound a {
+    color: #c70039;
+}
