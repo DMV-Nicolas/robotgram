@@ -6,7 +6,7 @@
     flex-direction: column;
     padding: 18px;
     gap: 2em;
-    background-color: #111;
+    background-color: var(--ui);
 }
 
 .navbar .title {
@@ -49,7 +49,7 @@
     border-radius: 10px;
     font-family: 'Nunito', sans-serif;
     font-weight: bold;
-    color: #fff;
+    color: var(--text-1);
     transition: background-color linear .1s;
 }
 
@@ -57,7 +57,7 @@
     background-color: #222;
 
     .navbarLinkBlank {
-        color: #bbbbbb
+        color: var(--text-1)
     }
 }
 

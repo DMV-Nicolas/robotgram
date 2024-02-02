@@ -1,9 +1,9 @@
 .post {
     width: 450px;
-    background-color: #111;
+    background-color: var(--ui);
     border-radius: 10px;
     font-family: 'Nunito', sans-serif;
-    color: #fafafa;
+    color: var(--text-1);
 }
 
 .postHeader {
@@ -30,11 +30,11 @@
 
 .postHeader .username {
     max-width: 70%;
-    color: #fafafa;
+    color: var(--text-1);
 }
 
 .postHeader .elapsedTime {
-    color: #fafafa;
+    color: var(--text-1);
 }
 
 .postBody {
@@ -84,14 +84,14 @@
 }
 
 .postBody .indicator {
-    background-color: #6e6c73;
+    background-color: var(--background-2);
     padding: 5px;
     cursor: pointer;
     transition: background-color linear .1s;
 }
 
 .postBody .indicatorSelected {
-    background-color: #fafafa;
+    background-color: var(--text-1);
 }
 
 .postFooter {
@@ -114,7 +114,7 @@
 
 .postFooter .likeCount p {
     font-weight: 600;
-    color: #fafafa;
+    color: var(--text-1);
     margin: 0;
 }
 
@@ -124,6 +124,6 @@
 }
 
 .postFooter .description p {
-    color: #fafafa;
+    color: var(--text-1);
     margin: 0
 }

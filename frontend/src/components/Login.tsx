@@ -1,26 +1,33 @@
+import { useId } from 'react'
 import './Login.css'
+import { Lock, User } from './Icons'
+import { Link } from 'react-router-dom'
 
 export function Login() {
+  const inputUsernameID = useId()
+  const inputPasswordID = useId()
   return (
-    <div className='login'>
-      <div className='left'>
-        <img className='picture' src="https://images.wondershare.com/filmora/article-images/2021/best-practices-for-creating-phone-aspect-ratio-vertical-on-your-smartphone8.jpg" />
-      </div>
-      <div className='right'>
+    <div className='container'>
+      <div className='login'>
         <form className='form'>
-          <h1 className='title'>Robotgram</h1>
-          <div>
-            <input className='input' type="text" placeholder='Username or email' />
-            <input className='input' type="text" placeholder='Password' />
+          <h1 className='title'>Log In</h1>
+          <div className='inputField'>
+            <label htmlFor={inputUsernameID}>
+              <User />
+            </label>
+            <input id={inputUsernameID} type="text" placeholder='Username or email' />
+          </div>
+          <div className='inputField'>
+            <label htmlFor={inputPasswordID}>
+              <Lock />
+            </label>
+            <input id={inputPasswordID} type="text" placeholder='Password' />
           </div>
           <button className='submit'>Log in</button>
         </form>
         <div className='notForm'>
-          <p>You do not have an account?</p>
-          <a href="/signup">Sign up</a>
-        </div>
-        <div className='promotion'>
-
+          <p>{"Don't"} have an account?</p>
+          <Link className='notForm' to="/signup"> Sign-up</Link>
         </div>
       </div>
     </div>

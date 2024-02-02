@@ -1,42 +1,86 @@
-.login {
-    width: 60%;
+.container {
     display: flex;
-    gap: 2em;
-    margin: 2em auto;
-}
-
-.login .left {
-    width: 50%;
-}
-
-.login .picture {
-    width: 100%;
-}
-
-.login .right {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--background-1);
 }
 
-/* Form */
+.login {
+    width: 20em;
+    margin: auto;
+    font-family: "Nunito";
+}
+
 .login .form {
     display: flex;
-    padding: 2em;
-    outline: 1px solid #fff;
     flex-direction: column;
+    gap: .5em;
 }
 
 .login .title {
-    text-align: center;
-    color: #fff;
-    font-size: 2em;
+    margin: 0;
+    color: var(--text-1);
     font-family: "Silkscreen";
-    font-weight: 100;
-    margin: .5em 0;
 }
 
-.login .input {
-    height: 2.2em;
+.login .inputField {
+    width: 100%;
+    height: 3.5em;
+    display: flex;
+}
+
+.login .inputField label {
+    width: 3em;
+    height: 100%;
+    padding: .8em;
+    text-align: center;
+    background-color: var(--ui-2);
+}
+
+.login .inputField label svg {
+    width: 100%;
+    height: 100%;
+    color: var(--ui-3);
+}
+
+.login .inputField input {
+    width: 100%;
+    height: 100%;
+    padding: .8em;
+    font-size: 1.1em;
+    border: none;
+    color: var(--text-1);
+    background-color: var(--ui-3);
+    transition: background-color linear .1s;
+}
+
+.login .inputField input:focus {
+    outline: none;
+    background-color: var(--ui-4);
+}
+
+.login .inputField input:hover {
+    background-color: var(--ui-4);
+}
+
+.login .form button {
+    background-color: var(--link);
+    height: 3em;
+    border: none;
+    border-radius: 5px;
+}
+
+.login .notForm {
+    margin-top: 1em;
+}
+
+.login .notForm p {
+    display: inline;
+    color: var(--text-3);
+}
+
+.login .notForm a {
+    display: inline;
+    color: var(--text-1);
 }
