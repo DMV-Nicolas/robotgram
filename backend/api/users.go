@@ -53,9 +53,8 @@ func (server *Server) CreateUser(c echo.Context) error {
 }
 
 type loginUserRequest struct {
-	Username string `json:"username" validate:"required_without=Email"`
-	Email    string `json:"email" validate:"required_without=Username"`
-	Password string `json:"password" validate:"required,min=8"`
+	UsernameOrEmail string `json:"username_or_email" validate:"required"`
+	Password        string `json:"password" validate:"required,min=8"`
 }
 
 type loginUserResponse struct {
@@ -72,12 +71,14 @@ func (server *Server) LoginUser(c echo.Context) error {
 		return err
 	}
 
+	addr, isMail := util.ValidMailAddress(req.UsernameOrEmail)
+
 	var err error
 	var user db.User
-	if req.Username != "" {
-		user, err = server.queries.GetUser(context.TODO(), "username", req.Username)
+	if isMail {
+		user, err = server.queries.GetUser(context.TODO(), "email", addr)
 	} else {
-		user, err = server.queries.GetUser(context.TODO(), "email", req.Email)
+		user, err = server.queries.GetUser(context.TODO(), "username", req.UsernameOrEmail)
 	}
 
 	if err != nil {

@@ -215,9 +215,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "OK-UsernameLogin",
 			body: map[string]any{
-				"username": user.Username,
-				"email":    "",
-				"password": password,
+				"username_or_email": user.Username,
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -235,9 +234,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "OK-EmailLogin",
 			body: map[string]any{
-				"username": "",
-				"email":    user.Email,
-				"password": password,
+				"username_or_email": user.Email,
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -255,9 +253,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "IncorrectPassword",
 			body: map[string]any{
-				"username": user.Username,
-				"email":    "",
-				"password": "incorrect-password",
+				"username_or_email": user.Username,
+				"password":          "incorrect-password",
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -275,9 +272,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "UserNotFound",
 			body: map[string]any{
-				"username": user.Username,
-				"email":    "",
-				"password": password,
+				"username_or_email": user.Username,
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -295,9 +291,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "InternalError",
 			body: map[string]any{
-				"username": user.Username,
-				"email":    "",
-				"password": password,
+				"username_or_email": user.Username,
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -315,9 +310,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "NoUsernameOrEmailProvided",
 			body: map[string]any{
-				"username": "",
-				"email":    "",
-				"password": password,
+				"username_or_email": "",
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
@@ -334,9 +328,8 @@ func TestLoginUserAPI(t *testing.T) {
 		{
 			name: "IncorrectBodyTypes",
 			body: map[string]any{
-				"username": 100,
-				"email":    "",
-				"password": password,
+				"username_or_email": 100,
+				"password":          password,
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
