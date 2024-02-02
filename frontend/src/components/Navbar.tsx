@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Blank, Create, EmptyHeart, Explore, Github, Home, Search } from './Icons'
 import './Navbar.css'
 
@@ -8,51 +9,51 @@ export function Navbar() {
       <ul>
         <div>
           <li>
-            <a href="/">
+            <Link to="/">
               <Home />
               <p>Home</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/search">
+            <Link to="/search">
               <Search />
               <p>Search</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/explore">
+            <Link to="/explore">
               <Explore />
               <p>Explore</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/notifications">
+            <Link to="/notifications">
               <EmptyHeart />
               <p>Notifications</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/create">
+            <Link to="/create">
               <Create />
               <p>Create</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/profile">
+            <Link to="/profile">
               <img className="avatar" src="https://avatars.githubusercontent.com/u/69326361?v=4" alt="avatar" />
               <p>Profile</p>
-            </a>
+            </Link>
           </li>
         </div>
         <div>
           <li>
-            <a href="https://github.com/DMV-Nicolas/robotgram" target="_blank" rel="noreferrer">
+            <Link to="https://github.com/DMV-Nicolas/robotgram" target="_blank" rel="noreferrer">
               <Github />
               <p>Github</p>
               <span className="navbarLinkBlank">
                 <Blank />
               </span>
-            </a>
+            </Link>
           </li>
         </div>
       </ul>
