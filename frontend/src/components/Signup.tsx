@@ -1,17 +1,25 @@
 import { useId, useState } from 'react'
+import { Lock, Mail, User } from './Icons'
 import { Link } from 'react-router-dom'
-import { Lock, User } from './Icons'
-import './Login.css'
+import './Signup.css'
 
-export function Login() {
+export function Signup() {
   const [error, setError] = useState('')
   const inputUsernameID = useId()
+  const inputEmailID = useId()
   const inputPasswordID = useId()
 
-  const login = async (usernameOrEmail: string, password: string) => {
-    const res = await fetch('http://localhost:5000/v1/users/login', {
+  const signup = async (username: string, email: string, password: string, gender: string) => {
+    const res = await fetch('http://localhost:5000/v1/users', {
       method: 'POST',
-      body: JSON.stringify({ username_or_email: usernameOrEmail, password }),
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        gender,
+        full_name: username,
+        avatar: 'https://cdn-icons-png.flaticon.com/512/1068/1068549.png'
+      }),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -32,23 +40,30 @@ export function Login() {
     const form = e.target as HTMLFormElement
     const formData = new FormData(form)
 
-    const usernameOrEmail = formData.get('usernameOrEmail') as string
+    const username = formData.get('username') as string
+    const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    login(usernameOrEmail, password)
+    signup(username, email, password, 'male')
   }
 
   return (
     <div className='container'>
-      <div className='login'>
-        <h1 className='title'>Log In</h1>
+      <div className='signup'>
+        <h1 className='title'>Sign Up</h1>
         <span style={{ color: 'red' }}>{error}</span>
         <form className='form' onSubmit={handleSubmit}>
           <div className='inputField'>
             <label htmlFor={inputUsernameID}>
               <User />
             </label>
-            <input id={inputUsernameID} name='usernameOrEmail' type="text" placeholder='Username or email' />
+            <input id={inputUsernameID} name='username' type="text" placeholder='Username' />
+          </div>
+          <div className='inputField'>
+            <label htmlFor={inputEmailID}>
+              <Mail />
+            </label>
+            <input id={inputEmailID} name='email' type="text" placeholder='Email' />
           </div>
           <div className='inputField'>
             <label htmlFor={inputPasswordID}>
@@ -56,11 +71,11 @@ export function Login() {
             </label>
             <input id={inputPasswordID} name='password' type="text" placeholder='Password' />
           </div>
-          <button className='submit'>Log in</button>
+          <button className='submit'>Sign up</button>
         </form>
         <div className='notForm'>
-          <p>{"Don't"} have an account?</p>
-          <Link className='notForm' to="/signup"> Sign-up</Link>
+          <p>Do you already have an account?</p>
+          <Link className='notForm' to="/login"> Log-in</Link>
         </div>
       </div>
     </div>

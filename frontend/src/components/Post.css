@@ -1,6 +1,6 @@
 .post {
     width: 450px;
-    background-color: var(--ui);
+    background-color: var(--ui-1);
     border-radius: 10px;
     font-family: 'Nunito', sans-serif;
     color: var(--text-1);
@@ -84,7 +84,7 @@
 }
 
 .postBody .indicator {
-    background-color: var(--background-2);
+    background-color: var(--text-4);
     padding: 5px;
     cursor: pointer;
     transition: background-color linear .1s;

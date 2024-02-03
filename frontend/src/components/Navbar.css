@@ -6,7 +6,7 @@
     flex-direction: column;
     padding: 18px;
     gap: 2em;
-    background-color: var(--ui);
+    background-color: var(--ui-1);
 }
 
 .navbar .title {

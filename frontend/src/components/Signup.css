@@ -6,32 +6,32 @@
     background-color: var(--background-1);
 }
 
-.login {
-    width: 20em;
+.signup {
+    width: 23em;
     margin: auto;
     font-family: "Nunito";
 }
 
-.login .form {
+.signup .form {
     display: flex;
     flex-direction: column;
     gap: .5em;
 }
 
-.login .title {
+.signup .title {
     margin-bottom: .2em;
     color: var(--text-1);
     font-size: 3em;
     font-family: "Silkscreen";
 }
 
-.login .inputField {
+.signup .inputField {
     width: 100%;
     height: 3.5em;
     display: flex;
 }
 
-.login .inputField label {
+.signup .inputField label {
     width: 3em;
     height: 100%;
     padding: .8em;
@@ -39,13 +39,13 @@
     background-color: var(--ui-2);
 }
 
-.login .inputField label svg {
+.signup .inputField label svg {
     width: 100%;
     height: 100%;
     color: var(--ui-3);
 }
 
-.login .inputField input {
+.signup .inputField input {
     width: 100%;
     height: 100%;
     padding: .8em;
@@ -56,32 +56,32 @@
     transition: background-color linear .1s;
 }
 
-.login .inputField input:focus {
+.signup .inputField input:focus {
     outline: none;
     background-color: var(--ui-4);
 }
 
-.login .inputField input:hover {
+.signup .inputField input:hover {
     background-color: var(--ui-4);
 }
 
-.login .form button {
+.signup .form button {
     background-color: var(--link);
     height: 3em;
     border: none;
     border-radius: 5px;
 }
 
-.login .notForm {
+.signup .notForm {
     margin-top: 1em;
 }
 
-.login .notForm p {
+.signup .notForm p {
     display: inline;
     color: var(--text-3);
 }
 
-.login .notForm a {
+.signup .notForm a {
     display: inline;
     color: var(--text-1);
 }

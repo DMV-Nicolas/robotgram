@@ -37,3 +37,7 @@ export interface UserResponse {
 }
 
 export type LikesCountResponse = number
+export interface TokenContextType {
+  accessToken: string
+  refreshToken: string
+}
