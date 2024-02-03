@@ -1,13 +1,16 @@
 import { useId, useState } from 'react'
-import { Lock, Mail, User } from './Icons'
-import { Link } from 'react-router-dom'
+import { Female, Lock, Mail, Male, User } from './Icons'
+import { Link, useNavigate } from 'react-router-dom'
 import './Signup.css'
 
 export function Signup() {
+  const navigate = useNavigate()
   const [error, setError] = useState('')
   const inputUsernameID = useId()
   const inputEmailID = useId()
   const inputPasswordID = useId()
+  const inputMaleID = useId()
+  const inputFemaleID = useId()
 
   const signup = async (username: string, email: string, password: string, gender: string) => {
     const res = await fetch('http://localhost:5000/v1/users', {
@@ -26,12 +29,10 @@ export function Signup() {
     })
 
     if (!res.ok) {
-      setError('Invalid credentials')
-      return
+      setError('Invalid credentials'); return
     }
 
-    const data = await res.json()
-    console.log(data)
+    navigate('/login')
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,8 +44,9 @@ export function Signup() {
     const username = formData.get('username') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
+    const gender = formData.get('gender') as string
 
-    signup(username, email, password, 'male')
+    signup(username, email, password, gender)
   }
 
   return (
@@ -70,6 +72,16 @@ export function Signup() {
               <Lock />
             </label>
             <input id={inputPasswordID} name='password' type="text" placeholder='Password' />
+          </div>
+          <div className='genderInputField'>
+            <div>
+              <input type="radio" id={inputMaleID} name='gender' value="male" />
+              <label htmlFor={inputMaleID}>Male <Male /></label>
+            </div>
+            <div>
+              <input type="radio" id={inputFemaleID} name='gender' value="female" />
+              <label htmlFor={inputFemaleID}>Female <Female /></label>
+            </div>
           </div>
           <button className='submit'>Sign up</button>
         </form>
