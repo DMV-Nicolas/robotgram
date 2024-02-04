@@ -15,25 +15,25 @@
     padding: 10px;
 }
 
-.postHeader .user {
+.postHeader__user {
     display: flex;
     align-items: center;
     gap: 10px;
     word-wrap: break-word;
 }
 
-.postHeader .avatar {
+.postHeader__avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
 }
 
-.postHeader .username {
+.postHeader__username {
     max-width: 70%;
     color: var(--text-1);
 }
 
-.postHeader .elapsedTime {
+.postHeader__elapsedTime {
     color: var(--text-1);
 }
 
@@ -43,11 +43,11 @@
     overflow: hidden;
 }
 
-.postBody .image {
+.postBody__image {
     width: 100%;
 }
 
-.postBody .rightArrow {
+.postBody__rightArrow {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -60,7 +60,7 @@
     width: 30px
 }
 
-.postBody .leftArrow {
+.postBody__leftArrow {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -72,7 +72,7 @@
     width: 30px
 }
 
-.postBody .indicators {
+.postBody__indicators {
     position: absolute;
     right: 0;
     left: 0;
@@ -83,14 +83,14 @@
     gap: 3px;
 }
 
-.postBody .indicator {
+.postBody__indicator {
     background-color: var(--text-4);
     padding: 5px;
     cursor: pointer;
     transition: background-color linear .1s;
 }
 
-.postBody .indicatorSelected {
+.postBody__indicator--selected {
     background-color: var(--text-1);
 }
 
@@ -98,32 +98,32 @@
     padding: 10px 7px;
 }
 
-.postFooter .actions {
+.postFooter__actions {
     display: flex;
     justify-content: space-between;
 }
 
-.postFooter .leftActions {
+.postFooter__leftActions {
     display: flex;
     gap: 13px;
 }
 
-.postFooter .likeCount {
+.postFooter__likeCount {
     padding-top: 10px;
 }
 
-.postFooter .likeCount p {
+.postFooter__likeCount p {
     font-weight: 600;
     color: var(--text-1);
     margin: 0;
 }
 
-.postFooter .description {
+.postFooter__description {
     padding-top: 5px;
     word-wrap: break-word;
 }
 
-.postFooter .description p {
+.postFooter__description p {
     color: var(--text-1);
     margin: 0
 }

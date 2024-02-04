@@ -50,42 +50,42 @@ export function Signup() {
   }
 
   return (
-    <div className='container'>
+    <div className='signupContainer'>
       <div className='signup'>
-        <h1 className='title'>Sign Up</h1>
-        <span style={{ color: 'red' }}>{error}</span>
-        <form className='form' onSubmit={handleSubmit}>
-          <div className='inputField'>
-            <label htmlFor={inputUsernameID}>
+        <h1 className='signup__title'>Sign Up</h1>
+        <span className='signup__error'>{error}</span>
+        <form className='signup__form' onSubmit={handleSubmit}>
+          <div className='signup__inputField'>
+            <label className='signup__label' htmlFor={inputUsernameID}>
               <User />
             </label>
-            <input id={inputUsernameID} name='username' type="text" placeholder='Username' />
+            <input className='signup__input' id={inputUsernameID} name='username' type="text" placeholder='Username' />
           </div>
-          <div className='inputField'>
-            <label htmlFor={inputEmailID}>
+          <div className='signup__inputField'>
+            <label className='signup__label' htmlFor={inputEmailID}>
               <Mail />
             </label>
-            <input id={inputEmailID} name='email' type="text" placeholder='Email' />
+            <input className='signup__input' id={inputEmailID} name='email' type="text" placeholder='Email' />
           </div>
-          <div className='inputField'>
-            <label htmlFor={inputPasswordID}>
+          <div className='signup__inputField'>
+            <label className='signup__label' htmlFor={inputPasswordID}>
               <Lock />
             </label>
-            <input id={inputPasswordID} name='password' type="text" placeholder='Password' />
+            <input className='signup__input' id={inputPasswordID} name='password' type="text" placeholder='Password' />
           </div>
-          <div className='genderInputField'>
+          <div className='signup__genderInputField'>
             <div>
-              <input type="radio" id={inputMaleID} name='gender' value="male" />
-              <label htmlFor={inputMaleID}>Male <Male /></label>
+              <input className='signup__inputRadio' type="radio" id={inputMaleID} name='gender' value="male" />
+              <label className='signup__labelRadio' htmlFor={inputMaleID}>Male <Male /></label>
             </div>
             <div>
-              <input type="radio" id={inputFemaleID} name='gender' value="female" />
-              <label htmlFor={inputFemaleID}>Female <Female /></label>
+              <input className='signup__inputRadio' type="radio" id={inputFemaleID} name='gender' value="female" />
+              <label className='signup__labelRadio' htmlFor={inputFemaleID}>Female <Female /></label>
             </div>
           </div>
-          <button className='submit'>Sign up</button>
+          <button className='signup__submit'>Sign up</button>
         </form>
-        <div className='notForm'>
+        <div className='signup__alreayHaveAnAccount'>
           <p>Do you already have an account?</p>
           <Link className='notForm' to="/login"> Log-in</Link>
         </div>

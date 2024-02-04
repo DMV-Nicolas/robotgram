@@ -1,4 +1,4 @@
-.container {
+.loginContainer {
     display: flex;
     align-items: center;
     width: 100%;
@@ -12,26 +12,30 @@
     font-family: "Nunito";
 }
 
-.login .form {
+.login__form {
     display: flex;
     flex-direction: column;
     gap: .5em;
 }
 
-.login .title {
+.login__title {
     margin-bottom: .2em;
     color: var(--text-1);
     font-size: 3em;
     font-family: "Silkscreen";
 }
 
-.login .inputField {
+.login__error {
+    color: var(--link-1);
+}
+
+.login__inputField {
     width: 100%;
     height: 3.5em;
     display: flex;
 }
 
-.login .inputField label {
+.login__label {
     width: 3em;
     height: 100%;
     padding: .8em;
@@ -39,13 +43,13 @@
     background-color: var(--ui-2);
 }
 
-.login .inputField label svg {
+.login__label svg {
     width: 100%;
     height: 100%;
     color: var(--ui-3);
 }
 
-.login .inputField input {
+.login__input {
     width: 100%;
     height: 100%;
     padding: .8em;
@@ -56,16 +60,16 @@
     transition: background-color linear .1s;
 }
 
-.login .inputField input:focus {
+.login__input:focus {
     outline: none;
     background-color: var(--ui-4);
 }
 
-.login .inputField input:hover {
+.login__input:hover {
     background-color: var(--ui-4);
 }
 
-.login .form button {
+.login__submit {
     background-color: var(--link-1);
     height: 3em;
     border: none;
@@ -73,24 +77,24 @@
     cursor: pointer;
 }
 
-.login .form button:hover {
+.login__submit:hover {
     background-color: var(--link-2);
 }
 
-.login .form button:active {
+.login__submit:active {
     background-color: var(--link-1);
 }
 
-.login .notForm {
+.login__dontHaveAnAccount {
     margin-top: 1em;
 }
 
-.login .notForm p {
+.login__dontHaveAnAccount p {
     display: inline;
     color: var(--text-3);
 }
 
-.login .notForm a {
+.login__dontHaveAnAccount a {
     display: inline;
     color: var(--text-1);
 }

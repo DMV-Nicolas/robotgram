@@ -1,4 +1,4 @@
-.container {
+.signupContainer {
     display: flex;
     align-items: center;
     width: 100%;
@@ -12,26 +12,30 @@
     font-family: "Nunito";
 }
 
-.signup .form {
+.signup__form {
     display: flex;
     flex-direction: column;
     gap: .5em;
 }
 
-.signup .title {
+.signup__title {
     margin-bottom: .2em;
     color: var(--text-1);
     font-size: 3em;
     font-family: "Silkscreen";
 }
 
-.signup .inputField {
+.signup__error {
+    color: var(--link-1);
+}
+
+.signup__inputField {
     width: 100%;
     height: 3.5em;
     display: flex;
 }
 
-.signup .inputField label {
+.signup__label {
     width: 3em;
     height: 100%;
     padding: .8em;
@@ -39,13 +43,13 @@
     background-color: var(--ui-2);
 }
 
-.signup .inputField label svg {
+.signup__label svg {
     width: 100%;
     height: 100%;
     color: var(--ui-3);
 }
 
-.signup .inputField input {
+.signup__input {
     width: 100%;
     height: 100%;
     padding: .8em;
@@ -56,16 +60,16 @@
     transition: background-color linear .1s;
 }
 
-.signup .inputField input:focus {
+.signup__input:focus {
     outline: none;
     background-color: var(--ui-4);
 }
 
-.signup .inputField input:hover {
+.signup__input:hover {
     background-color: var(--ui-4);
 }
 
-.signup .form button {
+.signup__submit {
     background-color: var(--link-1);
     cursor: pointer;
     height: 3em;
@@ -73,15 +77,15 @@
     border-radius: 5px;
 }
 
-.signup .form button:hover {
+.signup__submit:hover {
     background-color: var(--link-2);
 }
 
-.signup .form button:active {
+.signup__submit:active {
     background-color: var(--link-1);
 }
 
-.signup .genderInputField {
+.signup__genderInputField {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -92,22 +96,22 @@
     background-color: var(--ui-2);
 }
 
-.signup .genderInputField div {
+.signup__genderInputField div {
     display: flex;
     align-items: center;
 }
 
-.signup .genderInputField svg {
+.signup__genderInputField svg {
     width: 24px;
     height: 24px;
 }
 
-.signup .genderInputField label {
+.signup__labelRadio {
     display: flex;
     align-items: center;
 }
 
-.signup .genderInputField input[type="radio"] {
+.signup__inputRadio[type="radio"] {
     width: 20px;
     height: 20px;
     margin-right: .2em;
@@ -117,7 +121,7 @@
 }
 
 
-.signup .genderInputField input[type="radio"]:not(:disabled):checked {
+.signup__inputRadio[type="radio"]:not(:disabled):checked {
     background-image: radial-gradient(circle,
             var(--link-1) 0%,
             var(--link-1) 50%,
@@ -125,16 +129,16 @@
             transparent 100%);
 }
 
-.signup .notForm {
+.signup__alreayHaveAnAccount {
     margin-top: 1em;
 }
 
-.signup .notForm p {
+.signup__alreayHaveAnAccount p {
     display: inline;
     color: var(--text-3);
 }
 
-.signup .notForm a {
+.signup__alreayHaveAnAccount a {
     display: inline;
     color: var(--text-1);
 }

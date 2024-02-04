@@ -7,11 +7,11 @@ import { useToken } from '../hooks/useToken'
 import './Login.css'
 
 export function Login() {
-  const { updateTokens } = useToken()
-  const [error, setError] = useState('')
   const navigate = useNavigate()
+  const [error, setError] = useState('')
   const inputUsernameID = useId()
   const inputPasswordID = useId()
+  const { updateTokens } = useToken()
 
   const login = async (usernameOrEmail: string, password: string) => {
     const res = await fetch('http://localhost:5000/v1/users/login', {
@@ -47,26 +47,26 @@ export function Login() {
   }
 
   return (
-    <div className='container'>
+    <div className='loginContainer'>
       <div className='login'>
-        <h1 className='title'>Log In</h1>
-        <span style={{ color: 'red' }}>{error}</span>
-        <form className='form' onSubmit={handleSubmit}>
-          <div className='inputField'>
-            <label htmlFor={inputUsernameID}>
+        <h1 className='login__title'>Log In</h1>
+        <span className='login_error'>{error}</span>
+        <form className='login__form' onSubmit={handleSubmit}>
+          <div className='login__inputField'>
+            <label className='login__label' htmlFor={inputUsernameID}>
               <User />
             </label>
-            <input id={inputUsernameID} name='usernameOrEmail' type="text" placeholder='Username or email' />
+            <input className='login__input' id={inputUsernameID} name='usernameOrEmail' type="text" placeholder='Username or email' />
           </div>
-          <div className='inputField'>
-            <label htmlFor={inputPasswordID}>
+          <div className='login__inputField'>
+            <label className='login__label' htmlFor={inputPasswordID}>
               <Lock />
             </label>
-            <input id={inputPasswordID} name='password' type="text" placeholder='Password' />
+            <input className='login__input' id={inputPasswordID} name='password' type="text" placeholder='Password' />
           </div>
-          <button className='submit'>Log in</button>
+          <button className='login__submit'>Log in</button>
         </form>
-        <div className='notForm'>
+        <div className='login__dontHaveAnAccount'>
           <p>{"Don't"} have an account?</p>
           <Link className='notForm' to="/signup"> Sign-up</Link>
         </div>

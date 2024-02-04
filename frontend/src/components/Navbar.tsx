@@ -5,52 +5,52 @@ import './Navbar.css'
 export function Navbar() {
   return (
     <nav className="navbar">
-      <h1 className="title">Robotgram</h1>
-      <ul>
-        <div>
-          <li>
+      <h1 className="navbar__title">Robotgram</h1>
+      <ul className='navbar__ul'>
+        <div className='navbar__ulGroup'>
+          <li className='navbar__item'>
             <Link to="/">
               <Home />
               <p>Home</p>
             </Link>
           </li>
-          <li>
+          <li className='navbar__item'>
             <Link to="/search">
               <Search />
               <p>Search</p>
             </Link>
           </li>
-          <li>
+          <li className='navbar__item'>
             <Link to="/explore">
               <Explore />
               <p>Explore</p>
             </Link>
           </li>
-          <li>
+          <li className='navbar__item'>
             <Link to="/notifications">
               <EmptyHeart />
               <p>Notifications</p>
             </Link>
           </li>
-          <li>
+          <li className='navbar__item'>
             <Link to="/create">
               <Create />
               <p>Create</p>
             </Link>
           </li>
-          <li>
+          <li className='navbar__item'>
             <Link to="/profile">
               <img className="avatar" src="https://avatars.githubusercontent.com/u/69326361?v=4" alt="avatar" />
               <p>Profile</p>
             </Link>
           </li>
         </div>
-        <div>
-          <li>
+        <div className='navbar__ulGroup'>
+          <li className='navbar__item'>
             <Link to="https://github.com/DMV-Nicolas/robotgram" target="_blank" rel="noreferrer">
               <Github />
               <p>Github</p>
-              <span className="navbarLinkBlank">
+              <span className="navbar__blank">
                 <Blank />
               </span>
             </Link>
