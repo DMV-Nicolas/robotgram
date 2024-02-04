@@ -66,10 +66,19 @@
 }
 
 .login .form button {
-    background-color: var(--link);
+    background-color: var(--link-1);
     height: 3em;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.login .form button:hover {
+    background-color: var(--link-2);
+}
+
+.login .form button:active {
+    background-color: var(--link-1);
 }
 
 .login .notForm {

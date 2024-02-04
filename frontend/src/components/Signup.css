@@ -66,10 +66,19 @@
 }
 
 .signup .form button {
-    background-color: var(--link);
+    background-color: var(--link-1);
+    cursor: pointer;
     height: 3em;
     border: none;
     border-radius: 5px;
+}
+
+.signup .form button:hover {
+    background-color: var(--link-2);
+}
+
+.signup .form button:active {
+    background-color: var(--link-1);
 }
 
 .signup .genderInputField {
@@ -110,8 +119,8 @@
 
 .signup .genderInputField input[type="radio"]:not(:disabled):checked {
     background-image: radial-gradient(circle,
-            var(--link) 0%,
-            var(--link) 50%,
+            var(--link-1) 0%,
+            var(--link-1) 50%,
             transparent 60%,
             transparent 100%);
 }
