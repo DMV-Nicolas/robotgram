@@ -1,0 +1,10 @@
+.footer {
+    position: fixed;
+    padding: 1em;
+    font-family: "Nunito";
+    color: #fff;
+    background-color: #ffffff10;
+    border-radius: 15px;
+    left: 0;
+    bottom: 0;
+}

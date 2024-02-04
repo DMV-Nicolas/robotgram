@@ -1,42 +1,96 @@
-.login {
-    width: 60%;
+.loginContainer {
     display: flex;
-    gap: 2em;
-    margin: 2em auto;
-}
-
-.login .left {
-    width: 50%;
-}
-
-.login .picture {
-    width: 100%;
-}
-
-.login .right {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--background-1);
 }
 
-/* Form */
-.login .form {
+.login {
+    width: 20em;
+    margin: auto;
+    font-family: "Nunito";
+}
+
+.login__form {
     display: flex;
-    padding: 2em;
-    outline: 1px solid #fff;
     flex-direction: column;
+    gap: .5em;
 }
 
-.login .title {
-    text-align: center;
-    color: #fff;
-    font-size: 2em;
+.login__title {
+    margin-bottom: .2em;
+    color: var(--text-1);
+    font-size: 3em;
     font-family: "Silkscreen";
-    font-weight: 100;
-    margin: .5em 0;
 }
 
-.login .input {
-    height: 2.2em;
+.login__inputField {
+    width: 100%;
+    height: 3.5em;
+    display: flex;
+}
+
+.login__label {
+    width: 3em;
+    height: 100%;
+    padding: .8em;
+    text-align: center;
+    background-color: var(--ui-2);
+}
+
+.login__label svg {
+    width: 100%;
+    height: 100%;
+    color: var(--ui-3);
+}
+
+.login__input {
+    width: 100%;
+    height: 100%;
+    padding: .8em;
+    font-size: 1.1em;
+    border: none;
+    color: var(--text-1);
+    background-color: var(--ui-3);
+    transition: background-color linear .1s;
+}
+
+.login__input:focus {
+    outline: none;
+    background-color: var(--ui-4);
+}
+
+.login__input:hover {
+    background-color: var(--ui-4);
+}
+
+.login__submit {
+    background-color: var(--link-1);
+    height: 3em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login__submit:hover {
+    background-color: var(--link-2);
+}
+
+.login__submit:active {
+    background-color: var(--link-1);
+}
+
+.login__dontHaveAnAccount {
+    margin-top: 1em;
+}
+
+.login__dontHaveAnAccount p {
+    display: inline;
+    color: var(--text-3);
+}
+
+.login__dontHaveAnAccount a {
+    display: inline;
+    color: var(--text-1);
 }

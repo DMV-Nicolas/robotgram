@@ -15,12 +15,12 @@ function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps
   const elapsedTime = getTimeElapsed(postCreatedAt)
   return (
     <header className="postHeader">
-      <div className="user">
-        <img className="avatar" src={userAvatar} alt={`Avatar image of ${username}`} />
-        <strong className="username">{username} </strong>
-        <span className="elapsedTime">• {elapsedTime}</span>
+      <div className="postHeader__user">
+        <img className="postHeader__avatar" src={userAvatar} alt={`Avatar image of ${username}`} />
+        <strong className="postHeader__username">{username} </strong>
+        <span className="postHeader__elapsedTime">• {elapsedTime}</span>
       </div>
-      <div className="options">
+      <div className="postHeader__options">
         <Options />
       </div>
     </header>
@@ -47,16 +47,19 @@ function PostBody({ postImages, postID, username }: PostCardBodyProps) {
   return (
     <div className="postBody">
       {slide > 0 &&
-        <span className="leftArrow instagramIcons" onClick={prevSlide}></span>
+        <span className="postBody__leftArrow instagramIcons" onClick={prevSlide}></span>
       }
-      <img className="image" src={postImages[slide]} alt={`Post image of ${username}`} />
+      <img className="postBody__image" src={postImages[slide]} alt={`Post image of ${username}`} />
       {slide < postImages.length - 1 &&
-        <span className="rightArrow instagramIcons" onClick={nextSlide}></span>
+        <span className="postBody__rightArrow instagramIcons" onClick={nextSlide}></span>
       }
-      <div className="indicators">
+      <div className="postBody__indicators">
         {
           postImages.map((_, idx) => (
-            <span key={`${postID}-${idx}`} className={`indicator ${slide === idx ? 'indicatorSelected' : ''}`} onClick={() => { setSlide(idx) }}></span>
+            <span
+              key={`${postID}-${idx}`}
+              className={`postBody__indicator ${slide === idx ? 'postBody__indicator--selected' : ''}`}
+              onClick={() => { setSlide(idx) }}></span>
           ))
         }
       </div>
@@ -74,8 +77,8 @@ interface PostCardFooterProps {
 function PostFooter({ username, postLikes, postDescription, liked }: PostCardFooterProps) {
   return (
     <footer className="postFooter">
-      <section className="actions">
-        <div className="leftActions">
+      <section className="postFooter__actions">
+        <div className="postFooter__leftActions">
           {liked
             ? <Heart />
             : <EmptyHeart />
@@ -83,14 +86,14 @@ function PostFooter({ username, postLikes, postDescription, liked }: PostCardFoo
           <Comment />
           <Share />
         </div>
-        <div className="rightActions">
+        <div className="postFooter__rightActions">
           <Save />
         </div>
       </section>
-      <section className="likeCount">
+      <section className="postFooter__likeCount">
         <p>{postLikes} Me gusta</p>
       </section>
-      <section className="description">
+      <section className="postFooter__description">
         <p><strong>{username}</strong> {postDescription}</p>
       </section>
     </footer>

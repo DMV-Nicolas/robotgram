@@ -1,9 +1,12 @@
-export interface PostType {
+export interface UserResponse {
   id: string
-  userID: string
-  images: string[]
+  username: string
+  full_name: string
+  email: string
+  avatar: string
   description: string
-  createdAt: string
+  gender: string
+  created_at: string
 }
 
 export interface UserType {
@@ -25,15 +28,26 @@ export interface PostResponse {
   created_at: string
 }
 
-export interface UserResponse {
+export interface PostType {
   id: string
-  username: string
-  full_name: string
-  email: string
-  avatar: string
+  userID: string
+  images: string[]
   description: string
-  gender: string
-  created_at: string
+  createdAt: string
+}
+
+export interface UsersLoginResponse {
+  session_id: string
+  access_token: string
+  access_token_expires_at: string
+  refresh_token: string
+  refresh_token_expires_at: string
 }
 
 export type LikesCountResponse = number
+
+export interface TokenContextType {
+  accessToken: MutableRefObject<string>
+  refreshToken: MutableRefObject<string>
+  updateTokens: () => void
+}

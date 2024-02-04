@@ -6,10 +6,10 @@
     flex-direction: column;
     padding: 18px;
     gap: 2em;
-    background-color: #111;
+    background-color: var(--ui-1);
 }
 
-.navbar .title {
+.navbar__title {
     color: #fff;
     font-size: 1.5em;
     font-family: "Silkscreen";
@@ -23,24 +23,24 @@
     border-radius: 50%;
 }
 
-.navbar ul {
+.navbar__ul {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.navbar ul div {
+.navbar__ulGroup {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.navbar li {
+.navbar__item {
     height: auto;
 }
 
-.navbar a {
+.navbar__item a {
     position: relative;
     display: flex;
     align-items: center;
@@ -49,19 +49,19 @@
     border-radius: 10px;
     font-family: 'Nunito', sans-serif;
     font-weight: bold;
-    color: #fff;
+    color: var(--text-1);
     transition: background-color linear .1s;
 }
 
-.navbar a:hover {
+.navbar__item a:hover {
     background-color: #222;
 
-    .navbarLinkBlank {
-        color: #bbbbbb
+    .navbar__blank {
+        color: var(--text-1)
     }
 }
 
-.navbarLinkBlank {
+.navbar__blank {
     position: absolute;
     right: 0;
     padding: 0 12px;
