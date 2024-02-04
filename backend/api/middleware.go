@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -37,6 +38,7 @@ func authMiddleware(next echo.HandlerFunc, tokenMaker token.Maker) echo.HandlerF
 		}
 
 		accessToken := fields[1]
+		fmt.Printf("Access Token: \"%s\"\n", accessToken)
 		payload, err := tokenMaker.VerifyToken(accessToken)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, err)

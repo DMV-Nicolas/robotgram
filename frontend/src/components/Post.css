@@ -108,6 +108,18 @@
     gap: 13px;
 }
 
+.postFooter__button {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.postFooter__button--like {
+    color: var(--text-1);
+}
+
 .postFooter__likeCount {
     padding-top: 10px;
 }

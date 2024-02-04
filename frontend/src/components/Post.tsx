@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { usePost } from '../hooks/usePost'
+import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
@@ -72,17 +73,23 @@ interface PostCardFooterProps {
   postLikes: number
   postDescription: string
   liked: boolean
+  toggleLike: () => void
 }
 
-function PostFooter({ username, postLikes, postDescription, liked }: PostCardFooterProps) {
+function PostFooter({ username, postLikes, postDescription, liked, toggleLike }: PostCardFooterProps) {
   return (
     <footer className="postFooter">
       <section className="postFooter__actions">
         <div className="postFooter__leftActions">
-          {liked
-            ? <Heart />
-            : <EmptyHeart />
-          }
+          <button
+            className='postFooter__button postFooter__button--like'
+            onClick={toggleLike}
+          >
+            {liked
+              ? <Heart />
+              : <EmptyHeart />
+            }
+          </button>
           <Comment />
           <Share />
         </div>
@@ -106,6 +113,11 @@ interface PostProps {
 
 export function Post({ post }: PostProps) {
   const { user, likes } = usePost({ post })
+  const { toggleLike } = useLikes()
+
+  const handleToggleLike = () => {
+    toggleLike(post.id)
+  }
 
   return (
     <article className="post">
@@ -124,6 +136,7 @@ export function Post({ post }: PostProps) {
         postLikes={likes}
         postDescription={post.description}
         liked={false}
+        toggleLike={handleToggleLike}
       />
     </article>
   )
