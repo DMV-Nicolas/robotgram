@@ -1,39 +1,16 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
+import { Link } from 'react-router-dom'
+import { useSignup } from '../hooks/useSignup'
 import { Female, Lock, Mail, Male, User } from './Icons'
-import { Link, useNavigate } from 'react-router-dom'
 import './Signup.css'
 
 export function Signup() {
-  const navigate = useNavigate()
-  const [error, setError] = useState('')
+  const { signup, error } = useSignup()
   const inputUsernameID = useId()
   const inputEmailID = useId()
   const inputPasswordID = useId()
   const inputMaleID = useId()
   const inputFemaleID = useId()
-
-  const signup = async (username: string, email: string, password: string, gender: string) => {
-    const res = await fetch('http://localhost:5000/v1/users', {
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        gender,
-        full_name: username,
-        avatar: 'https://cdn-icons-png.flaticon.com/512/1068/1068549.png'
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!res.ok) {
-      setError('Invalid credentials'); return
-    }
-
-    navigate('/login')
-  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

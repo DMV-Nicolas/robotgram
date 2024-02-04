@@ -1,38 +1,13 @@
-import { useId, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useId } from 'react'
+import { Link } from 'react-router-dom'
+import { useLogin } from '../hooks/useLogin'
 import { Lock, User } from './Icons'
-import { store } from '../services/storage'
-import { type UsersLoginResponse } from '../types'
-import { useToken } from '../hooks/useToken'
 import './Login.css'
 
 export function Login() {
-  const navigate = useNavigate()
-  const [error, setError] = useState('')
+  const { login, error } = useLogin()
   const inputUsernameID = useId()
   const inputPasswordID = useId()
-  const { updateTokens } = useToken()
-
-  const login = async (usernameOrEmail: string, password: string) => {
-    const res = await fetch('http://localhost:5000/v1/users/login', {
-      method: 'POST',
-      body: JSON.stringify({ username_or_email: usernameOrEmail, password }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!res.ok) {
-      setError('Invalid credentials'); return
-    }
-    setError('')
-
-    const data: UsersLoginResponse = await res.json()
-    store('access_token', data.access_token)
-    store('refresh_token', data.refresh_token)
-    updateTokens()
-    navigate('/')
-  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
