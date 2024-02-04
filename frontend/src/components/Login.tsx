@@ -5,7 +5,7 @@ import { Lock, User } from './Icons'
 import './Login.css'
 
 export function Login() {
-  const { login, error } = useLogin()
+  const { login } = useLogin()
   const inputUsernameID = useId()
   const inputPasswordID = useId()
 
@@ -25,7 +25,6 @@ export function Login() {
     <div className='loginContainer'>
       <div className='login'>
         <h1 className='login__title'>Log In</h1>
-        <span className='login_error'>{error}</span>
         <form className='login__form' onSubmit={handleSubmit}>
           <div className='login__inputField'>
             <label className='login__label' htmlFor={inputUsernameID}>

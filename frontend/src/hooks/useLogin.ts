@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useToken } from './useToken'
 import { store } from '../services/storage'
 import { type UsersLoginResponse } from '../types'
+import { toast } from 'sonner'
 
 export function useLogin() {
   const navigate = useNavigate()
-  const [error, setError] = useState('')
   const { updateTokens } = useToken()
 
   const login = async (usernameOrEmail: string, password: string) => {
@@ -19,16 +18,18 @@ export function useLogin() {
     })
 
     if (!res.ok) {
-      setError('Invalid credentials'); return
+      toast.error('Invalid credentials')
+      return
     }
-    setError('')
 
     const data: UsersLoginResponse = await res.json()
     store('access_token', data.access_token)
     store('refresh_token', data.refresh_token)
     updateTokens()
+
+    toast.success('Successful login')
     navigate('/')
   }
 
-  return { login, error }
+  return { login }
 }

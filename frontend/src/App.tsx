@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import { Toaster } from 'sonner'
 import { LoginPage } from './pages/Login'
 import { HomePage } from './pages/Home'
 import { NotFoundPage } from './pages/NotFound'
@@ -15,6 +16,7 @@ function App() {
         <Route path='/signup' element={<SignupPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <Toaster richColors />
       {/* <Footer /> */}
     </main>
   )
