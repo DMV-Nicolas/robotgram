@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Lock, User } from './Icons'
 import { store } from '../services/storage'
 import { type UsersLoginResponse } from '../types'
+import { useToken } from '../hooks/useToken'
 import './Login.css'
 
 export function Login() {
+  const { updateTokens } = useToken()
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const inputUsernameID = useId()
@@ -28,6 +30,7 @@ export function Login() {
     const data: UsersLoginResponse = await res.json()
     store('access_token', data.access_token)
     store('refresh_token', data.refresh_token)
+    updateTokens()
     navigate('/')
   }
 

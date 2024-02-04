@@ -47,6 +47,7 @@ export interface UsersLoginResponse {
 }
 
 export interface TokenContextType {
-  accessToken: string
-  refreshToken: string
+  accessToken: MutableRefObject<string>
+  refreshToken: MutableRefObject<string>
+  updateTokens: () => void
 }

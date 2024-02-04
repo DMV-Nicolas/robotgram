@@ -5,10 +5,9 @@ export function useToken() {
   const context = useContext(TokenContext)
 
   if (context === null) {
-    console.log('Cannot load token context')
-    return { accessToken: '', refreshToken: '' }
+    throw new Error('Cannot load token context')
   }
 
-  const { accessToken, refreshToken } = context
-  return { accessToken, refreshToken }
+  const { accessToken, refreshToken, updateTokens } = context
+  return { accessToken, refreshToken, updateTokens }
 }
