@@ -16,7 +16,7 @@ type ToggleLikeParams struct {
 }
 
 func (q *Queries) ToggleLike(ctx context.Context, arg ToggleLikeParams) (*mongo.InsertOneResult, *mongo.DeleteResult, error) {
-	if like, liked := q.IsLiked(ctx, arg); liked {
+	if like, liked := q.IsLiked(ctx, IsLikedParams{TargetID: arg.TargetID, UserID: arg.UserID}); liked {
 		// delete like
 		filter := bson.M{"_id": like.ID}
 
@@ -87,4 +87,27 @@ func (q *Queries) CountLikes(ctx context.Context, targetID primitive.ObjectID) (
 	nLikes, err := coll.CountDocuments(ctx, filter, nil)
 
 	return nLikes, err
+}
+
+type IsLikedParams struct {
+	TargetID primitive.ObjectID `json:"target_id" bson:"target_id"`
+	UserID   primitive.ObjectID `json:"user_id" bson:"user_id"`
+}
+
+func (q *Queries) IsLiked(ctx context.Context, arg IsLikedParams) (Like, bool) {
+	filter := bson.D{
+		primitive.E{Key: "user_id", Value: arg.UserID},
+		primitive.E{Key: "target_id", Value: arg.TargetID},
+	}
+	opts := options.FindOne()
+
+	var like Like
+	coll := q.db.Collection("likes")
+	err := coll.FindOne(ctx, filter, opts).Decode(&like)
+
+	if err != nil {
+		return Like{}, false
+	}
+
+	return like, true
 }

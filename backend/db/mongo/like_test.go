@@ -103,3 +103,26 @@ func TestCountLikes(t *testing.T) {
 	require.NotZero(t, nLikes)
 	require.EqualValues(t, n, nLikes)
 }
+
+func TestIsLiked(t *testing.T) {
+	user := randomUser(t)
+	post := randomPost(t)
+	like1 := randomLike(t, user.ID, post.ID)
+
+	arg := IsLikedParams{
+		UserID:   user.ID,
+		TargetID: post.ID,
+	}
+
+	like2, liked := testQueries.IsLiked(testCtx, arg)
+	require.True(t, liked)
+	require.NotEmpty(t, like2)
+	require.Equal(t, like1, like2)
+
+	_, _, err := testQueries.ToggleLike(testCtx, ToggleLikeParams{UserID: arg.UserID, TargetID: arg.TargetID})
+	require.NoError(t, err)
+
+	like3, liked := testQueries.IsLiked(testCtx, arg)
+	require.False(t, liked)
+	require.Empty(t, like3)
+}
