@@ -60,6 +60,7 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	v1.POST("/likes", authMiddleware(server.ToggleLike, server.tokenMaker))
 	v1.GET("/likes/:target_id", server.ListLikes)
 	v1.GET("/likes/:target_id/count", server.CountLikes)
+	v1.GET("/likes/:target_id/liked", authMiddleware(server.IsLiked, server.tokenMaker))
 
 	v1.POST("/comments", authMiddleware(server.CreateComment, server.tokenMaker))
 	v1.GET("/comments/:target_id", server.ListComments)

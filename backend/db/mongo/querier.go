@@ -25,7 +25,7 @@ type Querier interface {
 	ListLikes(ctx context.Context, arg ListLikesParams) ([]Like, error)
 	CountLikes(ctx context.Context, targetID primitive.ObjectID) (int64, error)
 	ToggleLike(ctx context.Context, arg ToggleLikeParams) (*mongo.InsertOneResult, *mongo.DeleteResult, error)
-	IsLiked(ctx context.Context, arg IsLikedParams) (Like, bool)
+	IsLiked(ctx context.Context, arg IsLikedParams) (Like, bool, error)
 
 	CreateComment(ctx context.Context, arg CreateCommentParams) (*mongo.InsertOneResult, error)
 	GetComment(ctx context.Context, id primitive.ObjectID) (Comment, error)

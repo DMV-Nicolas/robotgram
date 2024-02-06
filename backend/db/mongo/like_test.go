@@ -114,15 +114,17 @@ func TestIsLiked(t *testing.T) {
 		TargetID: post.ID,
 	}
 
-	like2, liked := testQueries.IsLiked(testCtx, arg)
+	like2, liked, err := testQueries.IsLiked(testCtx, arg)
+	require.NoError(t, err)
 	require.True(t, liked)
 	require.NotEmpty(t, like2)
 	require.Equal(t, like1, like2)
 
-	_, _, err := testQueries.ToggleLike(testCtx, ToggleLikeParams{UserID: arg.UserID, TargetID: arg.TargetID})
+	_, _, err = testQueries.ToggleLike(testCtx, ToggleLikeParams{UserID: arg.UserID, TargetID: arg.TargetID})
 	require.NoError(t, err)
 
-	like3, liked := testQueries.IsLiked(testCtx, arg)
+	like3, liked, err := testQueries.IsLiked(testCtx, arg)
+	require.NoError(t, err)
 	require.False(t, liked)
 	require.Empty(t, like3)
 }
