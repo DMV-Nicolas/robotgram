@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { type PostType, type UserType, type UserResponse, type LikesCountResponse } from '../types'
+import { type PostType, type UserType, type UserResponse } from '../types'
 
 const DEFAULT_USER: UserType = {
   avatar: '',
@@ -14,7 +14,6 @@ const DEFAULT_USER: UserType = {
 
 export const usePost = ({ post }: { post: PostType }) => {
   const [user, setUser] = useState(DEFAULT_USER)
-  const [likes, setLikes] = useState(0)
 
   useEffect(() => {
     const fetchGetUser = async () => {
@@ -36,15 +35,5 @@ export const usePost = ({ post }: { post: PostType }) => {
     fetchGetUser()
   }, [post.userID])
 
-  useEffect(() => {
-    const fetchCountLikes = async () => {
-      const res = await fetch(`http://localhost:5000/v1/likes/${post.id}/count`)
-      const data: LikesCountResponse = await res.json()
-      setLikes(data)
-    }
-
-    fetchCountLikes()
-  }, [post.id])
-
-  return { user, likes }
+  return { user }
 }

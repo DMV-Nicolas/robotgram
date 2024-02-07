@@ -112,11 +112,11 @@ interface PostProps {
 }
 
 export function Post({ post }: PostProps) {
-  const { user, likes } = usePost({ post })
-  const { toggleLike } = useLikes()
+  const { user } = usePost({ post })
+  const { toggleLike, liked, likes } = useLikes({ targetID: post.id })
 
   const handleToggleLike = () => {
-    toggleLike(post.id)
+    toggleLike()
   }
 
   return (
@@ -135,7 +135,7 @@ export function Post({ post }: PostProps) {
         username={user.username}
         postLikes={likes}
         postDescription={post.description}
-        liked={false}
+        liked={liked}
         toggleLike={handleToggleLike}
       />
     </article>

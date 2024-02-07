@@ -46,6 +46,8 @@ export interface UsersLoginResponse {
 
 export type LikesCountResponse = number
 
+export type IsLikedResponse = boolean
+
 export interface TokenContextType {
   accessToken: MutableRefObject<string>
   refreshToken: MutableRefObject<string>
