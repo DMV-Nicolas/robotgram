@@ -25,14 +25,14 @@ func (server *Server) ToggleLike(c echo.Context) error {
 		return err
 	}
 
-	payload, err := getAuthorizationPayload(c)
-	if err != nil {
-		return err
-	}
-
 	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	payload, err := getAuthorizationPayload(c)
+	if err != nil {
+		return err
 	}
 
 	arg := db.ToggleLikeParams{
@@ -105,4 +105,37 @@ func (server *Server) CountLikes(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, nLikes)
+}
+
+type isLikedRequest struct {
+	TargetID string `param:"target_id" validate:"required,len=24"`
+}
+
+func (server *Server) IsLiked(c echo.Context) error {
+	req := new(isLikedRequest)
+	if err := bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	targetID, err := primitive.ObjectIDFromHex(req.TargetID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	payload, err := getAuthorizationPayload(c)
+	if err != nil {
+		return err
+	}
+
+	arg := db.IsLikedParams{
+		UserID:   payload.UserID,
+		TargetID: targetID,
+	}
+
+	_, liked, err := server.queries.IsLiked(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, liked)
 }

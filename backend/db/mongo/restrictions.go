@@ -4,10 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var (
@@ -42,23 +39,4 @@ func (q *Queries) EmailTaken(ctx context.Context, email string) error {
 	}
 
 	return ErrEmailTaken
-}
-
-// IsLiked verifies in the database if the entered like is already registered
-func (q *Queries) IsLiked(ctx context.Context, arg ToggleLikeParams) (Like, bool) {
-	filter := bson.D{
-		primitive.E{Key: "user_id", Value: arg.UserID},
-		primitive.E{Key: "target_id", Value: arg.TargetID},
-	}
-	opts := options.FindOne()
-
-	var like Like
-	coll := q.db.Collection("likes")
-	err := coll.FindOne(ctx, filter, opts).Decode(&like)
-
-	if err != nil {
-		return Like{}, false
-	}
-
-	return like, true
 }

@@ -40,8 +40,9 @@ func NewServer(config util.Config, queries db.Querier) (*Server, error) {
 func (server *Server) setupRouter(e *echo.Echo) {
 	v1 := e.Group("/v1")
 	v1.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5173"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowCredentials: true,
 	}))
 	v1.GET("/", server.Home)
 
@@ -59,6 +60,7 @@ func (server *Server) setupRouter(e *echo.Echo) {
 	v1.POST("/likes", authMiddleware(server.ToggleLike, server.tokenMaker))
 	v1.GET("/likes/:target_id", server.ListLikes)
 	v1.GET("/likes/:target_id/count", server.CountLikes)
+	v1.GET("/likes/:target_id/liked", authMiddleware(server.IsLiked, server.tokenMaker))
 
 	v1.POST("/comments", authMiddleware(server.CreateComment, server.tokenMaker))
 	v1.GET("/comments/:target_id", server.ListComments)

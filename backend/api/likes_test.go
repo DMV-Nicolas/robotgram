@@ -381,6 +381,124 @@ func TestCountLikesAPI(t *testing.T) {
 	}
 }
 
+func TestIsLikedAPI(t *testing.T) {
+	user, _ := randomUser(t)
+	post := randomPost(t, primitive.NewObjectID())
+	like := randomLike(t, user.ID, post.ID)
+
+	testCases := []struct {
+		name          string
+		targetID      any
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		buildStubs    func(store *mockdb.MockQuerier)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:     "IsLiked",
+			targetID: post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				arg := db.IsLikedParams{
+					UserID:   user.ID,
+					TargetID: post.ID,
+				}
+
+				querier.EXPECT().
+					IsLiked(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(like, true, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchLiked(t, recorder.Body, true)
+			},
+		},
+		{
+			name:     "IsNotLiked",
+			targetID: post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					IsLiked(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(like, false, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchLiked(t, recorder.Body, false)
+			},
+		},
+		{
+			name:     "InternalError",
+			targetID: post.ID.Hex(),
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					IsLiked(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(db.Like{}, false, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name:     "InvalidTargetID",
+			targetID: "qwertyuiopasdfghjklñzxcv",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					IsLiked(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name:     "TargetIDLenIsNot24",
+			targetID: "B)",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			}, buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					IsLiked(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+			tc.buildStubs(queries)
+
+			// start test server and send request
+			server := newTestServer(t, queries, util.RandomPassword(32))
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/v1/likes/%v/liked", tc.targetID)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			request.Header.Add("Content-Type", "application/json")
+			require.NoError(t, err)
+
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func randomLike(t *testing.T, userID, targetID primitive.ObjectID) db.Like {
 	return db.Like{
 		ID:       util.RandomID(),
