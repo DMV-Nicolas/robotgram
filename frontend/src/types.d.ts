@@ -48,8 +48,14 @@ export type LikesCountResponse = number
 
 export type IsLikedResponse = boolean
 
+export interface RefreshTokenResponse {
+  access_token: string
+  access_token_expires_at: string
+}
+
 export interface TokenContextType {
   accessToken: MutableRefObject<string>
   refreshToken: MutableRefObject<string>
   updateTokens: () => void
+  refreshAccessToken: () => Promise<void>
 }

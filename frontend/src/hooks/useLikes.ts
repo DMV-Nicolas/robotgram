@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { type LikesCountResponse, type IsLikedResponse } from '../types'
 
 export function useLikes({ targetID }: { targetID: string }) {
-  const { accessToken } = useToken()
+  const { accessToken, refreshAccessToken } = useToken()
   const [likes, setLikes] = useState(0)
   const [liked, setLiked] = useState(false)
 
@@ -22,6 +22,7 @@ export function useLikes({ targetID }: { targetID: string }) {
 
     if (!res.ok) {
       toast.error('cannot toggle like')
+      refreshAccessToken()
       return
     }
     setLikes(liked ? likes - 1 : likes + 1)

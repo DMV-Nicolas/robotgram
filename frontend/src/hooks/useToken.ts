@@ -8,6 +8,6 @@ export function useToken() {
     throw new Error('Cannot load token context')
   }
 
-  const { accessToken, refreshToken, updateTokens } = context
-  return { accessToken, refreshToken, updateTokens }
+  const { accessToken, refreshToken, updateTokens, refreshAccessToken } = context
+  return { accessToken, refreshToken, updateTokens, refreshAccessToken }
 }
