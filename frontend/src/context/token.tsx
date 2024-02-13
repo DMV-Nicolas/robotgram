@@ -24,10 +24,8 @@ export function TokenProvider({ children }: { children?: React.ReactNode }) {
       body: JSON.stringify({ refresh_token: refreshToken.current }),
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${accessToken.current}`
-      },
-      credentials: 'include'
+        Accept: 'application/json'
+      }
     })
 
     if (!res.ok) {

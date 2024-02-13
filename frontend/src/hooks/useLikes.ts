@@ -59,6 +59,7 @@ export function useLikes({ targetID }: { targetID: string }) {
 
       if (!res.ok) {
         toast.error('cannot get like data')
+        refreshAccessToken()
         return
       }
 
