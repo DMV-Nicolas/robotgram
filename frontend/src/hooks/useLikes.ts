@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { type LikesCountResponse, type IsLikedResponse } from '../types'
 
 export function useLikes({ targetID }: { targetID: string }) {
-  const { accessToken, refreshAccessToken } = useToken()
+  const { accessToken, refreshAccessToken, updateAccessToken, updateRefreshToken } = useToken()
   const [likes, setLikes] = useState(0)
   const [liked, setLiked] = useState(false)
 
@@ -15,14 +15,18 @@ export function useLikes({ targetID }: { targetID: string }) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${accessToken.current}`
+        Authorization: `Bearer ${accessToken}`
       },
       credentials: 'include'
     })
 
     if (!res.ok) {
       toast.error('cannot toggle like')
-      refreshAccessToken()
+      const err = await refreshAccessToken()
+      if (err instanceof Error) {
+        updateAccessToken('')
+        updateRefreshToken('')
+      }
       return
     }
     setLikes(liked ? likes - 1 : likes + 1)
@@ -52,14 +56,18 @@ export function useLikes({ targetID }: { targetID: string }) {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: `Bearer ${accessToken.current}`
+          Authorization: `Bearer ${accessToken}`
         },
         credentials: 'include'
       })
 
       if (!res.ok) {
         toast.error('cannot get like data')
-        refreshAccessToken()
+        const err = await refreshAccessToken()
+        if (err instanceof Error) {
+          updateAccessToken('')
+          updateRefreshToken('')
+        }
         return
       }
 
@@ -68,7 +76,7 @@ export function useLikes({ targetID }: { targetID: string }) {
     }
 
     fetchIsLiked()
-  }, [])
+  }, [accessToken])
 
   return { toggleLike, liked, likes }
 }

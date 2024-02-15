@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useToken } from './useToken'
-import { store } from '../services/storage'
 import { type UsersLoginResponse } from '../types'
 import { toast } from 'sonner'
 
 export function useLogin() {
   const navigate = useNavigate()
-  const { updateTokens } = useToken()
+  const { updateAccessToken, updateRefreshToken } = useToken()
 
   const login = async (usernameOrEmail: string, password: string) => {
     const res = await fetch('http://localhost:5000/v1/users/login', {
@@ -23,9 +22,8 @@ export function useLogin() {
     }
 
     const data: UsersLoginResponse = await res.json()
-    store('access_token', data.access_token)
-    store('refresh_token', data.refresh_token)
-    updateTokens()
+    updateAccessToken(data.access_token)
+    updateRefreshToken(data.refresh_token)
 
     toast.success('Successful login')
     navigate('/')

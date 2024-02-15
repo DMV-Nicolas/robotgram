@@ -54,8 +54,9 @@ export interface RefreshTokenResponse {
 }
 
 export interface TokenContextType {
-  accessToken: MutableRefObject<string>
-  refreshToken: MutableRefObject<string>
-  updateTokens: () => void
-  refreshAccessToken: () => Promise<void>
+  accessToken: string
+  refreshToken: string
+  updateAccessToken: (newToken: string) => void
+  updateRefreshToken: (newToken: string) => void
+  refreshAccessToken: () => Promise<Error | undefined>
 }
