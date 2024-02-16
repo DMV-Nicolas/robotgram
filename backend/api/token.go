@@ -39,17 +39,17 @@ func (server *Server) RefreshToken(c echo.Context) error {
 	}
 
 	if session.IsBlocked {
-		err := errors.New("Blocked session")
+		err := errors.New("blocked session")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 
 	if session.UserID != refreshPayload.UserID {
-		err := errors.New("Incorrect session user")
+		err := errors.New("incorrect session user")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 
 	if session.RefreshToken != req.RefreshToken {
-		err := errors.New("Mismatched session token")
+		err := errors.New("mismatched session token")
 		return echo.NewHTTPError(http.StatusUnauthorized, err)
 	}
 

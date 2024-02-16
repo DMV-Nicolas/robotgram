@@ -124,7 +124,7 @@ type deleteCommentRequest struct {
 }
 
 func (server *Server) DeleteComment(c echo.Context) error {
-	req := new(deletePostRequest)
+	req := new(deleteCommentRequest)
 	if err := bindAndValidate(c, req); err != nil {
 		return err
 	}

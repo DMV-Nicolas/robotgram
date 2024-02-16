@@ -115,6 +115,9 @@ func (server *Server) LoginUser(c echo.Context) error {
 	}
 
 	_, err = server.queries.CreateSession(context.TODO(), arg)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
 
 	res := loginUserResponse{
 		SessionID:             refreshPayload.ID.Hex(),

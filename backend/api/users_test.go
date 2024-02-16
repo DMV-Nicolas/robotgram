@@ -343,6 +343,26 @@ func TestLoginUserAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
+		{
+			name: "CreateSessionInternalError",
+			body: map[string]any{
+				"username_or_email": user.Username,
+				"password":          password,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq("username"), gomock.Eq(user.Username)).
+					Times(1).
+					Return(user, nil)
+				querier.EXPECT().
+					CreateSession(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
