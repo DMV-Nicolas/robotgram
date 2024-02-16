@@ -65,3 +65,12 @@ func (server *Server) RefreshToken(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, res)
 }
+
+func (server *Server) GetTokenData(c echo.Context) error {
+	payload, err := getAuthorizationPayload(c)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, payload)
+}
