@@ -182,6 +182,48 @@ func TestRefreshTokenAPI(t *testing.T) {
 	}
 }
 
+func TestGetTokenDataAPI(t *testing.T) {
+	user, _ := randomUser(t)
+
+	testCases := []struct {
+		name          string
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			queries := mockdb.NewMockQuerier(ctrl)
+
+			// start test server and send request
+			server := newTestServer(t, queries, util.RandomPassword(32))
+			recorder := httptest.NewRecorder()
+
+			url := "/v1/token/data"
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			request.Header.Add("Content-Type", "application/json")
+			require.NoError(t, err)
+
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}
+
 func randomSession(t *testing.T, userID primitive.ObjectID, duration time.Duration, isBlocked bool, tokenMaker token.Maker) db.Session {
 
 	refreshToken, refreshPayload, err := tokenMaker.CreateToken(userID, duration)
