@@ -1,5 +1,5 @@
 import { type UserType } from '../types'
-import { Female, Male, Options } from './Icons'
+import { Options } from './Icons'
 import './Profile.css'
 
 interface ProfileHeaderProps {
@@ -27,7 +27,7 @@ export function ProfileHeader({ username, fullName, email, avatar, description, 
           </button>
         </div>
         <div className='profileHeader__info profileHeader__info--column'>
-          <span>{fullName} - {email}</span>
+          <span className='profileHeader__fullname'>{fullName} - {email}</span>
           <p>{description}</p>
         </div>
       </div>

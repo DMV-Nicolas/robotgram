@@ -33,6 +33,7 @@
 }
 
 .profileHeader__info {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -48,6 +49,14 @@
 }
 
 .profileHeader__username {
+    max-width: 50%;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.profileHeader__fullname {
+    max-width: 87%;
+    word-wrap: break-word;
     margin: 0;
 }
 
