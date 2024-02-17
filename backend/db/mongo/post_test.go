@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -75,7 +74,6 @@ func TestListPosts(t *testing.T) {
 	require.Len(t, posts, n/2)
 
 	for _, p := range posts {
-		fmt.Println(p.UserID)
 		require.NotEmpty(t, p)
 	}
 

@@ -44,6 +44,8 @@ export interface UsersLoginResponse {
   refresh_token_expires_at: string
 }
 
+export type ListPostsResponse = PostResponse[] | null
+
 export type LikesCountResponse = number
 
 export type IsLikedResponse = boolean

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { DEFAULT_USER } from '../constants'
 import { type UserType, type UserResponse } from '../types'
+import { DEFAULT_USER } from '../constants'
 
 export const useUserByID = ({ userID }: { userID: string }) => {
   const [user, setUser] = useState(DEFAULT_USER)

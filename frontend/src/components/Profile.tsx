@@ -59,7 +59,7 @@ interface ProfileProps {
 }
 
 export function Profile({ user }: ProfileProps) {
-  const { posts } = usePosts()
+  const { posts } = usePosts({ userID: user.id })
   return (
     <div className='profileContainer'>
       <div className='profile'>

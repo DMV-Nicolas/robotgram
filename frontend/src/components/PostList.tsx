@@ -3,7 +3,7 @@ import { Post } from './Post'
 import './PostList.css'
 
 export function PostList() {
-  const { posts } = usePosts()
+  const { posts } = usePosts({})
 
   return (
     <ul className="postList">
