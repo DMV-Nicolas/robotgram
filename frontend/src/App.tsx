@@ -5,6 +5,7 @@ import { HomePage } from './pages/Home'
 import { NotFoundPage } from './pages/NotFound'
 import { SignupPage } from './pages/Signup'
 import './App.css'
+import { ProfilePage } from './pages/Profile'
 
 function App() {
   // TODO: create application router
@@ -14,6 +15,7 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
+        <Route path='/user/:userID' element={<ProfilePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Toaster richColors />

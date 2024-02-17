@@ -2,7 +2,11 @@ import { Link } from 'react-router-dom'
 import { Blank, Create, EmptyHeart, Explore, Github, Home, Search } from './Icons'
 import './Navbar.css'
 
-export function Navbar() {
+interface NavbarProps {
+  userID: string
+}
+
+export function Navbar({ userID }: NavbarProps) {
   return (
     <nav className="navbar">
       <h1 className="navbar__title">Robotgram</h1>
@@ -39,7 +43,7 @@ export function Navbar() {
             </Link>
           </li>
           <li className='navbar__item'>
-            <Link to="/profile">
+            <Link to={`/user/${userID}`}>
               <img className="avatar" src="https://avatars.githubusercontent.com/u/69326361?v=4" alt="avatar" />
               <p>Profile</p>
             </Link>
