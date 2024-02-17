@@ -21,3 +21,7 @@ body {
 .instagramIcons {
     background-image: url(https://static.cdninstagram.com/rsrc.php/v3/y5/r/TJztmXpWTmS.png);
 }
+
+hr {
+    border-color: #151515;
+}

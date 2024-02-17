@@ -8,6 +8,7 @@
 
 .profile {
     width: 100%;
+    margin: 0 1rem;
     color: var(--text-1);
     font-family: 'Nunito', sans-serif;
 }
@@ -19,7 +20,7 @@
 }
 
 .profileHeader__left {
-    margin: 2rem 5rem;
+    margin: 2rem 4rem;
 }
 
 .profileHeader__avatar {
@@ -79,4 +80,25 @@
 .profileHeader__buttonIcon svg {
     width: 32px;
     height: 32px;
+}
+
+.profileBody__ul {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.profileBody__li {
+    width: 20rem;
+    height: 20rem;
+
+    padding: 0;
+}
+
+.profileBody__postImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }

@@ -1,4 +1,5 @@
-import { type UserType } from '../types'
+import { usePosts } from '../hooks/usePosts'
+import { type PostType, type UserType } from '../types'
 import { Options } from './Icons'
 import './Profile.css'
 
@@ -11,7 +12,7 @@ interface ProfileHeaderProps {
   gender: string
 }
 
-export function ProfileHeader({ username, fullName, email, avatar, description, gender }: ProfileHeaderProps) {
+function ProfileHeader({ username, fullName, email, avatar, description, gender }: ProfileHeaderProps) {
   // const genderIcon = gender === 'male' ? <Male /> : <Female />
   return (
     <div className='profileHeader'>
@@ -35,11 +36,30 @@ export function ProfileHeader({ username, fullName, email, avatar, description, 
   )
 }
 
+interface ProfileBodyProps {
+  posts: PostType[]
+}
+
+function ProfileBody({ posts }: ProfileBodyProps) {
+  return (
+    <div className='profileBody'>
+      <ul className='profileBody__ul'>
+        {posts.map((post) => (
+          <li className='profileBody__li' key={post.id}>
+            <img className='profileBody__postImage' src={post.images[0]} alt="" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 interface ProfileProps {
   user: UserType
 }
 
 export function Profile({ user }: ProfileProps) {
+  const { posts } = usePosts()
   return (
     <div className='profileContainer'>
       <div className='profile'>
@@ -50,6 +70,10 @@ export function Profile({ user }: ProfileProps) {
           avatar={user.avatar}
           description={user.description}
           gender={user.gender}
+        />
+        <hr />
+        <ProfileBody
+          posts={posts}
         />
       </div>
     </div>
