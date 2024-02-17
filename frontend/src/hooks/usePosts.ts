@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react'
-import { type PostType, type PostResponse } from '../types'
+import { type PostType, type ListPostsResponse } from '../types'
 
-export function usePosts() {
+export function usePosts({ userID }: { userID?: string }) {
   const [posts, setPosts] = useState<PostType[]>([])
   useEffect(() => {
     const fetchListPosts = async () => {
-      const res = await fetch('http://localhost:5000/v1/posts?offset=0&limit=5')
-      const data: PostResponse[] = await res.json()
+      let url = 'http://localhost:5000/v1/posts?offset=0&limit=5'
+      if (userID !== undefined) {
+        url += `&user_id=${userID}`
+      }
+
+      const res = await fetch(url)
+      const data: ListPostsResponse = await res.json()
+      if (data === null) {
+        setPosts([])
+        return
+      }
+
       const posts = data.map((dataPost) => {
         const post: PostType = {
           id: dataPost.id,
@@ -21,7 +31,7 @@ export function usePosts() {
     }
 
     fetchListPosts()
-  }, [])
+  }, [userID])
 
   return { posts }
 }

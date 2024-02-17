@@ -68,8 +68,9 @@ func (server *Server) GetPost(c echo.Context) error {
 }
 
 type listPostsRequest struct {
-	Offset int64 `query:"offset" validate:"min=0"`
-	Limit  int64 `query:"limit" validate:"min=1"`
+	Offset int64  `query:"offset" validate:"min=0"`
+	Limit  int64  `query:"limit" validate:"min=1"`
+	UserID string `query:"user_id"`
 }
 
 func (server *Server) ListPosts(c echo.Context) error {
@@ -78,9 +79,19 @@ func (server *Server) ListPosts(c echo.Context) error {
 		return err
 	}
 
+	var userID primitive.ObjectID
+	var err error
+	if req.UserID != "" && req.UserID != "<nil>" {
+		userID, err = primitive.ObjectIDFromHex(req.UserID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err)
+		}
+	}
+
 	arg := db.ListPostsParams{
 		Offset: req.Offset,
 		Limit:  req.Limit,
+		UserID: userID,
 	}
 
 	posts, err := server.queries.ListPosts(context.TODO(), arg)

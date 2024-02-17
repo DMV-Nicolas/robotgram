@@ -43,12 +43,18 @@ func (q *Queries) GetPost(ctx context.Context, key string, value any) (Post, err
 }
 
 type ListPostsParams struct {
-	Offset int64 `json:"offset" bson:"offset"`
-	Limit  int64 `json:"limit" bson:"limit"`
+	Offset int64              `json:"offset" bson:"offset"`
+	Limit  int64              `json:"limit" bson:"limit"`
+	UserID primitive.ObjectID `json:"user_id" bson:"user_id"`
 }
 
 func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error) {
-	filter := bson.D{}
+	var filter bson.D
+	if arg.UserID.IsZero() {
+		filter = bson.D{}
+	} else {
+		filter = bson.D{primitive.E{Key: "user_id", Value: arg.UserID}}
+	}
 
 	var posts []Post
 	coll := q.db.Collection("posts")

@@ -220,8 +220,8 @@ func TestGetPostAPI(t *testing.T) {
 
 func TestListPostsAPI(t *testing.T) {
 	offset, limit := 5, 10
-	user, _ := randomUser(t)
 	posts := make([]db.Post, limit-offset)
+	user, _ := randomUser(t)
 	for i := 0; i < limit-offset; i++ {
 		posts[i] = randomPost(t, user.ID)
 	}
@@ -285,6 +285,46 @@ func TestListPostsAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
+		{
+			name: "ByUserIDOK",
+			query: map[string]any{
+				"offset":  offset,
+				"limit":   limit,
+				"user_id": user.ID.Hex(),
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				arg := db.ListPostsParams{
+					Offset: int64(offset),
+					Limit:  int64(limit),
+					UserID: user.ID,
+				}
+
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(posts, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchPosts(t, recorder.Body, posts)
+			},
+		},
+		{
+			name: "ByUserIDInvalidUserID",
+			query: map[string]any{
+				"offset":  offset,
+				"limit":   limit,
+				"user_id": "#v#",
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -308,6 +348,7 @@ func TestListPostsAPI(t *testing.T) {
 			q := request.URL.Query()
 			q.Add("offset", fmt.Sprint(tc.query["offset"]))
 			q.Add("limit", fmt.Sprint(tc.query["limit"]))
+			q.Add("user_id", fmt.Sprint(tc.query["user_id"]))
 			request.URL.RawQuery = q.Encode()
 
 			server.router.ServeHTTP(recorder, request)

@@ -59,8 +59,9 @@ func TestGetPost(t *testing.T) {
 
 func TestListPosts(t *testing.T) {
 	n := 10
+	lastPost := Post{}
 	for i := 0; i < n; i++ {
-		randomPost(t)
+		lastPost = randomPost(t)
 	}
 
 	arg := ListPostsParams{
@@ -75,6 +76,17 @@ func TestListPosts(t *testing.T) {
 	for _, p := range posts {
 		require.NotEmpty(t, p)
 	}
+
+	arg = ListPostsParams{
+		Offset: 0,
+		Limit:  int64(n),
+		UserID: lastPost.UserID,
+	}
+
+	posts, err = testQueries.ListPosts(testCtx, arg)
+	require.NoError(t, err)
+	require.Len(t, posts, 1)
+	require.Equal(t, lastPost, posts[0])
 }
 
 func TestUpdatePost(t *testing.T) {

@@ -21,15 +21,7 @@ type CreateSessionParams struct {
 }
 
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (*mongo.InsertOneResult, error) {
-	session := Session{
-		ID:           arg.ID,
-		RefreshToken: arg.RefreshToken,
-		UserID:       arg.UserID,
-		UserAgent:    arg.UserAgent,
-		ClientIP:     arg.ClientIP,
-		IsBlocked:    arg.IsBlocked,
-		ExpiresAt:    arg.ExpiresAt,
-	}
+	session := Session(arg)
 
 	coll := q.db.Collection("sessions")
 	result, err := coll.InsertOne(ctx, session)
