@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	ErrUsernameTaken  = errors.New("The username must be unique")
-	ErrEmailTaken     = errors.New("The email must be unique")
-	ErrDuplicatedLike = errors.New("The like has already been given")
+	ErrUsernameTaken  = errors.New("the username must be unique")
+	ErrEmailTaken     = errors.New("the email must be unique")
+	ErrDuplicatedLike = errors.New("the like has already been given")
 )
 
 // UsernameTaken verifies in the database if the provided username is taken or not
