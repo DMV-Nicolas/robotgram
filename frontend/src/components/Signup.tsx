@@ -5,7 +5,7 @@ import { Female, Lock, Mail, Male, User } from './Icons'
 import './Signup.css'
 
 export function Signup() {
-  const { signup, error } = useSignup()
+  const { signup } = useSignup()
   const inputUsernameID = useId()
   const inputEmailID = useId()
   const inputPasswordID = useId()
@@ -30,7 +30,6 @@ export function Signup() {
     <div className='signupContainer'>
       <div className='signup'>
         <h1 className='signup__title'>Sign Up</h1>
-        <span className='signup__error'>{error}</span>
         <form className='signup__form' onSubmit={handleSubmit}>
           <div className='signup__inputField'>
             <label className='signup__label' htmlFor={inputUsernameID}>

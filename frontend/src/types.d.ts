@@ -53,6 +53,13 @@ export interface RefreshTokenResponse {
   access_token_expires_at: string
 }
 
+export interface GetTokenDataResponse {
+  id: string
+  user_id: string
+  issued_at: string
+  expires_at: string
+}
+
 export interface TokenContextType {
   accessToken: string
   refreshToken: string

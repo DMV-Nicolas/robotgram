@@ -1,12 +1,14 @@
 import { Navbar } from '../components/Navbar'
 import { PostList } from '../components/PostList'
+import { useUserID } from '../hooks/useUserID'
 import { IsLoggedMiddleware } from './IsLoggedMiddleware'
 
 export function HomePage() {
+  const { userID } = useUserID()
   return (
     <>
       <IsLoggedMiddleware>
-        <Navbar />
+        <Navbar userID={userID} />
         <PostList />
       </IsLoggedMiddleware>
     </>
