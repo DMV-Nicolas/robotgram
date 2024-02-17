@@ -255,6 +255,37 @@ func TestListPostsAPI(t *testing.T) {
 			},
 		},
 		{
+			name: "InternalError",
+			query: map[string]any{
+				"offset": offset,
+				"limit":  limit,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil, mongo.ErrClientDisconnected)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "NegativeLimitOrOffset",
+			query: map[string]any{
+				"offset": -1,
+				"limit":  -1,
+			},
+			buildStubs: func(querier *mockdb.MockQuerier) {
+				querier.EXPECT().
+					ListPosts(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
 			name: "ByUserIDOK",
 			query: map[string]any{
 				"offset":  offset,
@@ -279,26 +310,11 @@ func TestListPostsAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "InternalError",
+			name: "ByUserIDInvalidUserID",
 			query: map[string]any{
-				"offset": offset,
-				"limit":  limit,
-			},
-			buildStubs: func(querier *mockdb.MockQuerier) {
-				querier.EXPECT().
-					ListPosts(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(nil, mongo.ErrClientDisconnected)
-			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusInternalServerError, recorder.Code)
-			},
-		},
-		{
-			name: "NegativeLimitOrOffset",
-			query: map[string]any{
-				"offset": -1,
-				"limit":  -1,
+				"offset":  offset,
+				"limit":   limit,
+				"user_id": "#v#",
 			},
 			buildStubs: func(querier *mockdb.MockQuerier) {
 				querier.EXPECT().
