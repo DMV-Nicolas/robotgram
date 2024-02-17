@@ -1,23 +1,13 @@
 import { useState, useEffect } from 'react'
-import { type PostType, type UserType, type UserResponse } from '../types'
+import { DEFAULT_USER } from '../constants'
+import { type UserType, type UserResponse } from '../types'
 
-const DEFAULT_USER: UserType = {
-  avatar: '',
-  createdAt: '',
-  description: '',
-  email: '',
-  fullName: '',
-  gender: '',
-  id: '',
-  username: ''
-}
-
-export const usePost = ({ post }: { post: PostType }) => {
+export const useUserByID = ({ userID }: { userID: string }) => {
   const [user, setUser] = useState(DEFAULT_USER)
 
   useEffect(() => {
     const fetchGetUser = async () => {
-      const res = await fetch(`http://localhost:5000/v1/users/${post.userID}`)
+      const res = await fetch(`http://localhost:5000/v1/users/${userID}`)
       const data: UserResponse = await res.json()
       const user: UserType = {
         id: data.id,
@@ -33,7 +23,7 @@ export const usePost = ({ post }: { post: PostType }) => {
     }
 
     fetchGetUser()
-  }, [post.userID])
+  }, [])
 
   return { user }
 }

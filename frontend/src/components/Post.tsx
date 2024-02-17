@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { usePost } from '../hooks/usePost'
+import { useUserByID } from '../hooks/useUserByID'
 import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
@@ -112,7 +112,7 @@ interface PostProps {
 }
 
 export function Post({ post }: PostProps) {
-  const { user } = usePost({ post })
+  const { user } = useUserByID({ userID: post.userID })
   const { toggleLike, liked, likes } = useLikes({ targetID: post.id })
 
   const handleToggleLike = () => {
