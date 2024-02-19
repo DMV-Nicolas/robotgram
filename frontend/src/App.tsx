@@ -6,13 +6,11 @@ import { NotFoundPage } from './pages/NotFound'
 import { SignupPage } from './pages/Signup'
 import './App.css'
 import { ProfilePage } from './pages/Profile'
-import { PostModal } from './components/PostModal'
 
 function App() {
   // TODO: create application router
   return (
     <main className="app">
-      <PostModal />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<LoginPage />} />
