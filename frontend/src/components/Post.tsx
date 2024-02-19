@@ -5,6 +5,7 @@ import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
 import './Post.css'
+import { PostModal } from './PostModal'
 
 interface PostCardHeaderProps {
   username: string
@@ -121,6 +122,13 @@ export function Post({ post }: PostProps) {
 
   return (
     <article className="post">
+      {post.id === '65ba92328830c66a2f8d3f71' &&
+        <PostModal
+          post={post}
+          user={user}
+        />
+      }
+
       <PostHeader
         username={user.username}
         userAvatar={user.avatar}
