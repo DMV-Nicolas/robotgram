@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
+import { Close } from './Icons'
 import { type PostType, type UserType } from '../types'
 import './PostModal.css'
 
@@ -46,10 +48,6 @@ export function PostModal({ user, post }: PostModalProps) {
   return (
     <div className="postModalContainer">
       <div className="postModal">
-        <h1>{likes}</h1>
-        <h1>{liked ? 'liked' : 'not liked'}</h1>
-        <h1>{user.username}</h1>
-        <h1>{post.id}</h1>
         <PostModalLeft
           postImages={post.images}
           username={user.username}
@@ -63,6 +61,9 @@ export function PostModal({ user, post }: PostModalProps) {
           postLiked={liked}
           postToggleLike={handleToogleLike}
         />
+        <Link className='postModal__close' to={'/'}>
+          <Close />
+        </Link>
       </div>
     </div>
   )
