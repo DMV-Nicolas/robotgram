@@ -114,9 +114,6 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-}
-
-.postFooter__button--like {
     color: var(--text-1);
 }
 

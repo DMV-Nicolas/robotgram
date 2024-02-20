@@ -1,11 +1,11 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useUserByID } from '../hooks/useUserByID'
 import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
 import './Post.css'
-import { PostModal } from './PostModal'
 
 interface PostCardHeaderProps {
   username: string
@@ -71,19 +71,20 @@ function PostBody({ postImages, postID, username }: PostCardBodyProps) {
 
 interface PostCardFooterProps {
   username: string
+  postID: string
   postLikes: number
   postDescription: string
   liked: boolean
   toggleLike: () => void
 }
 
-function PostFooter({ username, postLikes, postDescription, liked, toggleLike }: PostCardFooterProps) {
+function PostFooter({ username, postID, postLikes, postDescription, liked, toggleLike }: PostCardFooterProps) {
   return (
     <footer className="postFooter">
       <section className="postFooter__actions">
         <div className="postFooter__leftActions">
           <button
-            className='postFooter__button postFooter__button--like'
+            className='postFooter__button'
             onClick={toggleLike}
           >
             {liked
@@ -91,7 +92,12 @@ function PostFooter({ username, postLikes, postDescription, liked, toggleLike }:
               : <EmptyHeart />
             }
           </button>
-          <Comment />
+          <Link
+            className='postFooter__button'
+            to={`/post/${postID}`}
+          >
+            <Comment />
+          </Link>
           <Share />
         </div>
         <div className="postFooter__rightActions">
@@ -122,13 +128,6 @@ export function Post({ post }: PostProps) {
 
   return (
     <article className="post">
-      {post.id === '65ba92328830c66a2f8d3f71' &&
-        <PostModal
-          post={post}
-          user={user}
-        />
-      }
-
       <PostHeader
         username={user.username}
         userAvatar={user.avatar}
@@ -141,6 +140,7 @@ export function Post({ post }: PostProps) {
       />
       <PostFooter
         username={user.username}
+        postID={post.id}
         postLikes={likes}
         postDescription={post.description}
         liked={liked}
