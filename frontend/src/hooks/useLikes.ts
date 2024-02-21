@@ -46,6 +46,10 @@ export function useLikes({ targetID }: { targetID: string }) {
       setLikes(data)
     }
 
+    if (targetID.length !== 24) {
+      return
+    }
+
     fetchCountLikes()
   }, [targetID])
 
@@ -75,8 +79,12 @@ export function useLikes({ targetID }: { targetID: string }) {
       setLiked(data)
     }
 
+    if (targetID.length !== 24) {
+      return
+    }
+
     fetchIsLiked()
-  }, [accessToken])
+  }, [accessToken, targetID])
 
   return { toggleLike, liked, likes }
 }

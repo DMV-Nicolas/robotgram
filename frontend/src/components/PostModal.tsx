@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
-import { type UserType, type PostType } from '../types'
+import { Close } from './Icons'
+import { type PostType, type UserType } from '../types'
 import './PostModal.css'
 
 interface PostModalLeftProps {
@@ -36,7 +38,7 @@ interface PostModalProps {
   user: UserType
 }
 
-export function PostModal({ post, user }: PostModalProps) {
+export function PostModal({ user, post }: PostModalProps) {
   const { likes, liked, toggleLike } = useLikes({ targetID: post.id })
 
   const handleToogleLike = () => {
@@ -59,6 +61,9 @@ export function PostModal({ post, user }: PostModalProps) {
           postLiked={liked}
           postToggleLike={handleToogleLike}
         />
+        <Link className='postModal__close' to={'/'}>
+          <Close />
+        </Link>
       </div>
     </div>
   )

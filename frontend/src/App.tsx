@@ -4,15 +4,18 @@ import { LoginPage } from './pages/Login'
 import { HomePage } from './pages/Home'
 import { NotFoundPage } from './pages/NotFound'
 import { SignupPage } from './pages/Signup'
-import './App.css'
 import { ProfilePage } from './pages/Profile'
+import './App.css'
+import { PostModalPage } from './pages/PostModal'
 
 function App() {
   // TODO: create application router
   return (
     <main className="app">
       <Routes>
-        <Route path='/' element={<HomePage />} />
+        <Route path='/' element={<HomePage />} >
+          <Route path='post/:postID' element={<PostModalPage />} />
+        </Route>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/user/:userID' element={<ProfilePage />} />
