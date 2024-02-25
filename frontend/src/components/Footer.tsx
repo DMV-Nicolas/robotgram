@@ -1,11 +1,9 @@
-import { useToken } from '../hooks/useToken'
 import './Footer.css'
 
-export function Footer() {
-  const { accessToken, refreshToken } = useToken()
+export function Footer({ previousLocation }: { previousLocation: string }) {
   return (
     <footer className='footer'>
-      {JSON.stringify({ accessToken, refreshToken })}
+      {previousLocation}
     </footer>
   )
 }

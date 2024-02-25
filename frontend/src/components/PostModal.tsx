@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
 import { Close } from './Icons'
 import { type PostType, type UserType } from '../types'
@@ -40,9 +40,14 @@ interface PostModalProps {
 
 export function PostModal({ user, post }: PostModalProps) {
   const { likes, liked, toggleLike } = useLikes({ targetID: post.id })
+  const navigate = useNavigate()
 
   const handleToogleLike = () => {
     toggleLike()
+  }
+
+  const handleGoBack = () => {
+    navigate(-1)
   }
 
   return (
@@ -61,9 +66,9 @@ export function PostModal({ user, post }: PostModalProps) {
           postLiked={liked}
           postToggleLike={handleToogleLike}
         />
-        <Link className='postModal__close' to={'/'}>
+        <button className='postModal__close' onClick={handleGoBack}>
           <Close />
-        </Link>
+        </button>
       </div>
     </div>
   )

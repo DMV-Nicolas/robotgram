@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { usePosts } from '../hooks/usePosts'
 import { type PostType, type UserType } from '../types'
 import { Options } from './Icons'
@@ -46,7 +47,9 @@ function ProfileBody({ posts }: ProfileBodyProps) {
       <ul className='profileBody__ul'>
         {posts.map((post) => (
           <li className='profileBody__li' key={post.id}>
-            <img className='profileBody__postImage' src={post.images[0]} alt="" />
+            <Link to={`/post/${post.id}`}>
+              <img className='profileBody__postImage' src={post.images[0]} alt="" />
+            </Link>
           </li>
         ))}
       </ul>

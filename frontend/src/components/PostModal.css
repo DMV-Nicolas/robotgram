@@ -24,7 +24,10 @@
     top: 10px;
     right: 10px;
     margin: auto;
+    border: none;
+    cursor: pointer;
     color: var(--text-1);
+    background-color: transparent;
 }
 
 .postModal__close svg {
