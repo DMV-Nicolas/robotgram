@@ -36,6 +36,22 @@ export interface PostType {
   createdAt: string
 }
 
+export interface CommentResponse {
+  id: string
+  user_id: string
+  target_id: string
+  content: string
+  created_at: string
+}
+
+export interface CommentType {
+  id: string
+  userID: string
+  targetID: string
+  content: string
+  createdAt: string
+}
+
 export interface UsersLoginResponse {
   session_id: string
   access_token: string

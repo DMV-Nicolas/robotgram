@@ -1,17 +1,25 @@
 import { useNavigate } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
+import { useComments } from '../hooks/useComments'
 import { Close } from './Icons'
-import { type PostType, type UserType } from '../types'
+import { Slider } from './Slider'
+import { type CommentType, type PostType, type UserType } from '../types'
 import './PostModal.css'
 
 interface PostModalLeftProps {
-  postImages: string[]
+  postID: string
   username: string
+  postImages: string[]
 }
 
-function PostModalLeft({ postImages, username }: PostModalLeftProps) {
+function PostModalLeft({ postID, username, postImages }: PostModalLeftProps) {
   return (
     <div className='postModalLeft'>
+      <Slider
+        id={postID}
+        username={username}
+        images={postImages}
+      />
     </div>
   )
 }
@@ -24,11 +32,17 @@ interface PostModalRightProps {
   postLikes: number
   postLiked: boolean
   postToggleLike: () => void
+  postComments: CommentType[]
 }
 
-function PostModalRight({ username, userAvatar, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike }: PostModalRightProps) {
+function PostModalRight({ username, userAvatar, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments }: PostModalRightProps) {
   return (
     <div className='postModalRight'>
+      {postComments.map((comment, idx) => (
+        <div className='postModalRight__comment' key={`${comment.id}-${idx}`}>
+          <p>{comment.content}</p>
+        </div>
+      ))}
     </div>
   )
 }
@@ -40,6 +54,7 @@ interface PostModalProps {
 
 export function PostModal({ user, post }: PostModalProps) {
   const { likes, liked, toggleLike } = useLikes({ targetID: post.id })
+  const { comments } = useComments({ targetID: post.id })
   const navigate = useNavigate()
 
   const handleToogleLike = () => {
@@ -54,6 +69,7 @@ export function PostModal({ user, post }: PostModalProps) {
     <div className="postModalContainer">
       <div className="postModal">
         <PostModalLeft
+          postID={post.id}
           postImages={post.images}
           username={user.username}
         />
@@ -65,11 +81,12 @@ export function PostModal({ user, post }: PostModalProps) {
           postLikes={likes}
           postLiked={liked}
           postToggleLike={handleToogleLike}
+          postComments={comments}
         />
-        <button className='postModal__close' onClick={handleGoBack}>
-          <Close />
-        </button>
       </div>
+      <button className='postModalContainer__close' onClick={handleGoBack}>
+        <Close />
+      </button>
     </div>
   )
 }

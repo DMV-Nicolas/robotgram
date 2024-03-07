@@ -4,8 +4,8 @@ import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
-import './Post.css'
 import { Slider } from './Slider'
+import './Post.css'
 
 interface PostCardHeaderProps {
   username: string
@@ -25,6 +25,7 @@ function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps
       <div className="postHeader__options">
         <Options />
       </div>
+      <p>{postCreatedAt}</p>
     </header>
   )
 }
