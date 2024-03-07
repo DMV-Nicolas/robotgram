@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useUserByID } from '../hooks/useUserByID'
 import { useLikes } from '../hooks/useLikes'
@@ -6,6 +5,7 @@ import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
 import './Post.css'
+import { Slider } from './Slider'
 
 interface PostCardHeaderProps {
   username: string
@@ -36,36 +36,12 @@ interface PostCardBodyProps {
 }
 
 function PostBody({ postImages, postID, username }: PostCardBodyProps) {
-  const [slide, setSlide] = useState(0)
-
-  const prevSlide = (): void => {
-    if (slide > 0) setSlide(slide - 1)
-  }
-
-  const nextSlide = (): void => {
-    if (slide < postImages.length - 1) setSlide(slide + 1)
-  }
-
   return (
-    <div className="postBody">
-      {slide > 0 &&
-        <span className="postBody__leftArrow instagramIcons" onClick={prevSlide}></span>
-      }
-      <img className="postBody__image" src={postImages[slide]} alt={`Post image of ${username}`} />
-      {slide < postImages.length - 1 &&
-        <span className="postBody__rightArrow instagramIcons" onClick={nextSlide}></span>
-      }
-      <div className="postBody__indicators">
-        {
-          postImages.map((_, idx) => (
-            <span
-              key={`${postID}-${idx}`}
-              className={`postBody__indicator ${slide === idx ? 'postBody__indicator--selected' : ''}`}
-              onClick={() => { setSlide(idx) }}></span>
-          ))
-        }
-      </div>
-    </div>
+    <Slider
+      id={postID}
+      username={username}
+      images={postImages}
+    />
   )
 }
 

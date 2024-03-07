@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
 import { Close } from './Icons'
 import { type PostType, type UserType } from '../types'

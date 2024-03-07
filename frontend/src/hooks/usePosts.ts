@@ -5,7 +5,7 @@ export function usePosts({ userID }: { userID?: string }) {
   const [posts, setPosts] = useState<PostType[]>([])
   useEffect(() => {
     const fetchListPosts = async () => {
-      let url = 'http://localhost:5000/v1/posts?offset=0&limit=5'
+      let url = 'http://localhost:5000/v1/posts?offset=0&limit=1000'
       if (userID !== undefined) {
         url += `&user_id=${userID}`
       }
