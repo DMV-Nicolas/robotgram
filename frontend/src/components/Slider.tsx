@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import './Slider.css'
 
 interface Props {
@@ -9,6 +9,8 @@ interface Props {
 
 export function Slider({ id, username, images }: Props) {
   const [slide, setSlide] = useState(0)
+  const [sliderHeight, setSliderHeight] = useState(0)
+  const sliderRef = createRef<HTMLDivElement>()
 
   const prevSlide = (): void => {
     if (slide > 0) setSlide(slide - 1)
@@ -18,12 +20,30 @@ export function Slider({ id, username, images }: Props) {
     if (slide < images.length - 1) setSlide(slide + 1)
   }
 
+  useEffect(() => {
+    if (sliderRef.current instanceof HTMLDivElement) {
+      const image = new Image()
+      image.src = images[0]
+      const sliderWidth = sliderRef.current.clientWidth
+
+      image.onload = () => {
+        const height = image.height / (image.width / sliderWidth)
+        setSliderHeight(height)
+      }
+    }
+  }, [])
+
   return (
-    <div className="slider">
+    <div className="slider" ref={sliderRef}>
       {slide > 0 &&
         <span className="slider__leftArrow instagramIcons" onClick={prevSlide}></span>
       }
-      <img className="slider__image" src={images[slide]} alt={`Post image of ${username}`} />
+      <img
+        style={{ height: `${sliderHeight}px` }}
+        className="slider__image"
+        src={images[slide]}
+        alt={`Post image of ${username}`}
+      />
       {slide < images.length - 1 &&
         <span className="slider__rightArrow instagramIcons" onClick={nextSlide}></span>
       }

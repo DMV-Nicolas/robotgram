@@ -25,7 +25,6 @@ function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps
       <div className="postHeader__options">
         <Options />
       </div>
-      <p>{postCreatedAt}</p>
     </header>
   )
 }

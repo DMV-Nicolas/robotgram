@@ -36,6 +36,10 @@
     background-color: var(--ui-1);
 }
 
+.postModalLeft {
+    width: 500px;
+}
+
 .postModalRight {
-    width: 100%;
+    width: 40%;
 }

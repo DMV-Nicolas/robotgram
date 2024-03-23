@@ -50,9 +50,10 @@ function PostModalRight({ username, userAvatar, postDescription, postCreatedAt, 
 interface PostModalProps {
   post: PostType
   user: UserType
+  loading: boolean
 }
 
-export function PostModal({ user, post }: PostModalProps) {
+export function PostModal({ user, post, loading }: PostModalProps) {
   const { likes, liked, toggleLike } = useLikes({ targetID: post.id })
   const { comments } = useComments({ targetID: post.id })
   const navigate = useNavigate()
@@ -68,21 +69,25 @@ export function PostModal({ user, post }: PostModalProps) {
   return (
     <div className="postModalContainer">
       <div className="postModal">
-        <PostModalLeft
-          postID={post.id}
-          postImages={post.images}
-          username={user.username}
-        />
-        <PostModalRight
-          username={user.username}
-          userAvatar={user.avatar}
-          postDescription={post.description}
-          postCreatedAt={post.createdAt}
-          postLikes={likes}
-          postLiked={liked}
-          postToggleLike={handleToogleLike}
-          postComments={comments}
-        />
+        {!loading &&
+          <>
+            <PostModalLeft
+              postID={post.id}
+              postImages={post.images}
+              username={user.username}
+            />
+            <PostModalRight
+              username={user.username}
+              userAvatar={user.avatar}
+              postDescription={post.description}
+              postCreatedAt={post.createdAt}
+              postLikes={likes}
+              postLiked={liked}
+              postToggleLike={handleToogleLike}
+              postComments={comments}
+            />
+          </>
+        }
       </div>
       <button className='postModalContainer__close' onClick={handleGoBack}>
         <Close />

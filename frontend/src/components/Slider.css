@@ -6,6 +6,7 @@
 
 .slider__image {
     width: 100%;
+    object-fit: contain;
 }
 
 .slider__rightArrow {

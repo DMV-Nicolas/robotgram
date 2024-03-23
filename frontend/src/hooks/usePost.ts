@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 
 export function usePost({ postID }: { postID: string }) {
   const [post, setPost] = useState(DEFAULT_POST)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchGetPost = async () => {
@@ -22,6 +23,7 @@ export function usePost({ postID }: { postID: string }) {
         createdAt: data.created_at
       }
       setPost(post)
+      setLoading(false)
     }
 
     if (postID.length !== 24) {
@@ -31,5 +33,5 @@ export function usePost({ postID }: { postID: string }) {
     fetchGetPost()
   }, [postID])
 
-  return { post }
+  return { post, loading }
 }

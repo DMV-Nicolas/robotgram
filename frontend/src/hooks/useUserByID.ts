@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 
 export const useUserByID = ({ userID }: { userID: string }) => {
   const [user, setUser] = useState(DEFAULT_USER)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchGetUser = async () => {
@@ -24,6 +25,7 @@ export const useUserByID = ({ userID }: { userID: string }) => {
         createdAt: data.created_at
       }
       setUser(user)
+      setLoading(false)
     }
 
     if (userID.length !== 24) {
@@ -33,5 +35,5 @@ export const useUserByID = ({ userID }: { userID: string }) => {
     fetchGetUser()
   }, [userID])
 
-  return { user }
+  return { user, loading }
 }
