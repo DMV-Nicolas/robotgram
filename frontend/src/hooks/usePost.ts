@@ -10,6 +10,7 @@ export function usePost({ postID }: { postID: string }) {
   useEffect(() => {
     const fetchGetPost = async () => {
       const res = await fetch(`http://localhost:5000/v1/posts/${postID}`)
+
       if (!res.ok) {
         toast.error('cannot get post data')
       }

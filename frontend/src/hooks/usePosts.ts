@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { type PostType, type ListPostsResponse } from '../types'
+import { toast } from 'sonner'
 
 export function usePosts({ userID }: { userID?: string }) {
   const [posts, setPosts] = useState<PostType[]>([])
@@ -11,6 +12,12 @@ export function usePosts({ userID }: { userID?: string }) {
       }
 
       const res = await fetch(url)
+
+      if (!res.ok) {
+        toast.error('cannot list posts')
+        return
+      }
+
       const data: ListPostsResponse = await res.json()
       if (data === null) return
 

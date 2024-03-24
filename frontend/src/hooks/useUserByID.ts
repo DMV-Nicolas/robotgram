@@ -10,9 +10,11 @@ export const useUserByID = ({ userID }: { userID: string }) => {
   useEffect(() => {
     const fetchGetUser = async () => {
       const res = await fetch(`http://localhost:5000/v1/users/${userID}`)
+
       if (!res.ok) {
         toast.error('cannot get user data')
       }
+
       const data: UserResponse = await res.json()
       const user: UserType = {
         id: data.id,
