@@ -1,9 +1,36 @@
 import { useEffect, useState } from 'react'
-import { type ListCommentsResponse, type CommentType } from '../types'
+import { useToken } from './useToken'
 import { toast } from 'sonner'
+import { type ListCommentsResponse, type CommentType } from '../types'
 
 export function useComments({ targetID }: { targetID: string }) {
   const [comments, setComments] = useState<CommentType[]>([])
+  const [reListComments, setReListComments] = useState(false)
+  const { accessToken, refreshAccessToken, updateAccessToken, updateRefreshToken } = useToken()
+
+  const createComment = async ({ content }: { content: string }) => {
+    const res = await fetch('http://localhost:5000/v1/comments', {
+      method: 'POST',
+      body: JSON.stringify({ target_id: targetID, content }),
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      },
+      credentials: 'include'
+    })
+
+    if (!res.ok) {
+      toast.error('cannot create comment')
+      const err = await refreshAccessToken()
+      if (err instanceof Error) {
+        updateAccessToken('')
+        updateRefreshToken('')
+      }
+    }
+
+    setReListComments(!reListComments)
+  }
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -27,11 +54,11 @@ export function useComments({ targetID }: { targetID: string }) {
         }
         return comment
       })
-      setComments(comments)
+      setComments(comments.reverse())
     }
 
     fetchComments()
-  }, [targetID])
+  }, [targetID, reListComments])
 
-  return { comments }
+  return { comments, createComment }
 }

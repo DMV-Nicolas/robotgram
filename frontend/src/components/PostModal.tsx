@@ -38,9 +38,20 @@ interface PostModalRightProps {
   postLiked: boolean
   postToggleLike: () => void
   postComments: CommentType[]
+  createComment: ({ content }: { content: string }) => Promise<void>
 }
 
-function PostModalRight({ userID, username, userAvatar, postID, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments }: PostModalRightProps) {
+function PostModalRight({ userID, username, userAvatar, postID, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments, createComment }: PostModalRightProps) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const form = e.target as HTMLFormElement
+    const formData = new FormData(form)
+
+    const content = formData.get('content') as string
+    createComment({ content })
+  }
+
   return (
     <div className='postModalRight'>
       <div className='postModalRight__top'>
@@ -77,9 +88,10 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
           liked={postLiked}
           toggleLike={postToggleLike}
         />
-        <form className='postModalRight__form'>
+        <form className='postModalRight__form' onSubmit={handleSubmit}>
           <input
             className='postModalRight__input'
+            name='content'
             type="text"
             placeholder='Add a comment...'
           />
@@ -97,7 +109,7 @@ interface PostModalProps {
 
 export function PostModal({ user, post }: PostModalProps) {
   const { likes, liked, toggleLike } = useLikes({ targetID: post.id })
-  const { comments } = useComments({ targetID: post.id })
+  const { comments, createComment } = useComments({ targetID: post.id })
   const navigate = useNavigate()
 
   const handleToogleLike = () => {
@@ -127,6 +139,7 @@ export function PostModal({ user, post }: PostModalProps) {
           postLiked={liked}
           postToggleLike={handleToogleLike}
           postComments={comments}
+          createComment={createComment}
         />
       </div>
       <button className='postModalContainer__close' onClick={handleGoBack}>
