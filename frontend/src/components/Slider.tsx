@@ -28,15 +28,18 @@ export function Slider({ id, username, images }: Props) {
         console.log(sliderRef.current)
         return
       }
-
+      const sliderWidth = sliderRef.current.offsetWidth
+      const limitHeight = window.innerHeight - (window.innerHeight / 25)
       const image = new Image()
       image.src = images[0]
-      const sliderWidth = sliderRef.current.offsetWidth
 
       image.onload = () => {
         const height = image.height / (image.width / sliderWidth)
-        setSliderHeight(height)
-        console.log('Hola')
+        if (height >= limitHeight) {
+          setSliderHeight(limitHeight)
+        } else {
+          setSliderHeight(height)
+        }
       }
     })
 
