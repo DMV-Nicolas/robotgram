@@ -65,8 +65,8 @@ export function PostFooter({ username, postID, postLikes, postDescription, liked
             onClick={toggleLike}
           >
             {liked
-              ? <Heart />
-              : <EmptyHeart />
+              ? <Heart size={24} />
+              : <EmptyHeart size={24} />
             }
           </button>
           <Link
@@ -82,7 +82,7 @@ export function PostFooter({ username, postID, postLikes, postDescription, liked
         </div>
       </section>
       <section className="postFooter__likeCount">
-        <p>{postLikes} Me gusta</p>
+        <p>{postLikes} {postLikes === 1 ? 'Like' : 'Likes'}</p>
       </section>
       <section className="postFooter__description">
         <p><strong>{username}</strong> {postDescription}</p>

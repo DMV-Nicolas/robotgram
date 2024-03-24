@@ -27,7 +27,7 @@
 
 .comment__footer {
     display: flex;
-    gap: 10px;
+    gap: 7px;
 }
 
 .comment__small {
@@ -40,5 +40,13 @@
     border: none;
     color: var(--text-3);
     font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.comment__likeButton {
+    background-color: transparent;
+    border: none;
+    color: var(--text-1);
     cursor: pointer;
 }

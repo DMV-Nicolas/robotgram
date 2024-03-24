@@ -72,11 +72,12 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
                 content: postDescription,
                 createdAt: postCreatedAt
               }}
+              withLike={false}
             />
           </li>
           {postComments.map((comment) => (
             <li className='postModalRight__comment' key={comment.id}>
-              <Comment comment={comment} />
+              <Comment comment={comment} withLike={true} />
             </li>
           ))}
         </ul>
