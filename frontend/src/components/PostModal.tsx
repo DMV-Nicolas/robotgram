@@ -19,6 +19,7 @@ function PostModalLeft({ postID, username, postImages }: PostModalLeftProps) {
         id={postID}
         username={username}
         images={postImages}
+        forceLimitHeight={true}
       />
     </div>
   )

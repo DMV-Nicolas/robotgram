@@ -41,6 +41,7 @@ function PostBody({ postImages, postID, username }: PostCardBodyProps) {
       id={postID}
       username={username}
       images={postImages}
+      forceLimitHeight={false}
     />
   )
 }

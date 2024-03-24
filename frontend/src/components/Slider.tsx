@@ -5,9 +5,10 @@ interface Props {
   id: string
   username: string
   images: string[]
+  forceLimitHeight: boolean
 }
 
-export function Slider({ id, username, images }: Props) {
+export function Slider({ id, username, images, forceLimitHeight }: Props) {
   const [slide, setSlide] = useState(0)
   const [sliderHeight, setSliderHeight] = useState(0)
   const sliderRef = useRef<HTMLDivElement>(null)
@@ -22,6 +23,12 @@ export function Slider({ id, username, images }: Props) {
 
   useEffect(() => {
     if (!(sliderRef.current instanceof HTMLDivElement)) return
+    const limitHeight = window.innerHeight - (window.innerHeight / 25)
+
+    if (forceLimitHeight) {
+      setSliderHeight(limitHeight)
+      return
+    }
 
     const resizeObserver = new ResizeObserver(() => {
       if (!(sliderRef.current instanceof HTMLDivElement)) {
@@ -29,7 +36,6 @@ export function Slider({ id, username, images }: Props) {
         return
       }
       const sliderWidth = sliderRef.current.offsetWidth
-      const limitHeight = window.innerHeight - (window.innerHeight / 25)
       const image = new Image()
       image.src = images[0]
 
