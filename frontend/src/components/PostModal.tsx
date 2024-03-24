@@ -50,6 +50,8 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
 
     const content = formData.get('content') as string
     createComment({ content })
+
+    form.reset()
   }
 
   return (
