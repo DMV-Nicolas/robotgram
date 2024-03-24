@@ -10,11 +10,13 @@ export function ProfilePage() {
     return <NotFound />
   }
 
-  const { user } = useUserByID({ userID })
+  const { user, loading: userLoading } = useUserByID({ userID })
   return (
     <>
       <Navbar userID={user.id} />
-      <Profile user={user} />
+      {!userLoading &&
+        <Profile user={user} />
+      }
     </>
   )
 }

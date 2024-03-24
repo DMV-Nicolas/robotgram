@@ -4,6 +4,7 @@
     padding: 10px;
     gap: 10px;
     font-family: 'Nunito', sans-serif;
+    word-wrap: break-word;
 }
 
 .comment__avatar {

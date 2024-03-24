@@ -52,6 +52,8 @@ export interface CommentType {
   createdAt: string
 }
 
+export type ListCommentsResponse = CommentResponse[] | null
+
 export interface UsersLoginResponse {
   session_id: string
   access_token: string

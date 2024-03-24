@@ -13,10 +13,10 @@ export function PostModalPage() {
   const { user, loading: userLoading } = useUserByID({ userID: post.userID })
 
   return (
-    <PostModal
-      post={post}
-      user={user}
-      loading={postLoading && userLoading}
-    />
+    <>
+      {!postLoading && !userLoading &&
+        <PostModal post={post} user={user} />
+      }
+    </>
   )
 }

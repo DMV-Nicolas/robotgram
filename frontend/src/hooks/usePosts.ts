@@ -6,16 +6,13 @@ export function usePosts({ userID }: { userID?: string }) {
   useEffect(() => {
     const fetchListPosts = async () => {
       let url = 'http://localhost:5000/v1/posts?offset=0&limit=1000'
-      if (userID !== undefined) {
+      if (userID !== undefined && userID !== '') {
         url += `&user_id=${userID}`
       }
 
       const res = await fetch(url)
       const data: ListPostsResponse = await res.json()
-      if (data === null) {
-        setPosts([])
-        return
-      }
+      if (data === null) return
 
       const posts = data.map((dataPost) => {
         const post: PostType = {

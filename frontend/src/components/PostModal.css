@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: row;
     background-color: var(--ui-0);
-    color: white;
+    color: var(--text-1);
     font-family: 'Nunito', sans-serif;
 }
 
