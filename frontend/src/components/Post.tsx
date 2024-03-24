@@ -7,13 +7,13 @@ import { type PostType } from '../types'
 import { Slider } from './Slider'
 import './Post.css'
 
-interface PostCardHeaderProps {
+interface PostHeaderProps {
   username: string
   userAvatar: string
   postCreatedAt: string
 }
 
-function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps) {
+export function PostHeader({ username, userAvatar, postCreatedAt }: PostHeaderProps) {
   const elapsedTime = getTimeElapsed(postCreatedAt)
   return (
     <header className="postHeader">
@@ -29,13 +29,13 @@ function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps
   )
 }
 
-interface PostCardBodyProps {
+interface PostBodyProps {
   postImages: string[]
   postID: string
   username: string
 }
 
-function PostBody({ postImages, postID, username }: PostCardBodyProps) {
+function PostBody({ postImages, postID, username }: PostBodyProps) {
   return (
     <Slider
       id={postID}
@@ -46,7 +46,7 @@ function PostBody({ postImages, postID, username }: PostCardBodyProps) {
   )
 }
 
-interface PostCardFooterProps {
+interface PostFooterProps {
   username: string
   postID: string
   postLikes: number
@@ -55,7 +55,7 @@ interface PostCardFooterProps {
   toggleLike: () => void
 }
 
-function PostFooter({ username, postID, postLikes, postDescription, liked, toggleLike }: PostCardFooterProps) {
+export function PostFooter({ username, postID, postLikes, postDescription, liked, toggleLike }: PostFooterProps) {
   return (
     <footer className="postFooter">
       <section className="postFooter__actions">

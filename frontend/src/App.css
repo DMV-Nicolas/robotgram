@@ -25,5 +25,7 @@ body {
 }
 
 hr {
-    border-color: #151515;
+    border: none;
+    border-top: 1px solid #252525;
+    z-index: 10;
 }

@@ -11,6 +11,7 @@
     right: 0;
     margin: auto;
     z-index: 10;
+    font-size: 17px;
     background-color: var(--ui-5);
 }
 
@@ -30,11 +31,12 @@
 }
 
 .postModal {
-    width: 65%;
+    width: 85%;
     display: flex;
     flex-direction: row;
     background-color: var(--ui-0);
     color: white;
+    font-family: 'Nunito', sans-serif;
 }
 
 .postModalLeft {
@@ -43,4 +45,40 @@
 
 .postModalRight {
     width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid #252525;
+}
+
+.postModalRight__comments {
+    padding: 0 1rem;
+    max-height: 30rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    border-top: 1px solid #252525;
+    border-bottom: 1px solid #252525;
+}
+
+.postModalRight__form {
+    width: 100%;
+    display: flex;
+    border-top: 1px solid #252525;
+}
+
+.postModalRight__input {
+    width: 80%;
+    border: none;
+    outline: none;
+    padding: 1rem;
+    background-color: transparent;
+    color: var(--text-1)
+}
+
+.postModalRight__button {
+    width: 20%;
+    border: none;
+    background-color: transparent;
+    color: var(--link-1);
+    cursor: pointer;
 }

@@ -1,0 +1,28 @@
+.comment {
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.comment__avatar {
+    display: inline;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.comment__username {
+    display: inline;
+    max-width: 70%;
+    color: var(--text-1);
+}
+
+.comment__content {
+    display: inline;
+}
+
+.comment__elapsedTime {
+    color: var(--text-1);
+}

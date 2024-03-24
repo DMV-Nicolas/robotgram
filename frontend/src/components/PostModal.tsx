@@ -3,6 +3,8 @@ import { useLikes } from '../hooks/useLikes'
 import { useComments } from '../hooks/useComments'
 import { Close } from './Icons'
 import { Slider } from './Slider'
+import { PostFooter, PostHeader } from './Post'
+import { Comment } from './Comment'
 import { type CommentType, type PostType, type UserType } from '../types'
 import './PostModal.css'
 
@@ -26,8 +28,10 @@ function PostModalLeft({ postID, username, postImages }: PostModalLeftProps) {
 }
 
 interface PostModalRightProps {
+  userID: string
   username: string
   userAvatar: string
+  postID: string
   postDescription: string
   postCreatedAt: string
   postLikes: number
@@ -36,14 +40,52 @@ interface PostModalRightProps {
   postComments: CommentType[]
 }
 
-function PostModalRight({ username, userAvatar, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments }: PostModalRightProps) {
+function PostModalRight({ userID, username, userAvatar, postID, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments }: PostModalRightProps) {
   return (
     <div className='postModalRight'>
-      {postComments.map((comment, idx) => (
-        <div className='postModalRight__comment' key={`${comment.id}-${idx}`}>
-          <p>{comment.content}</p>
-        </div>
-      ))}
+      <div className='postModalRight__top'>
+        <PostHeader
+          username={username}
+          userAvatar={userAvatar}
+          postCreatedAt={postCreatedAt}
+        />
+        <ul className='postModalRight__comments'>
+          <li className='postModalRight__comment'>
+            <Comment
+              comment={{
+                id: '',
+                targetID: '',
+                userID,
+                content: postDescription,
+                createdAt: postCreatedAt
+              }}
+            />
+          </li>
+          {postComments.map((comment) => (
+            <li className='postModalRight__comment' key={comment.id}>
+              <Comment comment={comment} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className='postModalRight__bottom'>
+        <PostFooter
+          username=""
+          postID={postID}
+          postLikes={postLikes}
+          postDescription=""
+          liked={postLiked}
+          toggleLike={postToggleLike}
+        />
+        <form className='postModalRight__form'>
+          <input
+            className='postModalRight__input'
+            type="text"
+            placeholder='Add a comment...'
+          />
+          <button className='postModalRight__button'>Post</button>
+        </form>
+      </div>
     </div>
   )
 }
@@ -78,8 +120,10 @@ export function PostModal({ user, post, loading }: PostModalProps) {
               username={user.username}
             />
             <PostModalRight
+              userID={user.id}
               username={user.username}
               userAvatar={user.avatar}
+              postID={post.id}
               postDescription={post.description}
               postCreatedAt={post.createdAt}
               postLikes={likes}
