@@ -5,13 +5,16 @@ import { toast } from 'sonner'
 
 export const useUserByID = ({ userID }: { userID: string }) => {
   const [user, setUser] = useState(DEFAULT_USER)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchGetUser = async () => {
       const res = await fetch(`http://localhost:5000/v1/users/${userID}`)
+
       if (!res.ok) {
         toast.error('cannot get user data')
       }
+
       const data: UserResponse = await res.json()
       const user: UserType = {
         id: data.id,
@@ -24,6 +27,7 @@ export const useUserByID = ({ userID }: { userID: string }) => {
         createdAt: data.created_at
       }
       setUser(user)
+      setLoading(false)
     }
 
     if (userID.length !== 24) {
@@ -33,5 +37,5 @@ export const useUserByID = ({ userID }: { userID: string }) => {
     fetchGetUser()
   }, [userID])
 
-  return { user }
+  return { user, loading }
 }

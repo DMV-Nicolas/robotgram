@@ -1,6 +1,7 @@
 #root {
     --background-1: #101010;
     --background-2: #888888;
+    --ui-0: #000000;
     --ui-1: #111111;
     --ui-2: #151515;
     --ui-3: #202020;
@@ -24,5 +25,7 @@ body {
 }
 
 hr {
-    border-color: #151515;
+    border: none;
+    border-top: 1px solid #252525;
+    z-index: 10;
 }

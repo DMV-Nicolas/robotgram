@@ -9,13 +9,14 @@ export function PostModalPage() {
   if (postID === undefined) {
     return <NotFound />
   }
-  const { post } = usePost({ postID })
-  const { user } = useUserByID({ userID: post.userID })
+  const { post, loading: postLoading } = usePost({ postID })
+  const { user, loading: userLoading } = useUserByID({ userID: post.userID })
 
   return (
-    <PostModal
-      user={user}
-      post={post}
-    />
+    <>
+      {!postLoading && !userLoading &&
+        <PostModal post={post} user={user} />
+      }
+    </>
   )
 }

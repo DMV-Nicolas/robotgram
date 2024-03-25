@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { useToken } from './useToken'
 
 export function useUserID() {
-  const { accessToken } = useToken()
+  const { accessToken, refreshAccessToken, updateAccessToken, updateRefreshToken } = useToken()
   const [userID, setUserID] = useState('')
 
   useEffect(() => {
@@ -20,7 +20,12 @@ export function useUserID() {
       })
 
       if (!res.ok) {
-        toast.error('cannot get user token data')
+        toast.error('cannot get like data')
+        const err = await refreshAccessToken()
+        if (err instanceof Error) {
+          updateAccessToken('')
+          updateRefreshToken('')
+        }
         return
       }
 

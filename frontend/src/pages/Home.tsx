@@ -1,4 +1,3 @@
-import { Outlet } from 'react-router-dom'
 import { Navbar } from '../components/Navbar'
 import { PostList } from '../components/PostList'
 import { useUserID } from '../hooks/useUserID'
@@ -11,7 +10,6 @@ export function HomePage() {
       <IsLoggedMiddleware>
         <Navbar userID={userID} />
         <PostList />
-        <Outlet />
       </IsLoggedMiddleware>
     </>
   )

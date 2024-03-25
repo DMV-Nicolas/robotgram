@@ -5,5 +5,19 @@ export const getTimeElapsed = (time: string) => {
 
   const daysDiff = actualDate.getTime() - targetDate.getTime()
   const days = Math.round(daysDiff / (1000 * 60 * 60 * 24))
-  return `${days} d`
+  const hours = Math.round(daysDiff / (1000 * 60 * 60))
+  const minutes = Math.round(daysDiff / (1000 * 60))
+  const seconds = Math.round(daysDiff / (1000))
+
+  if (days !== 0) {
+    return `${days} d`
+  } else if (hours !== 0) {
+    return `${hours} h`
+  } else if (minutes !== 0) {
+    return `${minutes} m`
+  } else if (seconds !== 0) {
+    return `${seconds} s`
+  } else {
+    return 'now'
+  }
 }
