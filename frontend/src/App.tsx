@@ -11,6 +11,7 @@ import './App.css'
 
 function App() {
   const { previousLocation } = useModals({ modalPages: ['/post/:postID'] })
+
   return (
     <main className="app">
       <Routes location={{ pathname: previousLocation }}>

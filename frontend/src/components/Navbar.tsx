@@ -32,7 +32,7 @@ export function Navbar({ userID }: NavbarProps) {
           </li>
           <li className='navbar__item'>
             <Link to="/notifications">
-              <EmptyHeart />
+              <EmptyHeart size={24} />
               <p>Notifications</p>
             </Link>
           </li>

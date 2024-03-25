@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLikes } from '../hooks/useLikes'
 import { useComments } from '../hooks/useComments'
@@ -7,6 +8,7 @@ import { PostFooter, PostHeader } from './Post'
 import { Comment } from './Comment'
 import { type CommentType, type PostType, type UserType } from '../types'
 import './PostModal.css'
+import { useTransform } from '../hooks/useTransform'
 
 interface PostModalLeftProps {
   postID: string
@@ -42,16 +44,30 @@ interface PostModalRightProps {
 }
 
 function PostModalRight({ userID, username, userAvatar, postID, postDescription, postCreatedAt, postLikes, postLiked, postToggleLike, postComments, createComment }: PostModalRightProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { transform, updateTransform } = useTransform({ transformModel: createComment })
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const currentInput = inputRef.current
+    if (currentInput === null) return
 
-    const form = e.target as HTMLFormElement
-    const formData = new FormData(form)
+    transform({ content: currentInput.value })
+    updateTransform({ newTransform: createComment })
+    currentInput.value = ''
+  }
 
-    const content = formData.get('content') as string
-    createComment({ content })
+  const focusInput = () => {
+    const currentInput = inputRef.current
+    if (currentInput === null) return
 
-    form.reset()
+    currentInput.focus()
+  }
+
+  const updateInputValue = ({ newValue }: { newValue: string }) => {
+    const currentInput = inputRef.current
+    if (currentInput === null) return
+
+    currentInput.value = newValue
   }
 
   return (
@@ -66,18 +82,27 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
           <li className='postModalRight__comment'>
             <Comment
               comment={{
-                id: '',
-                targetID: '',
+                id: postID,
+                targetID: postID,
                 userID,
                 content: postDescription,
                 createdAt: postCreatedAt
               }}
               withLike={false}
+              updateTransform={updateTransform}
+              focusInput={focusInput}
+              updateInputValue={updateInputValue}
             />
           </li>
           {postComments.map((comment) => (
             <li className='postModalRight__comment' key={comment.id}>
-              <Comment comment={comment} withLike={true} />
+              <Comment
+                comment={comment}
+                withLike={true}
+                updateTransform={updateTransform}
+                focusInput={focusInput}
+                updateInputValue={updateInputValue}
+              />
             </li>
           ))}
         </ul>
@@ -94,9 +119,10 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
         <form className='postModalRight__form' onSubmit={handleSubmit}>
           <input
             className='postModalRight__input'
-            name='content'
+            ref={inputRef}
             type="text"
             placeholder='Add a comment...'
+            autoComplete='off'
           />
           <button className='postModalRight__button'>Post</button>
         </form>

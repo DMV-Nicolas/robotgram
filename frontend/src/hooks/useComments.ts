@@ -29,7 +29,7 @@ export function useComments({ targetID }: { targetID: string }) {
       }
     }
 
-    setReListComments(!reListComments)
+    setReListComments((prevReListComments) => !prevReListComments)
   }
 
   useEffect(() => {
