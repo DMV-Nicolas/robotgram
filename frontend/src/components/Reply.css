@@ -1,9 +1,9 @@
-.comment {
+.reply {
     width: 100%;
     padding: 10px 0;
 }
 
-.comment__main {
+.reply__main {
     width: 100%;
     display: flex;
     gap: 10px;
@@ -11,34 +11,34 @@
     word-wrap: break-word;
 }
 
-.comment__avatar {
+.reply__avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
 }
 
-.comment__text {
+.reply__text {
     width: 100%;
     word-wrap: break-word;
 }
 
-.comment__username {
+.reply__username {
     display: inline;
     max-width: 70%;
     color: var(--text-1);
 }
 
-.comment__footer {
+.reply__footer {
     display: flex;
     gap: 7px;
 }
 
-.comment__small {
+.reply__small {
     font-size: .75rem;
     color: var(--text-2);
 }
 
-.comment__small--button {
+.reply__small--button {
     background-color: transparent;
     border: none;
     color: var(--text-3);
@@ -47,7 +47,7 @@
     padding: 0;
 }
 
-.comment__likeButton {
+.reply__likeButton {
     background-color: transparent;
     border: none;
     color: var(--text-1);

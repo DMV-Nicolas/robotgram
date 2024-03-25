@@ -7,8 +7,8 @@ import { Slider } from './Slider'
 import { PostFooter, PostHeader } from './Post'
 import { Comment } from './Comment'
 import { type CommentType, type PostType, type UserType } from '../types'
-import './PostModal.css'
 import { useTransform } from '../hooks/useTransform'
+import './PostModal.css'
 
 interface PostModalLeftProps {
   postID: string
@@ -88,7 +88,8 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
                 content: postDescription,
                 createdAt: postCreatedAt
               }}
-              withLike={false}
+              isDescriptionStyle={true}
+              isReplyStyle={false}
               updateTransform={updateTransform}
               focusInput={focusInput}
               updateInputValue={updateInputValue}
@@ -98,7 +99,8 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
             <li className='postModalRight__comment' key={comment.id}>
               <Comment
                 comment={comment}
-                withLike={true}
+                isDescriptionStyle={false}
+                isReplyStyle={false}
                 updateTransform={updateTransform}
                 focusInput={focusInput}
                 updateInputValue={updateInputValue}
