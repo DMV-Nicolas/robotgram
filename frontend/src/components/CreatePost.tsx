@@ -12,7 +12,7 @@ export function CreatePost() {
   return (
     <div className="createPostContainer">
       <div className="createPost">
-        <h1>CreatePost</h1>
+        <h2>Create a new post!</h2>
       </div>
       <button className='postModalContainer__close' onClick={handleGoBack}>
         <Close />
