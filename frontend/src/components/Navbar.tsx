@@ -46,7 +46,7 @@ export function Navbar({ userID }: NavbarProps) {
           </li>
           <li className='navbar__item'>
             <Link to={`/user/${userID}`}>
-              <img className="avatar" src={user.avatar} alt="avatar" />
+              <img className="avatar" src={user.avatar} alt={`Avatar image of ${user.username}`} />
               <p>Profile</p>
             </Link>
           </li>
