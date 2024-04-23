@@ -1,0 +1,55 @@
+.reply {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.reply__main {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    font-family: 'Nunito', sans-serif;
+    word-wrap: break-word;
+}
+
+.reply__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.reply__text {
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.reply__username {
+    display: inline;
+    max-width: 70%;
+    color: var(--text-1);
+}
+
+.reply__footer {
+    display: flex;
+    gap: 7px;
+}
+
+.reply__small {
+    font-size: .75rem;
+    color: var(--text-2);
+}
+
+.reply__small--button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-3);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.reply__likeButton {
+    background-color: transparent;
+    border: none;
+    color: var(--text-1);
+    cursor: pointer;
+}

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { usePosts } from '../hooks/usePosts'
 import { type PostType, type UserType } from '../types'
 import { Options } from './Icons'
@@ -17,7 +18,7 @@ function ProfileHeader({ username, fullName, email, avatar, description, gender 
   return (
     <div className='profileHeader'>
       <div className='profileHeader__left'>
-        <img className='profileHeader__avatar' src={avatar} alt="" />
+        <img className='profileHeader__avatar' src={avatar} alt={`Avatar image of ${username}`} />
       </div>
       <div className='profileHeader__right'>
         <div className='profileHeader__info'>
@@ -38,15 +39,18 @@ function ProfileHeader({ username, fullName, email, avatar, description, gender 
 
 interface ProfileBodyProps {
   posts: PostType[]
+  username: string
 }
 
-function ProfileBody({ posts }: ProfileBodyProps) {
+function ProfileBody({ posts, username }: ProfileBodyProps) {
   return (
     <div className='profileBody'>
       <ul className='profileBody__ul'>
         {posts.map((post) => (
           <li className='profileBody__li' key={post.id}>
-            <img className='profileBody__postImage' src={post.images[0]} alt="" />
+            <Link to={`/post/${post.id}`}>
+              <img className='profileBody__postImage' src={post.images[0]} alt={`Post image of ${username}`} />
+            </Link>
           </li>
         ))}
       </ul>
@@ -74,6 +78,7 @@ export function Profile({ user }: ProfileProps) {
         <hr />
         <ProfileBody
           posts={posts}
+          username={user.username}
         />
       </div>
     </div>

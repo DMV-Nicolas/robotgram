@@ -20,6 +20,14 @@ export interface UserType {
   createdAt: string
 }
 
+export interface UsersLoginResponse {
+  session_id: string
+  access_token: string
+  access_token_expires_at: string
+  refresh_token: string
+  refresh_token_expires_at: string
+}
+
 export interface PostResponse {
   id: string
   user_id: string
@@ -36,19 +44,25 @@ export interface PostType {
   createdAt: string
 }
 
-export interface UsersLoginResponse {
-  session_id: string
-  access_token: string
-  access_token_expires_at: string
-  refresh_token: string
-  refresh_token_expires_at: string
-}
-
 export type ListPostsResponse = PostResponse[] | null
 
-export type LikesCountResponse = number
+export interface CommentResponse {
+  id: string
+  user_id: string
+  target_id: string
+  content: string
+  created_at: string
+}
 
-export type IsLikedResponse = boolean
+export interface CommentType {
+  id: string
+  userID: string
+  targetID: string
+  content: string
+  createdAt: string
+}
+
+export type ListCommentsResponse = CommentResponse[] | null
 
 export interface RefreshTokenResponse {
   access_token: string
@@ -68,4 +82,12 @@ export interface TokenContextType {
   updateAccessToken: (newToken: string) => void
   updateRefreshToken: (newToken: string) => void
   refreshAccessToken: () => Promise<Error | undefined>
+}
+
+export type LikesCountResponse = number
+
+export type IsLikedResponse = boolean
+
+export interface CreatedResponse {
+  InsertedID: string
 }

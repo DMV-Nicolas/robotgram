@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useUserByID } from '../hooks/useUserByID'
 import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
 import { Comment, EmptyHeart, Heart, Options, Save, Share } from './Icons'
 import { type PostType } from '../types'
+import { Slider } from './Slider'
 import './Post.css'
 
-interface PostCardHeaderProps {
+interface PostHeaderProps {
   username: string
   userAvatar: string
   postCreatedAt: string
 }
 
-function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps) {
+export function PostHeader({ username, userAvatar, postCreatedAt }: PostHeaderProps) {
   const elapsedTime = getTimeElapsed(postCreatedAt)
   return (
     <header className="postHeader">
@@ -29,56 +29,33 @@ function PostHeader({ username, userAvatar, postCreatedAt }: PostCardHeaderProps
   )
 }
 
-interface PostCardBodyProps {
+interface PostBodyProps {
   postImages: string[]
   postID: string
   username: string
 }
 
-function PostBody({ postImages, postID, username }: PostCardBodyProps) {
-  const [slide, setSlide] = useState(0)
-
-  const prevSlide = (): void => {
-    if (slide > 0) setSlide(slide - 1)
-  }
-
-  const nextSlide = (): void => {
-    if (slide < postImages.length - 1) setSlide(slide + 1)
-  }
-
+function PostBody({ postImages, postID, username }: PostBodyProps) {
   return (
-    <div className="postBody">
-      {slide > 0 &&
-        <span className="postBody__leftArrow instagramIcons" onClick={prevSlide}></span>
-      }
-      <img className="postBody__image" src={postImages[slide]} alt={`Post image of ${username}`} />
-      {slide < postImages.length - 1 &&
-        <span className="postBody__rightArrow instagramIcons" onClick={nextSlide}></span>
-      }
-      <div className="postBody__indicators">
-        {
-          postImages.map((_, idx) => (
-            <span
-              key={`${postID}-${idx}`}
-              className={`postBody__indicator ${slide === idx ? 'postBody__indicator--selected' : ''}`}
-              onClick={() => { setSlide(idx) }}></span>
-          ))
-        }
-      </div>
-    </div>
+    <Slider
+      id={postID}
+      username={username}
+      images={postImages}
+      forceLimitHeight={false}
+    />
   )
 }
 
-interface PostCardFooterProps {
+interface PostFooterProps {
   username: string
-  postID: string
   postLikes: number
   postDescription: string
   liked: boolean
   toggleLike: () => void
+  commentAction: () => void
 }
 
-function PostFooter({ username, postID, postLikes, postDescription, liked, toggleLike }: PostCardFooterProps) {
+export function PostFooter({ username, postLikes, postDescription, liked, toggleLike, commentAction }: PostFooterProps) {
   return (
     <footer className="postFooter">
       <section className="postFooter__actions">
@@ -88,16 +65,13 @@ function PostFooter({ username, postID, postLikes, postDescription, liked, toggl
             onClick={toggleLike}
           >
             {liked
-              ? <Heart />
-              : <EmptyHeart />
+              ? <Heart size={24} />
+              : <EmptyHeart size={24} />
             }
           </button>
-          <Link
-            className='postFooter__button'
-            to={`/post/${postID}`}
-          >
+          <button className='postFooter__button' onClick={commentAction}>
             <Comment />
-          </Link>
+          </button>
           <Share />
         </div>
         <div className="postFooter__rightActions">
@@ -105,7 +79,7 @@ function PostFooter({ username, postID, postLikes, postDescription, liked, toggl
         </div>
       </section>
       <section className="postFooter__likeCount">
-        <p>{postLikes} Me gusta</p>
+        <p>{postLikes} {postLikes === 1 ? 'Like' : 'Likes'}</p>
       </section>
       <section className="postFooter__description">
         <p><strong>{username}</strong> {postDescription}</p>
@@ -121,9 +95,14 @@ interface PostProps {
 export function Post({ post }: PostProps) {
   const { user } = useUserByID({ userID: post.userID })
   const { toggleLike, liked, likes } = useLikes({ targetID: post.id })
+  const navigate = useNavigate()
 
   const handleToggleLike = () => {
     toggleLike()
+  }
+
+  const handleClickComment = () => {
+    navigate(`post/${post.id}`)
   }
 
   return (
@@ -140,11 +119,11 @@ export function Post({ post }: PostProps) {
       />
       <PostFooter
         username={user.username}
-        postID={post.id}
         postLikes={likes}
         postDescription={post.description}
         liked={liked}
         toggleLike={handleToggleLike}
+        commentAction={handleClickComment}
       />
     </article>
   )
