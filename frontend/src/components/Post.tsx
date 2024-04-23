@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useUserByID } from '../hooks/useUserByID'
 import { useLikes } from '../hooks/useLikes'
 import { getTimeElapsed } from '../services/time'
@@ -48,14 +48,14 @@ function PostBody({ postImages, postID, username }: PostBodyProps) {
 
 interface PostFooterProps {
   username: string
-  postID: string
   postLikes: number
   postDescription: string
   liked: boolean
   toggleLike: () => void
+  commentAction: () => void
 }
 
-export function PostFooter({ username, postID, postLikes, postDescription, liked, toggleLike }: PostFooterProps) {
+export function PostFooter({ username, postLikes, postDescription, liked, toggleLike, commentAction }: PostFooterProps) {
   return (
     <footer className="postFooter">
       <section className="postFooter__actions">
@@ -69,12 +69,9 @@ export function PostFooter({ username, postID, postLikes, postDescription, liked
               : <EmptyHeart size={24} />
             }
           </button>
-          <Link
-            className='postFooter__button'
-            to={`/post/${postID}`}
-          >
+          <button className='postFooter__button' onClick={commentAction}>
             <Comment />
-          </Link>
+          </button>
           <Share />
         </div>
         <div className="postFooter__rightActions">
@@ -98,9 +95,14 @@ interface PostProps {
 export function Post({ post }: PostProps) {
   const { user } = useUserByID({ userID: post.userID })
   const { toggleLike, liked, likes } = useLikes({ targetID: post.id })
+  const navigate = useNavigate()
 
   const handleToggleLike = () => {
     toggleLike()
+  }
+
+  const handleClickComment = () => {
+    navigate(`post/${post.id}`)
   }
 
   return (
@@ -117,11 +119,11 @@ export function Post({ post }: PostProps) {
       />
       <PostFooter
         username={user.username}
-        postID={post.id}
         postLikes={likes}
         postDescription={post.description}
         liked={liked}
         toggleLike={handleToggleLike}
+        commentAction={handleClickComment}
       />
     </article>
   )

@@ -112,11 +112,11 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
       <div className='postModalRight__bottom'>
         <PostFooter
           username=""
-          postID={postID}
           postLikes={postLikes}
           postDescription=""
           liked={postLiked}
           toggleLike={postToggleLike}
+          commentAction={focusInput}
         />
         <form className='postModalRight__form' onSubmit={handleSubmit}>
           <input
