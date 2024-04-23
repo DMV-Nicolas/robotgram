@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Blank, Create, EmptyHeart, Explore, Github, Home, Search } from './Icons'
 import './Navbar.css'
+import { useUserByID } from '../hooks/useUserByID'
 
 interface NavbarProps {
   userID: string
 }
 
 export function Navbar({ userID }: NavbarProps) {
+  const { user } = useUserByID({ userID })
   return (
     <nav className="navbar">
       <h1 className="navbar__title">Robotgram</h1>
@@ -44,7 +46,7 @@ export function Navbar({ userID }: NavbarProps) {
           </li>
           <li className='navbar__item'>
             <Link to={`/user/${userID}`}>
-              <img className="avatar" src="https://avatars.githubusercontent.com/u/69326361?v=4" alt="avatar" />
+              <img className="avatar" src={user.avatar} alt="avatar" />
               <p>Profile</p>
             </Link>
           </li>
