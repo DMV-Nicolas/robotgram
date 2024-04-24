@@ -114,6 +114,7 @@
     padding: .8em;
     text-align: center;
     background-color: var(--ui-2);
+    cursor: pointer;
 }
 
 .createPost__input--shorter {

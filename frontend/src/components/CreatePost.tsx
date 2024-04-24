@@ -54,7 +54,7 @@ export function CreatePost() {
                 <label className="createPost__label" htmlFor={inputImageUrlID + v}>
                   <Url />
                 </label>
-                {inputAmount.length === v + 1
+                {inputAmount.length !== v + 1
                   ? <>
                     <input className='createPost__input' type="text" id={inputImageUrlID + v} name={`imageUrl${v}`} placeholder={`Image url ${v + 1}`} />
                   </>
