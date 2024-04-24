@@ -33,8 +33,105 @@
 .createPost {
     width: 40%;
     display: flex;
-    flex-direction: row;
-    background-color: var(--ui-4);
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--background-1);
     color: var(--text-1);
+    border-radius: 10px;
     font-family: 'Nunito', sans-serif;
+}
+
+.createPost__title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid #505050;
+    color: var(--text-1);
+    font-family: "Silkscreen";
+}
+
+.createPost__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 5rem;
+}
+
+.createPost__label {
+    width: 15%;
+    height: 100%;
+    padding: .8em;
+    text-align: center;
+    background-color: var(--ui-2);
+}
+
+.createPost__label svg {
+    width: 100%;
+    height: 100%;
+    color: var(--ui-3);
+}
+
+.createPost__ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.createPost__inputField {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+}
+
+.createPost__input {
+    width: 85%;
+    height: 100%;
+    padding: .6rem;
+    font-size: 1.1rem;
+    border: none;
+    color: var(--text-1);
+    background-color: var(--ui-3);
+    transition: background-color linear .1s;
+}
+
+.createPost__input:focus {
+    outline: none;
+    background-color: var(--ui-4);
+}
+
+.createPost__input:hover {
+    background-color: var(--ui-4);
+}
+
+.createPost__input--textarea {
+    width: 100%;
+}
+
+.createPost__input--increment {
+    width: 10%;
+    height: 100%;
+    padding: .8em;
+    text-align: center;
+    background-color: var(--ui-2);
+}
+
+.createPost__input--shorter {
+    width: 75%;
+}
+
+.createPost__submit {
+    background-color: var(--link-1);
+    height: 3em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.createPost__submit:hover {
+    background-color: var(--link-2);
+}
+
+.createPost__submit:active {
+    background-color: var(--link-1);
 }
