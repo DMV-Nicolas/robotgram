@@ -79,22 +79,24 @@ function PostModalRight({ userID, username, userAvatar, postID, postDescription,
           postCreatedAt={postCreatedAt}
         />
         <ul className='postModalRight__comments'>
-          <li className='postModalRight__comment'>
-            <Comment
-              comment={{
-                id: postID,
-                targetID: postID,
-                userID,
-                content: postDescription,
-                createdAt: postCreatedAt
-              }}
-              isDescriptionStyle={true}
-              isReplyStyle={false}
-              updateTransform={updateTransform}
-              focusInput={focusInput}
-              updateInputValue={updateInputValue}
-            />
-          </li>
+          {postDescription !== '' &&
+            <li className='postModalRight__comment'>
+              <Comment
+                comment={{
+                  id: postID,
+                  targetID: postID,
+                  userID,
+                  content: postDescription,
+                  createdAt: postCreatedAt
+                }}
+                isDescriptionStyle={true}
+                isReplyStyle={false}
+                updateTransform={updateTransform}
+                focusInput={focusInput}
+                updateInputValue={updateInputValue}
+              />
+            </li>
+          }
           {postComments.map((comment) => (
             <li className='postModalRight__comment' key={comment.id}>
               <Comment
