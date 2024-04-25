@@ -32,7 +32,6 @@ export function Slider({ id, username, images, forceLimitHeight }: Props) {
 
     const resizeObserver = new ResizeObserver(() => {
       if (!(sliderRef.current instanceof HTMLDivElement)) {
-        console.log(sliderRef.current)
         return
       }
       const sliderWidth = sliderRef.current.offsetWidth
